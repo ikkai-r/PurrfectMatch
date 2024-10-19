@@ -24,6 +24,11 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    public void loginSuccess(View v) {
+        Intent i = new Intent(this, ShelterPage.class);
+        this.startActivity(i);
+    }
+
     public void register(View v) {
         Intent i = new Intent(this, SignUp.class);
         this.startActivity(i);

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
 
         button.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
+            Intent i = new Intent(this, Login.class);
             this.startActivity(i);
         });
     }
