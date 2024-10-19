@@ -13,6 +13,24 @@
         android:theme="@style/Theme.PurrfectMatch"
         tools:targetApi="31">
         <activity
+            android:name=".ViewPagerAdapterCat"
+            android:exported="false" />
+        <activity
+            android:name=".AddCat"
+            android:exported="false" />
+        <activity
+            android:name=".ScheduledApplications"
+            android:exported="false" />
+        <activity
+            android:name=".PendingApplications"
+            android:exported="false" />
+        <activity
+            android:name=".ShelterPage"
+            android:exported="false" />
+        <activity
+            android:name=".SuccessForm"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -21,6 +39,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ViewPagerAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".SignUp"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
     </application>
 
 </manifest>

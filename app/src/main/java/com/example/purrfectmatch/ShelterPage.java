@@ -10,13 +10,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class ShelterPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_shelter_page);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -24,13 +24,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void login(View v) {
-        Intent i = new Intent(this, Login.class);
+    public void goPendingApps(View v) {
+        Intent i = new Intent(this, PendingApplications.class);
         this.startActivity(i);
     }
 
-    public void register(View v) {
-        Intent i = new Intent(this, SignUp.class);
+    public void goScheduledApp(View v) {
+        Intent i = new Intent(this, ScheduledApplications.class);
+        this.startActivity(i);
+    }
+
+    public void addCat(View v) {
+        Intent i = new Intent(this, AddCat.class);
         this.startActivity(i);
     }
 }
