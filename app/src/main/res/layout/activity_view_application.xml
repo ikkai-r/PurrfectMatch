@@ -1,7 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
+    tools:context=".ViewApplication"
     android:id="@+id/main">
 
     <LinearLayout
@@ -11,6 +13,49 @@
         android:padding="40dp"
         android:background="@color/white">
 
+
+        <LinearLayout
+            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonReject"
+                android:onClick="rejectApp"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:background="@drawable/bg_button_red"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Reject"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+               />
+
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonAccept"
+                android:onClick="acceptApp"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:background="@drawable/custom_bg2"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Accept"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:layout_margin="5dp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
         <!-- Title centered, minimal padding -->
         <TextView
             android:layout_width="match_parent"
