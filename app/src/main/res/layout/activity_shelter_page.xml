@@ -212,7 +212,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
-                    android:clipChildren="false">
+                    android:clipChildren="false"
+                    android:onClick="goViewApplication"                    
+                    >
 
                     <ImageView
                         android:id="@+id/imageView5"
