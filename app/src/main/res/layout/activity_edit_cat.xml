@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/custom_bg"
     android:fillViewport="true"
-    tools:context=".AddCat">
+    tools:context=".EditCat">
 
 
     <ImageView
@@ -39,7 +39,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/cat_form"
+            android:id="@+id/cat_edit_form"
             android:layout_width="332dp"
             android:layout_height="476dp">
 

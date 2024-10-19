@@ -16,6 +16,21 @@
             android:name=".ViewApplication"
             android:exported="false" />
         <activity
+            android:name=".ViewPagerCatEditAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ViewPagerAdapterCatEdit"
+            android:exported="false" />
+        <activity
+            android:name=".EditCat"
+            android:exported="false" />
+        <activity
+            android:name=".CatProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ViewCatsAdoption"
+            android:exported="false" />
+        <activity
             android:name=".ViewPagerAdapterCat"
             android:exported="false" />
         <activity

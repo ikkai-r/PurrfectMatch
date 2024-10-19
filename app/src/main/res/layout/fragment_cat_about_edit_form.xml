@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context=".CatAboutForm">
+    tools:context=".CatAboutEditForm">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/poppins_bold"
-            android:text="Add a cat"
+            android:text="Edit cat information"
             android:layout_marginTop="18dp"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -62,10 +62,10 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="top"
                 android:textSize="12sp"
-                android:hint="Tell us more about your furry friend..."
+                android:text="Hello, I’m Dweety! DLSU’s resident Henry cat. I am a calm, loving cat who is very comfortable around strangers and other cats. I am looking for a PURRever home that will feed me yummy food everyday! I like being outdoors, so a house with a backyard would be ideal :)"
                 android:inputType="textMultiLine"
                 android:padding="16dp" />
-    </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

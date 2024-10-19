@@ -1,5 +1,6 @@
 package com.example.purrfectmatch;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
-public class SignUp extends AppCompatActivity {
+public class EditCat extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private Button nextButton;
@@ -22,17 +23,17 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_edit_cat);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        viewPager = findViewById(R.id.form);
+        viewPager = findViewById(R.id.cat_edit_form);
         nextButton = findViewById(R.id.buttonNext);
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        ViewPagerCatEditAdapter adapter = new ViewPagerCatEditAdapter(this);
         viewPager.setAdapter(adapter);
 
         viewPager.setUserInputEnabled(false);
@@ -43,7 +44,7 @@ public class SignUp extends AppCompatActivity {
                 super.onPageSelected(position);
 
                 if (position == viewPager.getAdapter().getItemCount() - 1) {
-                    nextButton.setText("Register");
+                    nextButton.setText("Finish");
                 } else {
                     nextButton.setText("Next");
                 }
@@ -56,21 +57,20 @@ public class SignUp extends AppCompatActivity {
                 if (viewPager.getCurrentItem() < NUM_PAGES - 1) {
                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
                 } else if(viewPager.getCurrentItem() == NUM_PAGES-1) {
-                    Intent i = new Intent(SignUp.this, SuccessForm.class);
-                    i.putExtra("title", "Sign up");
-                    i.putExtra("title_big", "Success");
-                    i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
-                    i.putExtra("subtitle_2", "Are you ready to meet the cat of your dreams?");
-                    i.putExtra("button_text", "Yes!");
-                    SignUp.this.startActivity(i);
+                    Intent i = new Intent(EditCat.this, SuccessForm.class);
+                    i.putExtra("title", "Profile successfully edited");
+                    i.putExtra("title_big", "Dweety");
+                    i.putExtra("subtitle_1", "");
+                    i.putExtra("subtitle_2", "");
+                    i.putExtra("button_text", "Okay");
+                    EditCat.this.startActivity(i);
                     finish();
                 }
             }
         });
     }
 
-    public void login(View v) {
-        Intent i = new Intent(this, Login.class);
-        this.startActivity(i);
+    public void cancel(View v) {
+        finish();
     }
 }

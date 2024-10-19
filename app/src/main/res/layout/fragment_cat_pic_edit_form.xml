@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context=".CatPicForm">
+    tools:context=".CatPicEditForm">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:paddingStart="0dp"
+        android:clipChildren="false"
+
         android:paddingEnd="0dp"
         android:orientation="vertical"
         android:textAlignment="center">
@@ -29,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/poppins_bold"
-            android:text="Add a cat"
+            android:text="Edit cat information"
             android:layout_marginTop="18dp"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -48,26 +50,53 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipChildren="false"
             android:padding="16dp">
 
             <!-- Large Image -->
 
             <!-- Smaller Images (right) -->
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/largeImageView"
-                android:layout_width="218dp"
-                android:layout_height="227dp"
-                android:layout_margin="8dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/dweety"
-                android:contentDescription="Main Image"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="1:1"
+                android:layout_width="254dp"
+                android:layout_height="247dp"
+                android:layout_margin="3dp"
+                android:clipChildren="false"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.6" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:clipChildren="false"
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="254dp"
+                    app:srcCompat="@drawable/dweety" />
+
+                <View
+                    android:id="@+id/notificationBadge1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginEnd="-2dp"
+                    android:background="@drawable/circle_red" />
+
+                <TextView
+                    android:id="@+id/badgeText1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginEnd="4dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="X"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/smallImageView4"
@@ -108,17 +137,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/largeImageView" />
 
-            <ImageView
-                android:id="@+id/smallImageView2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/picture_placeholder"
-                android:contentDescription="Small Image 2"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteY="16dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -52,8 +52,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Overview"
+                android:text="All Cats for Adoption >"
                 android:textColor="@color/black"
+                android:onClick="viewCats"
                 android:textSize="16sp" />
 
             <LinearLayout

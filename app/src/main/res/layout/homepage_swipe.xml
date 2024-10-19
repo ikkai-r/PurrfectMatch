@@ -68,7 +68,7 @@
             android:layout_width="116dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:srcCompat="@drawable/arrowleft"
+            app:srcCompat="@drawable/arrow"
             app:tint="#E91E63" />
 
         <TextView
@@ -89,7 +89,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:rotation="180"
-            app:srcCompat="@drawable/arrowleft"
+            app:srcCompat="@drawable/arrow_front"
             app:tint="#4CAF50" />
     </LinearLayout>
 
