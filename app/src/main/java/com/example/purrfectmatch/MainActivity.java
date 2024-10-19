@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Button button;
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -22,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-    }
 
-    public void login(View v) {
-        Intent i = new Intent(this, Login.class);
-        this.startActivity(i);
+        button = findViewById(R.id.button);
+
+        button.setOnClickListener(view -> {
+            Intent i = new Intent(this, SwipeActivity.class);
+            this.startActivity(i);
+        });
     }
 
     public void register(View v) {

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="50dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp">
+
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/fredoka_medium"
+            android:text="Find a schedule that matches DLSU Pusa"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/datePicker2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <DatePicker
+            android:id="@+id/datePicker2"
+            android:layout_width="313dp"
+            android:layout_height="349dp"
+            android:layout_marginTop="1dp"
+            android:background="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
+            android:calendarTextColor="#000000"
+            android:endYear="2100"
+            android:headerBackground="@color/white"
+            android:scaleX=".8"
+            android:scaleY=".8"
+            android:startYear="2024"
+            android:yearListSelectorColor="#000000"
+            app:layout_constraintBottom_toTopOf="@+id/textView35"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView34"></DatePicker>
+
+        <TextView
+            android:id="@+id/textView35"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/fredoka_medium"
+            android:text="Suggested Venue:"
+            android:textAlignment="viewStart"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/textView36"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/datePicker2" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="314dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="27dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FDA626"
+            android:fontFamily="@font/fredoka_medium"
+            android:text="Schedule"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/textView37"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView36" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="312dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:backgroundTint="#000000"
+            android:fontFamily="@font/fredoka_medium"
+            android:text="Not Available"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView37" />
+
+        <TextView
+            android:id="@+id/textView36"
+            android:layout_width="312dp"
+            android:layout_height="39dp"
+            android:layout_marginBottom="10dp"
+            android:background="#F5F5F5"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="DLSU - Manila"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView35" />
+
+        <TextView
+            android:id="@+id/textView37"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="92dp"
+            android:layout_marginBottom="3dp"
+            android:fontFamily="@font/fredoka_light"
+            android:text="If no schedule matches, contact DLSU Pusa directly at dlsupusa@gmail.com"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView36" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
