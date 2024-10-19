@@ -57,8 +57,8 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
         holder.vaccinatedImage.setImageResource(swipeDataItem.vaccinationImage);
         holder.litterTrainedImage.setImageResource(swipeDataItem.litterTrainedImage);
 
-        holder.ageText.setText(String.valueOf(swipeDataItem.age));
-        holder.weightText.setText(String.valueOf(swipeDataItem.weight));
+        holder.ageText.setText(String.valueOf(swipeDataItem.age) + "months");
+        holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
         holder.sexText.setText(String.valueOf(swipeDataItem.sex));
         holder.breedText.setText(swipeDataItem.breed);
         holder.birthdayText.setText(swipeDataItem.birthday);
