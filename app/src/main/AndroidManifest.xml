@@ -21,6 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SwipeActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ApplicationsActivity" />
+        <activity android:name=".ScheduleActivity" />
+        <activity android:name=".BookmarkActivity" />
+        <activity android:name=".ExploreActivity" />
     </application>
 
 </manifest>
