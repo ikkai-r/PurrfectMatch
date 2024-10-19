@@ -68,7 +68,9 @@
                     android:backgroundTint="#F4F2F2"
                     android:padding="10dp"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="10dp"
+                    android:onClick="goViewApplication"
+                    >
 
                     <ImageView
                         android:id="@+id/imageView1"

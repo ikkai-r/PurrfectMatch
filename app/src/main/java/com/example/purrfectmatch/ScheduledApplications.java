@@ -1,6 +1,8 @@
 package com.example.purrfectmatch;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +22,11 @@ public class ScheduledApplications extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+
+    public void goViewApplication(View v) {
+        Intent i = new Intent(this, ViewApplication.class);
+        this.startActivity(i);
     }
 }

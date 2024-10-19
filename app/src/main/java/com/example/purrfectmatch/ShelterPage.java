@@ -39,8 +39,4 @@ public class ShelterPage extends AppCompatActivity {
         this.startActivity(i);
     }
 
-    public void goViewApplication(View v) {
-        Intent i = new Intent(this, ViewApplication.class);
-        this.startActivity(i);
-    }
 }
