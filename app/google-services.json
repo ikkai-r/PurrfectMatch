@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "884554224900",
+    "project_id": "mobdevepurrfectmatch",
+    "storage_bucket": "mobdevepurrfectmatch.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884554224900:android:9e2913da936653139fec51",
+        "android_client_info": {
+          "package_name": "com.example.purrfectmatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDewTmMnmhKMq96ZqHrYnxNjSI0i9IyHJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
