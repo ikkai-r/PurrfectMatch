@@ -50,7 +50,7 @@ public class SuccessForm extends AppCompatActivity {
     }
 
     public void goShelterView(View v) {
-        Intent i = new Intent(this, ShelterPage.class);
+        Intent i = new Intent(this, SwipeActivity.class);
         this.startActivity(i);
     }
 }

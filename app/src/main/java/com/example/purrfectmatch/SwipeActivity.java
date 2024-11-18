@@ -24,7 +24,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
     ViewPager2 viewPager2;
     SwipeAdapter swipeAdapter;
-    ImageView profile, bookmark, explore, swipe;
+    ImageView profile, explore, swipe;
     private static final String TAG = "Swipe Position";
     private float x1, x2, y1, y2;
     private static int MIN_DISTANCE = 150;
@@ -51,7 +51,6 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         viewPager2 = findViewById(R.id.viewPager2);
         viewPager2.setUserInputEnabled(false);
 
-        bookmark = findViewById(R.id.bookmark);
 
         profile = findViewById(R.id.profile);
 
@@ -68,27 +67,34 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                 new SwipeData(30, 15, 1000,  R.drawable.check, R.drawable.check, R.drawable.check, catPicSet0,'F', "- wet food"
                 , "Playful and affectionate, loves lounging on windowsills and chasing laser pointers. He’s a social butterfly and always greets guests at the door.",
                         "Aloof", "Puspin", "Diagnosed with mild arthritis, treated with joint supplements.\n" +
-                        "Experienced an ear infection last year but fully recovered with antibiotics.", "CAR", "01/09/2010", "091712345678"),
+                        "Experienced an ear infection last year but fully recovered with antibiotics.", "CAR", "01/09/2010", "091712345678", true),
 
                 new SwipeData(20, 11, 5500,  R.drawable.x, R.drawable.x, R.drawable.x, catPicSet2,'M', "- wet food"
                         , "Energetic and mischievous, loves to ambush other pets and zoom through the house at midnight. He's endlessly curious about new things.",
-                        "Aloof", "Maine Coon", "None so far", "Chai", "12/23/2012", "091712345678"),
+                        "Aloof", "Maine Coon", "None so far", "Chai", "12/23/2012", "091712345678", false),
 
                 new SwipeData(47, 12, 4500,  R.drawable.check, R.drawable.x, R.drawable.check, catPicSet3,'F', "- dry food"
                         , "Sweet and friendly, is a cuddler. He loves kneading blankets and being held. His favorite activity is watching birds from the window.",
                         "Moody", "Persian Maine coon", "Neutered at 5 months.\n" +
                         "No chronic illnesses or allergies.\n" +
-                        "Treated for a minor flea infestation three months ago, now on preventive medication.\n", "Solana", "10/11/2018", "091712345678"),
+                        "Treated for a minor flea infestation three months ago, now on preventive medication.\n", "Solana", "10/11/2018", "091712345678", true),
                 new SwipeData(34, 16, 2500,  R.drawable.check, R.drawable.check, R.drawable.x, catPicSet4,'M', "- water"
                         , "Calm and elegant, is a quiet observer. She prefers high perches and enjoys being brushed. She’s bonded closely with one person and can be shy around others.",
-                        "Orange", "Puspin", "Overweight, currently on a weight management diet.", "Leo", "01/25/2020", "091712345678"),
+                        "Orange", "Puspin", "Overweight, currently on a weight management diet.", "Leo", "01/25/2020", "091712345678", true),
                 new SwipeData(19, 10, 9000,  R.drawable.x, R.drawable.check, R.drawable.x, catPicSet1,'F', "- wet food"
                         , "Gentle and laid-back, enjoys long naps and belly rubs. He’s especially fond of sunbeams and naps near radiators", "Playful", "Siamese",
-                        "None so far", "Coco", "08/26/2020", "091712345678")
+                        "None so far", "Coco", "08/26/2020", "091712345678", false)
         };
 
         swipeAdapter = new SwipeAdapter(swipeData, SwipeActivity.this);
         viewPager2.setAdapter(swipeAdapter);
+
+        viewPager2.setPageTransformer((page, position) -> {
+            float absPos = Math.abs(position);
+            page.setAlpha(1.0f - absPos);
+            page.setScaleY(1.0f - absPos * 0.15f);
+        });
+
 
         //viewPager2.setUserInputEnabled(false);
 
@@ -123,11 +129,6 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
         explore.setOnClickListener(view -> {
             Intent i = new Intent(this, ExploreActivity.class);
-            startActivity(i);
-        });
-
-        bookmark.setOnClickListener(view -> {
-            Intent i = new Intent(this, BookmarkActivity.class);
             startActivity(i);
         });
     }
