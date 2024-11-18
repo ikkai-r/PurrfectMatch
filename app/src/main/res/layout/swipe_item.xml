@@ -4,7 +4,6 @@
     android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="0dp"
     app:layout_constraintBottom_toTopOf="@+id/linearLayout"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -13,609 +12,397 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@color/white"
+        android:layout_marginTop="10dp">
 
-        <RelativeLayout
+        <!-- Bookmark Icon -->
+        <ImageView
+            android:id="@+id/bookmarkIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_bookmark"
+            android:layout_gravity="end"
+            android:tint="#ff7a26" />
+
+        <!-- Cat Image Section -->
+        <ImageView
+            android:id="@+id/catPic"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/cat0"
+            android:background="@drawable/rounded_image_border"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true" />
+
+        <!-- Cat Name and Age Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF">
-
-            <ImageView
-                android:id="@+id/catPic"
-                android:layout_width="379dp"
-                android:layout_height="412dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/rounded_text_view"
-                android:scaleX="1.5"
-                app:srcCompat="@drawable/cat0" />
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/nameText"
-                android:layout_width="152dp"
-                android:layout_height="30dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="362dp"
-                android:layout_marginEnd="224dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/rounded_text_view"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="CAR"
-                android:textAlignment="center"
-                android:textColor="#000000"
-                android:textSize="24sp" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="331dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="25dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/generalInformation"
-                android:layout_width="328dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="General Information"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#FDA626"
-                android:scaleY="5" />
-
+                android:text="Fluffy"
+                android:fontFamily="@font/poppins_bold"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
         </LinearLayout>
 
+        <!-- Basic Information Section -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="103dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:background="@drawable/card_background"
+            android:layout_gravity="center">
 
+            <!-- Header with Icon for Basic Information -->
             <LinearLayout
-                android:layout_width="101dp"
-                android:layout_height="71dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_info"
+                    android:layout_marginEnd="10dp"
+                    android:tint="#ff7a26" />
 
                 <TextView
-                    android:id="@+id/age"
-                    android:layout_width="match_parent"
+                    android:id="@+id/generalInformation"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Age"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:text="Basic Information"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626" />
+            <!-- Age -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_age"
+                    android:tint="#000"
+                    android:layout_marginEnd="10dp" />
 
                 <TextView
                     android:id="@+id/ageText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="47 months"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:text="Age: 3 years old"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
+     
+            <!-- Breed -->
             <LinearLayout
-                android:layout_width="65dp"
-                android:layout_height="74dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginTop="8dp">
 
-                <TextView
-                    android:id="@+id/weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Weight"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626" />
-
-                <TextView
-                    android:id="@+id/weightText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="12lb"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="44dp"
-                android:layout_height="77dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="25dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/sex"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Sex"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626" />
-
-                <TextView
-                    android:id="@+id/sexText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="F"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="68dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="50dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/breed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Breed"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_breed"
+                    android:tint="#000"
+                    android:layout_marginEnd="10dp" />
 
                 <TextView
                     android:id="@+id/breedText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="Puspin"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:text="Breed: Garfield"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="109dp"
-            android:orientation="horizontal">
-
+            <!--  Weight -->
             <LinearLayout
-                android:layout_width="142dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="0dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_weight"
+                    android:tint="#000"
+                    android:layout_marginEnd="10dp" />
 
                 <TextView
-                    android:id="@+id/birthday"
-                    android:layout_width="match_parent"
+                    android:id="@+id/weightText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Birthday"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:text="Weight: 5 kg"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+            </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626"
-                    android:scaleY="2" />
+            <!-- Gender -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_gender"
+                    android:tint="#000"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/sexText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gender: Female"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <!-- Birthday -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_birthday"
+                    android:tint="#000"
+                    android:layout_marginEnd="10dp" />
 
                 <TextView
                     android:id="@+id/birthdayText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="01/01/2020"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:text="Birthday: 10/02/2024"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="133dp"
-                android:layout_height="85dp"
-                android:layout_marginLeft="70dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="25dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/temperment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Temperment"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626"
-                    android:scaleY="2" />
-
-                <TextView
-                    android:id="@+id/tempermentText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="Aloof"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-            </LinearLayout>
         </LinearLayout>
 
+        <!-- Temperament Section -->
         <LinearLayout
-            android:layout_width="336dp"
-            android:layout_height="158dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/rounded_linear_layout_view"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:background="@drawable/card_background"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_heart"
+                    android:layout_marginEnd="10dp"
+                    android:tint="#ff7a26" />
+
+                <TextView
+                    android:id="@+id/tempermentLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Temperament"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/bio"
-                android:layout_width="match_parent"
+                android:id="@+id/tempermentText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="Bio"
-                android:textAlignment="center"
-                android:textSize="14sp" />
+                android:text="Friendly, Playful"
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="#FDA626" />
+        <!-- Bio Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:background="@drawable/card_background"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_bio"
+                    android:layout_marginEnd="10dp"
+                    android:tint="#ff7a26" />
+
+                <TextView
+                    android:id="@+id/bioLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bio"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/bioText"
-                android:layout_width="match_parent"
-                android:layout_height="87dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginRight="2dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                android:textAlignment="center"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="336dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="25dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/healthLifestyle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Health and Lifestyle"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#FDA626"
-                android:scaleY="5" />
-
+                android:text="Fluffy is a playful and loving cat looking for a forever home."
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
+            <!-- Medical History Section -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:background="@drawable/card_background"
+            android:layout_gravity="center">
 
-            <ImageView
-                android:id="@+id/neuteredImageView"
-                android:layout_width="124dp"
-                android:layout_height="61dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/check" />
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Spayed/Neutered"
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/vaccinatedImageView"
-                android:layout_width="124dp"
-                android:layout_height="61dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/check" />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Vaccination Status"
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/litterTrainedImageView"
-                android:layout_width="124dp"
-                android:layout_height="61dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/check" />
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Litter Trained"
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imageView13"
-                android:layout_width="124dp"
-                android:layout_height="61dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/food" />
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="- Wet food"
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/rounded_linear_layout_view"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/medicalHistory"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="Medical Histiory"
-                android:textAlignment="center"
-                android:textSize="14sp" />
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginBottom="12dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="#FDA626" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_medical"
+                    android:layout_marginEnd="10dp"
+                    android:tint="#ff7a26" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medical History"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/medicalHistoryText"
-                android:layout_width="match_parent"
-                android:layout_height="79dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginRight="2dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                android:textAlignment="center"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="336dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="25dp"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/adoptionInformation"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="Adoption Information"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#FDA626"
-                android:scaleY="5" />
-
+                android:text="Vaccinations: Up to date. No known health issues."
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
+        <!-- Adoption Fee Section with Card Background -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="137dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:background="@drawable/card_background"
+            android:layout_gravity="center">
 
             <LinearLayout
-                android:layout_width="129dp"
-                android:layout_height="82dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="0dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_money"
+                    android:layout_marginEnd="10dp"
+                    android:tint="#ff7a26" />
 
                 <TextView
-                    android:id="@+id/adoptionFee"
-                    android:layout_width="match_parent"
+                    android:id="@+id/adoptionFeeLabel"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
                     android:text="Adoption Fee"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626"
-                    android:scaleY="2" />
-
-                <TextView
-                    android:id="@+id/adoptionFeeText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="PHP 5000"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:fontFamily="@font/poppins_bold"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="135dp"
-                android:layout_height="82dp"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="25dp"
-                android:background="@drawable/rounded_linear_layout_view"
-                android:orientation="vertical">
+            <TextView
+                android:id="@+id/adoptionFeeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₱3000"
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
 
-                <TextView
-                    android:id="@+id/contactInformation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Contact Information"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
+            <TextView
+                android:id="@+id/contactInformationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact: 09123456789"
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FDA626"
-                    android:scaleY="2" />
-
-                <TextView
-                    android:id="@+id/contactInformationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="9179200202"
-                    android:textAlignment="center"
-                    android:textSize="14sp" />
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
