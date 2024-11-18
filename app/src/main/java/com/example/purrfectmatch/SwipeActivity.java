@@ -89,6 +89,13 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         swipeAdapter = new SwipeAdapter(swipeData, SwipeActivity.this);
         viewPager2.setAdapter(swipeAdapter);
 
+        viewPager2.setPageTransformer((page, position) -> {
+            float absPos = Math.abs(position);
+            page.setAlpha(1.0f - absPos);
+            page.setScaleY(1.0f - absPos * 0.15f);
+        });
+
+
         //viewPager2.setUserInputEnabled(false);
 
         // Set up a touch listener on the ViewPager20
