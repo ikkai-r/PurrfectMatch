@@ -19,8 +19,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class SwipeActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
 
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    ArrayList<SwipeData> swipeDataList = new ArrayList<>();
+    
 
     ViewPager2 viewPager2;
     SwipeAdapter swipeAdapter;
@@ -59,63 +70,11 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         swipe = findViewById(R.id.imageView17);
 
 
-        //viewPager2.requestDisallowInterceptTouchEvent(false);
 
         this.gestureDetector = new GestureDetector(this, this);
 
-        SwipeData swipeData[] = new SwipeData[]{
-                new SwipeData(30, 15, 1000,  R.drawable.check, R.drawable.check, R.drawable.check, catPicSet0,'F', "- wet food"
-                , "Playful and affectionate, loves lounging on windowsills and chasing laser pointers. He’s a social butterfly and always greets guests at the door.",
-                        "Aloof", "Puspin", "Diagnosed with mild arthritis, treated with joint supplements.\n" +
-                        "Experienced an ear infection last year but fully recovered with antibiotics.", "CAR", "01/09/2010", "091712345678", true),
+        loadCatData();
 
-                new SwipeData(20, 11, 5500,  R.drawable.x, R.drawable.x, R.drawable.x, catPicSet2,'M', "- wet food"
-                        , "Energetic and mischievous, loves to ambush other pets and zoom through the house at midnight. He's endlessly curious about new things.",
-                        "Aloof", "Maine Coon", "None so far", "Chai", "12/23/2012", "091712345678", false),
-
-                new SwipeData(47, 12, 4500,  R.drawable.check, R.drawable.x, R.drawable.check, catPicSet3,'F', "- dry food"
-                        , "Sweet and friendly, is a cuddler. He loves kneading blankets and being held. His favorite activity is watching birds from the window.",
-                        "Moody", "Persian Maine coon", "Neutered at 5 months.\n" +
-                        "No chronic illnesses or allergies.\n" +
-                        "Treated for a minor flea infestation three months ago, now on preventive medication.\n", "Solana", "10/11/2018", "091712345678", true),
-                new SwipeData(34, 16, 2500,  R.drawable.check, R.drawable.check, R.drawable.x, catPicSet4,'M', "- water"
-                        , "Calm and elegant, is a quiet observer. She prefers high perches and enjoys being brushed. She’s bonded closely with one person and can be shy around others.",
-                        "Orange", "Puspin", "Overweight, currently on a weight management diet.", "Leo", "01/25/2020", "091712345678", true),
-                new SwipeData(19, 10, 9000,  R.drawable.x, R.drawable.check, R.drawable.x, catPicSet1,'F', "- wet food"
-                        , "Gentle and laid-back, enjoys long naps and belly rubs. He’s especially fond of sunbeams and naps near radiators", "Playful", "Siamese",
-                        "None so far", "Coco", "08/26/2020", "091712345678", false)
-        };
-
-        swipeAdapter = new SwipeAdapter(swipeData, SwipeActivity.this);
-        viewPager2.setAdapter(swipeAdapter);
-
-        viewPager2.setPageTransformer((page, position) -> {
-            float absPos = Math.abs(position);
-            page.setAlpha(1.0f - absPos);
-            page.setScaleY(1.0f - absPos * 0.15f);
-        });
-
-
-        //viewPager2.setUserInputEnabled(false);
-
-        // Set up a touch listener on the ViewPager20
-
-        /*
-        // Set up a gesture detector for swipe handling
-        gestureDetector = new GestureDetectorCompat(this, new SwipeGestureListener());
-
-        // Detect gestures on the ViewPager2
-        viewPager2.getChildAt(0).setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
-        */
-
-        /*
-        catPic = findViewById(R.id.catPic);
-
-        catPic.setOnClickListener(view -> {
-            imageIndex = (imageIndex + 1) % catPicSet.length;
-            catPic.setImageResource(catPicSet[imageIndex]);
-        });
-        */
 
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
@@ -132,6 +91,58 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
             startActivity(i);
         });
     }
+
+    private void loadCatData() {
+        CollectionReference catsRef = db.collection("Cats");
+
+        catsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    SwipeData swipeData = createSwipeDataFromDocument(document);
+                    swipeDataList.add(swipeData);
+                }
+
+                swipeAdapter = new SwipeAdapter(swipeDataList.toArray(new SwipeData[0]), SwipeActivity.this);
+                viewPager2.setAdapter(swipeAdapter);
+                viewPager2.setPageTransformer((page, position) -> {
+                    float absPos = Math.abs(position);
+                    page.setAlpha(1.0f - absPos);
+                    page.setScaleY(1.0f - absPos * 0.15f);
+                });
+
+
+            } else {
+                Toast.makeText(this, "Failed to load data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private SwipeData createSwipeDataFromDocument(QueryDocumentSnapshot document) {
+        int age = document.getLong("age").intValue();
+        int weight = document.getLong("weight").intValue();
+        int adoptionFee = document.getLong("adoptionFee").intValue();
+        
+        List<String> catImages = (List<String>) document.get("catImages");
+        int[] catPicSet = new int[catImages.size()];
+        for (int i = 0; i < catImages.size(); i++) {
+            catPicSet[i] = getResources().getIdentifier(catImages.get(i), "drawable", getPackageName());
+        }
+
+        char sex = document.getString("sex").charAt(0);
+        String foodPreference = document.getString("foodPreference");
+        String bio = document.getString("bio");
+        String temperament = document.getString("temperament");
+        String breed = document.getString("breed");
+        String medicalHistory = document.getString("medicalHistory");
+        String name = document.getString("name");
+        String birthday = document.getString("birthday");
+        String contact = document.getString("contact");
+
+        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
+                             sex, foodPreference, bio, temperament, breed, medicalHistory, name, birthday, contact, true);
+    }
+
+
 
     private void showPopupRight(View anchorView) {
         // Inflate the popup layout
