@@ -52,11 +52,6 @@ public class SuccessForm extends AppCompatActivity {
         buttonYes.setText(buttonText);
     }
 
-    public void goShelterView(View v) {
-        Intent i = new Intent(this, SwipeActivity.class);
-        this.startActivity(i);
-    }
-
     public void handleButtonClick(View v) {
         Intent nextIntent = null;
         if ("shelter".equalsIgnoreCase(userType)) {
