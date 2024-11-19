@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,10 +118,74 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
             PopupWindow popupWindow = (PopupWindow) result.get(1); 
             ViewGroup rootLayout = (ViewGroup) result.get(2); 
 
-   
+            EditText ageEditText = popupView.findViewById(R.id.filterAgeEditText);
+            EditText feeEditText = popupView.findViewById(R.id.filterAdoptionFeeEditText);
+            RadioGroup sexRadioGroup = popupView.findViewById(R.id.filterSexRadioGroup);
+
+            Button applyButton = popupView.findViewById(R.id.filterApplyButton);
+            Button resetButton = popupView.findViewById(R.id.filterResetButton);
+
+            resetButton.setOnClickListener(filterView -> {
+                filter.setText("Filter");
+                swipeAdapter.updateData(swipeDataList.toArray(new SwipeData[0]));
+
+                popupWindow.dismiss();
+            });
+
+            applyButton.setOnClickListener(filterView -> {
+                // Capture filter values
+                filter.setText("Filter (filtered)");
+                if (!ageEditText.getText().toString().isEmpty()) {
+                    maxAge = Integer.parseInt(ageEditText.getText().toString());
+                }
+
+                if (!feeEditText.getText().toString().isEmpty()) {
+                    maxAdoptionFee = Integer.parseInt(feeEditText.getText().toString());
+                }
+
+                int selectedSexId = sexRadioGroup.getCheckedRadioButtonId();
+                if (selectedSexId == R.id.filterSexMale) {
+                    selectedSex = "Male";
+                } else if (selectedSexId == R.id.filterSexFemale) {
+                    selectedSex = "Female";
+                } else {
+                    selectedSex = "All";
+                }
+
+                // Apply the filter and update the swipe data
+                applyFilter();
+                popupWindow.dismiss();
+            });
 
         });
     }
+
+    private void applyFilter() {
+        List<SwipeData> filteredList = new ArrayList<>();
+        
+        // Filter swipeDataList based on the conditions
+        for (SwipeData data : swipeDataList) {
+            boolean isValid = true;
+            
+            // Check max age
+            if (data.getAge() > maxAge) {
+                isValid = false;
+            }
+
+            // Check max adoption fee
+            if (data.getAdoptionFee() > maxAdoptionFee) {
+                isValid = false;
+            }
+
+            if (isValid) {
+                filteredList.add(data);
+            }
+        }
+
+        // Update the adapter with the filtered data
+        swipeAdapter.updateData(filteredList.toArray(new SwipeData[0]));
+    }
+
 
     private List<Object> createPopup(int layoutRes, View view) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);

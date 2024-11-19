@@ -32,4 +32,22 @@ public class SwipeData {
     public String getCatId() {
         return catId;
     }
+
+
+    public int getAge() {
+        return age;
+    }
+
+    
+    public int getAdoptionFee() {
+        return adoptionFee;
+    }
+
+    
+    public char getSexS() {
+        return sex;
+    }
+    
+
+
 }
