@@ -70,4 +70,10 @@ public class ExploreActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing, so back navigation is disabled
+    }
+
 }

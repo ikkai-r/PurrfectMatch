@@ -178,6 +178,13 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         Button closeButton = popupView.findViewById(R.id.close_button);
         Button sendButton = popupView.findViewById(R.id.send_application_button);
 
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                rootLayout.removeView(overlay); // Remove overlay when popup is dismissed
+            }
+        });
+
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +221,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
             }
         });
     }
+
     private void sendApplication(String applicationText) {
         Map<String, Object> applicationData = new HashMap<>();
 
@@ -359,6 +367,13 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     public boolean onFling(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1, float v, float v1) {
         return false;
     }
+
+    
+    @Override
+    public void onBackPressed() {
+        // Do nothing, so back navigation is disabled
+    }
+
 
     // Method to move to the next card in the dataset
     private void moveToNextCard() {

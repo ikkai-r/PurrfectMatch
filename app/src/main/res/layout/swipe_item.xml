@@ -18,6 +18,16 @@
         android:background="@drawable/profile_card"
         >
 
+        <TextView
+        android:id="@+id/filterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:textSize="12sp"
+        android:textColor="#666"
+        android:layout_gravity="start"
+        android:paddingEnd="8dp" />
+
         <!-- Bookmark Icon -->
         <ImageView
             android:id="@+id/bookmarkIcon"
