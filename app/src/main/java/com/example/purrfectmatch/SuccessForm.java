@@ -16,6 +16,7 @@ public class SuccessForm extends AppCompatActivity {
 
     private TextView title, title_big, subtitle_1, subtitle_2;
     private Button buttonYes;
+    private String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,8 @@ public class SuccessForm extends AppCompatActivity {
         String subtitle1 = intent.getStringExtra("subtitle_1");
         String subtitle2 = intent.getStringExtra("subtitle_2");
         String buttonText = intent.getStringExtra("button_text");
+        userType = intent.getStringExtra("user_type");
+
 
         // Set the retrieved data into the TextViews and Button
         title.setText(title_str);
@@ -52,5 +55,15 @@ public class SuccessForm extends AppCompatActivity {
     public void goShelterView(View v) {
         Intent i = new Intent(this, SwipeActivity.class);
         this.startActivity(i);
+    }
+
+    public void handleButtonClick(View v) {
+        Intent nextIntent = null;
+        if ("shelter".equalsIgnoreCase(userType)) {
+            nextIntent = new Intent(this, ShelterPage.class);
+        } else if ("user".equalsIgnoreCase(userType)) {
+            nextIntent = new Intent(this, SwipeActivity.class);
+        }
+        startActivity(nextIntent);
     }
 }

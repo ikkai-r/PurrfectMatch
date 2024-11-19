@@ -63,6 +63,7 @@ public class EditCat extends AppCompatActivity {
                     i.putExtra("subtitle_1", "");
                     i.putExtra("subtitle_2", "");
                     i.putExtra("button_text", "Okay");
+                    i.putExtra("user_type", "shelter");
                     EditCat.this.startActivity(i);
                     finish();
                 }

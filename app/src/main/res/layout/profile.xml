@@ -9,29 +9,31 @@
     <TextView
         android:id="@+id/textView22"
         android:layout_width="184dp"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="211dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/rounded_linear_layout_view"
         android:backgroundTint="#FBA526"
-        android:fontFamily="@font/fredoka_medium"
+        android:fontFamily="@font/poppins_medium"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
+        android:paddingTop="2dp"
         android:text="View Submitted Applications"
         android:textAlignment="center"
         android:textColor="#000000"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@+id/scrollView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
+
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="113dp"
+        android:layout_width="458dp"
+        android:layout_height="100dp"
         android:background="#FDA626"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +41,8 @@
 
         <LinearLayout
             android:id="@+id/linearLayout4"
-            android:layout_width="230dp"
-            android:layout_height="77dp"
+            android:layout_width="199dp"
+            android:layout_height="59dp"
             android:layout_marginStart="147dp"
             android:layout_marginTop="22dp"
             android:layout_marginEnd="34dp"
@@ -58,27 +60,48 @@
                 android:fontFamily="@font/fredoka_medium"
                 android:text="Mickey Mouse"
                 android:textAlignment="textStart"
+                android:textColor="@color/black"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/fredoka_light"
-                android:text="📍 Manila, Philippines" />
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_location" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Manila, Philippines"
+                    android:textSize="12dp" />
+
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+9321234567" />
+                android:fontFamily="@font/poppins_light"
+                android:text="+9321234567"
+                android:textSize="10dp" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/imageView7"
-            android:layout_width="93dp"
-            android:layout_height="92dp"
-            android:layout_marginLeft="50dp"
+            android:layout_width="142dp"
+            android:layout_height="73dp"
+            android:layout_marginLeft="100dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="29dp"
             android:layout_marginRight="29dp"
@@ -88,17 +111,34 @@
             app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/cat0" />
+            app:srcCompat="@drawable/user_1" />
+
+        <TextView
+            android:layout_width="70dp"
+            android:textColor="#4C0000"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="35dp"
+            android:layout_marginRight="37dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rounded_linear_layout_view"
+            android:backgroundTint="#F1EAE0"
+            android:fontFamily="@font/poppins_regular"
+            android:minHeight="0dp"
+            android:padding="2dp"
+            android:paddingStart="10dp"
+            android:text="Edit Profile"
+            android:textSize="10dp" />
+
 
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="408dp"
-        android:layout_height="541dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="409dp"
+        android:layout_height="518dp"
+
         android:paddingBottom="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,8 +159,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginBottom="5dp"
-                android:fontFamily="@font/fredoka_medium"
-                android:text="About me" />
+                android:fontFamily="@font/poppins_medium"
+                android:text="ABOUT ME"
+                android:textColor="#4C0000"
+                android:textSize="14dp" />
 
             <View
                 android:layout_width="wrap_content"
@@ -133,14 +175,16 @@
 
             <TextView
                 android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="105dp"
+                android:layout_width="match_parent"
+                android:layout_height="83dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:background="@drawable/rounded_linear_layout_view"
                 android:backgroundTint="#F4F2F2"
-                android:fontFamily="@font/fredoka_light"
-                android:text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&quot;" />
+                android:fontFamily="@font/poppins_light"
+                android:padding="15dp"
+                android:text="&quot;Hello, I am Mickey Mouse, 20 years old. I am currently a college student living along in a condo. I am looking to adopt a cat that will keep me company in my small space! I have experience taking care of cats in the past. I hope to be a loving cat’s PURRever home!"
+                android:textSize="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,8 +200,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/fredoka_medium"
-                    android:text="Health and Lifestyle" />
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="LIFESTYLE PREFERENCES"
+                    android:textColor="#4C0000"
+                    android:textSize="14dp" />
 
                 <View
                     android:layout_width="wrap_content"
@@ -169,15 +215,21 @@
                     android:scaleY="5" />
 
                 <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="105dp"
+                    android:id="@+id/textView100"
+                    android:layout_width="match_parent"
+                    android:layout_height="83dp"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
                     android:background="@drawable/rounded_linear_layout_view"
                     android:backgroundTint="#F4F2F2"
-                    android:fontFamily="@font/fredoka_light"
-                    android:text="&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&quot;" />
+                    android:fontFamily="@font/poppins_light"
+                    android:padding="15dp"
+                    android:text=" Living Situation:
+                                    \n Household Members:
+                                    \n Other pets:
+                                    \n Experience taking care of cats:
+                                    \n Cat Preferences:"
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -196,11 +248,13 @@
                     <TextView
                         android:id="@+id/textView18"
                         android:layout_width="187dp"
+                        android:textColor="#4C0000"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/fredoka_medium"
-                        android:text="Submitted Applications" />
+                        android:fontFamily="@font/poppins_medium"
+                        android:textSize="14dp"
+                        android:text="SUBMITTED APPLICATIONS" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -208,8 +262,10 @@
                         android:layout_height="match_parent"
                         android:layout_marginRight="25dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/fredoka_light"
-                        android:text="> see all"
+                        android:textSize="12dp"
+                        android:textColor="#4C0000"
+                        android:fontFamily="@font/poppins_light"
+                        android:text="> See all"
                         android:textAlignment="viewEnd" />
                 </LinearLayout>
 
@@ -233,10 +289,10 @@
 
                     <ImageView
                         android:id="@+id/imageView8"
-                        android:layout_width="294dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        app:srcCompat="@drawable/cat1" />
+                        app:srcCompat="@drawable/dweety" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -250,7 +306,7 @@
                             android:id="@+id/textView21"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/fredoka_medium"
+                            android:fontFamily="@font/poppins_bold"
                             android:text="Dweety"
                             android:textStyle="bold" />
 
@@ -258,17 +314,17 @@
                             android:id="@+id/textView27"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/fredoka_light"
+                            android:fontFamily="@font/poppins_regular"
                             android:text="Application submitted on September 13, 4:00PM"
-                            android:textSize="12sp" />
+                            android:textSize="9sp" />
 
                         <TextView
                             android:id="@+id/textView19"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/fredoka_light"
+                            android:fontFamily="@font/poppins_regular"
                             android:text="Status: To be reviewed by DLSU PUSA"
-                            android:textSize="12sp" />
+                            android:textSize="9sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -289,14 +345,17 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
+
                     <TextView
                         android:id="@+id/textView23"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/fredoka_medium"
-                        android:text="🔖 Bookmarked Cats" />
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="BOOKMARKED CATS"
+                        android:textSize="14dp"
+                        android:textColor="#4C0000"/>
 
                     <TextView
                         android:id="@+id/textView26"
@@ -304,8 +363,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="25dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/fredoka_light"
-                        android:text="> see all"
+                        android:textSize="12dp"
+                        android:textColor="#4C0000"
+                        android:fontFamily="@font/poppins_light"
+                        android:text="> See all"
                         android:textAlignment="textEnd" />
                 </LinearLayout>
 
@@ -335,7 +396,7 @@
                             android:id="@+id/imageView10"
                             android:layout_width="136dp"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/cat0" />
+                            app:srcCompat="@drawable/dweety" />
 
                         <TextView
                             android:id="@+id/textView24"
@@ -347,9 +408,9 @@
                             android:layout_marginEnd="76dp"
                             android:background="#FFFFFF"
                             android:fontFamily="@font/fredoka_medium"
-                            android:paddingLeft="2dp"
+                            android:paddingLeft="5dp"
                             android:paddingTop="2dp"
-                            android:paddingRight="2dp"
+                            android:paddingRight="3dp"
                             android:paddingBottom="2dp"
                             android:text="Dweety"
                             android:textColor="#000000"
@@ -364,7 +425,7 @@
                             android:id="@+id/imageView9"
                             android:layout_width="136dp"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/cat0" />
+                            app:srcCompat="@drawable/dweety" />
 
                         <TextView
                             android:id="@+id/textView25"
@@ -392,11 +453,13 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="393dp"
-        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:background="#FDA626"
         android:orientation="horizontal"
+        android:gravity="center"
         android:paddingBottom="0dp"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -404,29 +467,23 @@
         <ImageView
             android:id="@+id/imageView16"
             android:layout_width="0dp"
-            android:layout_height="28dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="35dp"
             android:layout_weight="1"
-            android:src="@drawable/profile" />
+            android:src="@drawable/ic_profile_black" />
 
         <ImageView
             android:id="@+id/imageView17"
             android:layout_width="0dp"
-            android:layout_height="28dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="35dp"
             android:layout_weight="1"
-            android:src="@drawable/catlogo" />
+            android:src="@drawable/ic_navcat" />
 
         <ImageView
             android:id="@+id/imageView19"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="39dp"
             android:layout_weight="1"
-            android:src="@drawable/menu" />
+            android:src="@drawable/ic_list" />
 
     </LinearLayout>
 

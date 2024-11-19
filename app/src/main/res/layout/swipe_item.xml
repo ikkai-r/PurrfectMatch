@@ -25,19 +25,19 @@
             android:layout_height="48dp"
             android:src="@drawable/ic_bookmark"
             android:layout_gravity="end"
-            android:tint="#ff7a26" />
+            app:tint="#ff7a26" />
 
         <!-- Cat Image Section -->
         <ImageView
             android:id="@+id/catPic"
-            android:layout_width="260dp"
-            android:layout_height="260dp"
+            android:layout_width="347dp"
+            android:layout_height="312dp"
             android:layout_gravity="center"
             android:layout_marginTop="12dp"
-            android:src="@drawable/cat0"
             android:background="@drawable/rounded_image_border"
+            android:clipToOutline="true"
             android:scaleType="centerCrop"
-            android:clipToOutline="true" />
+            android:src="@drawable/cat0" />
 
         <!-- Cat Name and Age Section -->
         <LinearLayout
@@ -116,7 +116,7 @@
                     android:textColor="@color/black" />
             </LinearLayout>
 
-     
+
             <!-- Breed -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -218,7 +218,33 @@
                     android:textColor="@color/black" />
             </LinearLayout>
 
+            <!-- Neutered/Spayed -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_shield"
+                    android:tint="#000"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/neuterText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Neutered/Spayed: Yes"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+            </LinearLayout>
         </LinearLayout>
+
+
 
         <!-- Temperament Section -->
         <LinearLayout

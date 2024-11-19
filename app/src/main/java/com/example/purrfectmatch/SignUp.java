@@ -62,6 +62,7 @@ public class SignUp extends AppCompatActivity {
                     i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
                     i.putExtra("subtitle_2", "Are you ready to meet the cat of your dreams?");
                     i.putExtra("button_text", "Yes!");
+                    i.putExtra("user_type", "user");
                     SignUp.this.startActivity(i);
                     finish();
                 }

@@ -62,6 +62,7 @@ public class AddCat extends AppCompatActivity {
                     i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
                     i.putExtra("subtitle_2", "We hope you find your forever home");
                     i.putExtra("button_text", "Okay");
+                    i.putExtra("user_type", "shelter");
                     AddCat.this.startActivity(i);
                 }
             }

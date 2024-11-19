@@ -18,88 +18,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Footer section with icons -->
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#000000"
+        android:background="#FDA626"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:gravity="center"
+        android:paddingBottom="0dp"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:gravity="center_vertical"
-        android:weightSum="3">
+        app:layout_constraintStart_toStartOf="parent">
 
-    <!-- Profile Image with text beneath -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
         <ImageView
             android:id="@+id/profile"
-            android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/profile"
-        android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/profile_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Profile"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_profile" />
 
-    <!-- Cat Logo with text beneath -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
         <ImageView
             android:id="@+id/imageView17"
-            android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/catlogo"
-        android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/matchText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Match"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_marginTop="3dp"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_cat_black" />
 
-    <!-- Menu Icon with text beneath -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
         <ImageView
             android:id="@+id/imageView19"
-            android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/menu"
-        android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/menu_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Menu"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_width="0dp"
+            android:layout_height="39dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_list" />
 
     </LinearLayout>
 

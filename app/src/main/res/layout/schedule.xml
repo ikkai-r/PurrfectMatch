@@ -113,6 +113,7 @@
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:text="DLSU - Manila"
+            android:fontFamily="@font/poppins_light"
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/button2"

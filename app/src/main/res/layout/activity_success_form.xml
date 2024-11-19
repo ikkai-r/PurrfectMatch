@@ -76,7 +76,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonYes"
-            android:onClick="goShelterView"
+            android:onClick="handleButtonClick"
             android:layout_width="304dp"
             android:layout_height="61dp"
             android:layout_marginLeft="45dp"

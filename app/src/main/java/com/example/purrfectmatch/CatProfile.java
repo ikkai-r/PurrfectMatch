@@ -43,6 +43,7 @@ public class CatProfile extends AppCompatActivity {
                 i.putExtra("subtitle_1", "Sad to see you go :(");
                 i.putExtra("subtitle_2", "");
                 i.putExtra("button_text", "Okay");
+                i.putExtra("user_type", "shelter");
                 // Close the dialog
                 CatProfile.this.startActivity(i);
             }
