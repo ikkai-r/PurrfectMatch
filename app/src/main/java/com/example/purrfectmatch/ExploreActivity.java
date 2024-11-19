@@ -1,9 +1,11 @@
 package com.example.purrfectmatch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,11 +19,17 @@ public class ExploreActivity extends AppCompatActivity {
     private List<ExploreData> exploreList;
     private List<ExploreData> filteredList;
     private EditText searchBar;
+    ImageView profile, explore, swipe;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explore);
+
+        profile = findViewById(R.id.profile);
+        explore = findViewById(R.id.explore);
+        swipe = findViewById(R.id.swipe);
 
         exploreList = new ArrayList<>();
 
@@ -54,6 +62,21 @@ public class ExploreActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable editable) {}
+        });
+
+        profile.setOnClickListener(view -> {
+            Intent i = new Intent(this, ProfileActivity.class);
+            startActivity(i);
+        });
+
+        swipe.setOnClickListener(view -> {
+            Intent i = new Intent(this, SwipeActivity.class);
+            startActivity(i);
+        });
+
+        explore.setOnClickListener(view -> {
+            Intent i = new Intent(this, ExploreActivity.class);
+            startActivity(i);
         });
     }
 
