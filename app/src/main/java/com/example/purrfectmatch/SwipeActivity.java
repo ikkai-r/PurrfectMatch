@@ -146,7 +146,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         String contact = document.getString("contact");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
-                             sex, foodPreference, bio, temperament, breed, medicalHistory, name, birthday, contact, catId);
+                             sex, foodPreference, bio, temperament, breed, medicalHistory, name, 
+                             birthday, contact, catId);
     }
 
     private void showPopupRight(View anchorView) {

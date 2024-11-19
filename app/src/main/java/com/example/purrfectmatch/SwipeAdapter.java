@@ -17,6 +17,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import android.graphics.PorterDuff;
 
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
 
@@ -66,11 +69,42 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
 
     if (swipeDataItem.isBookmarked) {
-        holder.bookmarkIcon.setColorFilter(0xFFCE0000, PorterDuff.Mode.SRC_IN);
+        holder.bookmarkIcon.setColorFilter(0xFFFE327F, PorterDuff.Mode.SRC_IN);
     } else {
         holder.bookmarkIcon.setColorFilter(0xFF808080, PorterDuff.Mode.SRC_IN); 
     }
 
+    holder.bookmarkIcon.setOnClickListener(v -> {
+        swipeDataItem.isBookmarked = !swipeDataItem.isBookmarked;
+        notifyItemChanged(position);
+
+
+        // need to make this about THE USER
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userId = "user67890";  
+
+        if (swipeDataItem.isBookmarked) {
+            db.collection("Cats")
+                .document(swipeDataItem.catId)
+                .update("bookmarkedBy", FieldValue.arrayUnion(userId))
+                .addOnSuccessListener(aVoid -> {
+                    notifyItemChanged(position);
+                })
+                .addOnFailureListener(e -> {
+                });
+        } else {
+            db.collection("Cats")
+                .document(swipeDataItem.catId)
+                .update("bookmarkedBy", FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(aVoid -> {
+                    notifyItemChanged(position);
+                })
+                .addOnFailureListener(e -> {
+                });
+        }
+
+
+    });
 }
 
 public void setFlip(boolean b){
