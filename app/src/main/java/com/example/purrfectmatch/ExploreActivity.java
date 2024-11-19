@@ -1,73 +1,37 @@
 package com.example.purrfectmatch;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExploreActivity extends AppCompatActivity {
 
+    private ExploreAdapter adapter;
+    private List<ExploreData> exploreList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        ImageView profile, explore, swipe;
-        LinearLayout card1, card2, card3, card4;
-
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.explore);
 
-        profile = findViewById(R.id.imageView16);
+        exploreList = new ArrayList<>();
+        exploreList.add(new ExploreData(R.drawable.cat0, "Dweety", "47 months old", "Female", "Puspin", true));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Fluffy", "32 months old", "Male", "Puspin", false));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Milo", "32 months old", "Female", "Puspin", false));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Mikmik", "12 months old", "Male", "Puspin", false));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Female", "Puspin", false));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Male", "Puspin", false));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Female", "Puspin", false));
+        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Male", "Puspin", false));
 
-        explore = findViewById(R.id.imageView19);
-
-        swipe = findViewById(R.id.imageView17);
-
-        card1 = findViewById(R.id.card1);
-
-        card2 = findViewById(R.id.card2);
-
-        card3 = findViewById(R.id.card3);
-
-        card4 = findViewById(R.id.card4);
-
-        profile.setOnClickListener(view -> {
-            Intent i = new Intent(this, ProfileActivity.class);
-            startActivity(i);
-        });
-
-        swipe.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
-            startActivity(i);
-        });
-
-        explore.setOnClickListener(view -> {
-            Intent i = new Intent(this, ExploreActivity.class);
-            startActivity(i);
-        });
-
-        card1.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
-            startActivity(i);
-        });
-
-        card2.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
-            startActivity(i);
-        });
-
-        card3.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
-            startActivity(i);
-        });
-
-        card4.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
-            startActivity(i);
-        });
-
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        adapter = new ExploreAdapter(exploreList, ExploreActivity.this);
+        recyclerView.setAdapter(adapter);
     }
+
+    // TODO: Redirect to "swipe view" when a card is tapped
 }
