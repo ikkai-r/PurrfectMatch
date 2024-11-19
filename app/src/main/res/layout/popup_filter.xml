@@ -97,13 +97,13 @@
     </RadioGroup>
 
     <!-- Apply Button -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/filterApplyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Apply Filters"
         android:textColor="#ffffff"
-        android:background="#ff7a26"
+        android:background="#000"
         android:fontFamily="@font/poppins_regular"
         android:layout_marginTop="10dp"/>
 </LinearLayout>

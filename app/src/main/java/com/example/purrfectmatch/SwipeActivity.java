@@ -18,13 +18,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
+
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -49,6 +52,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     ViewPager2 viewPager2;
     SwipeAdapter swipeAdapter;
     ImageView profile, explore, swipe;
+    TextView filter;
+
     private static final String TAG = "Swipe Position";
     private float x1, x2, y1, y2;
     private static int MIN_DISTANCE = 150;
@@ -77,6 +82,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         profile = findViewById(R.id.profile);
         explore = findViewById(R.id.imageView19);
         swipe = findViewById(R.id.imageView17);
+        filter = findViewById(R.id.filterText);
+    
 
         this.gestureDetector = new GestureDetector(this, this);
 
@@ -96,7 +103,61 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
             Intent i = new Intent(this, ExploreActivity.class);
             startActivity(i);
         });
+
+        filter.setOnClickListener(view -> {
+            List<Object> result = createPopup(R.layout.popup_filter, view);
+        
+            View popupView = (View) result.get(0);  
+            PopupWindow popupWindow = (PopupWindow) result.get(1); 
+            ViewGroup rootLayout = (ViewGroup) result.get(2); 
+
+   
+
+        });
     }
+
+    private List<Object> createPopup(int layoutRes, View view) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(layoutRes, null);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+
+        int width = (int) (screenWidth * 0.8); 
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.showAtLocation(view, Gravity.CENTER, 30, 0);
+
+        View overlay = new View(this);
+        overlay.setBackgroundColor(Color.parseColor("#111111")); 
+        overlay.setAlpha(0.6f); // Adjust transparency
+
+        ViewGroup rootLayout = findViewById(android.R.id.content); 
+        rootLayout.addView(overlay);
+
+        popupWindow.showAtLocation(view, Gravity.CENTER, 30, 0);
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                rootLayout.removeView(overlay); // Remove overlay when popup is dismissed
+            }
+        });
+
+        List<Object> result = new ArrayList<>();
+        result.add(popupView);       // Index 0: popupView
+        result.add(popupWindow);     // Index 1: popupWindow
+        result.add(rootLayout);      // Index 2: rootLayout
+        result.add(overlay);        // Index 3: Overlay
+
+        return result;
+    }
+
+    
 
     private void loadCatData() {
         CollectionReference catsRef = db.collection("Cats");
@@ -151,39 +212,14 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     }
 
     private void showPopupRight(View anchorView) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.dialog_swipe_right_cat, null);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
-
-        int width = (int) (screenWidth * 0.8); 
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
-
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 30, 0);
-
-        View overlay = new View(this);
-        overlay.setBackgroundColor(Color.parseColor("#111111")); 
-        overlay.setAlpha(0.6f); // Adjust transparency
-
-        ViewGroup rootLayout = findViewById(android.R.id.content); 
-        rootLayout.addView(overlay);
-
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 30, 0);
+        List<Object> result = createPopup(R.layout.dialog_swipe_right_cat, anchorView);
+        View popupView = (View) result.get(0);  
+        PopupWindow popupWindow = (PopupWindow) result.get(1); 
+        ViewGroup rootLayout = (ViewGroup) result.get(2); 
+        View overlay = (View) result.get(3);
 
         Button closeButton = popupView.findViewById(R.id.close_button);
         Button sendButton = popupView.findViewById(R.id.send_application_button);
-
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                rootLayout.removeView(overlay); // Remove overlay when popup is dismissed
-            }
-        });
 
 
         closeButton.setOnClickListener(new View.OnClickListener() {
