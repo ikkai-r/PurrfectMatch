@@ -65,6 +65,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         return exploreList.size();
     }
 
+    public void updateList(List<ExploreData> newExploreList) {
+        this.exploreList = newExploreList;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView catImage;
         TextView catName, catAge, catSex, catNeutered, catBreed;
