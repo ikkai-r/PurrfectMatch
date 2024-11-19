@@ -1,13 +1,20 @@
 package com.example.purrfectmatch;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -20,11 +27,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import android.view.ViewGroup;
 
 public class SwipeActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
 
@@ -61,20 +74,13 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
         viewPager2 = findViewById(R.id.viewPager2);
         viewPager2.setUserInputEnabled(false);
-
-
         profile = findViewById(R.id.profile);
-
         explore = findViewById(R.id.imageView19);
-
         swipe = findViewById(R.id.imageView17);
-
-
 
         this.gestureDetector = new GestureDetector(this, this);
 
         loadCatData();
-
 
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
@@ -98,7 +104,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         catsRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    SwipeData swipeData = createSwipeDataFromDocument(document);
+                    String catId = document.getId();
+                    SwipeData swipeData = createSwipeDataFromDocument(document, catId);
                     swipeDataList.add(swipeData);
                 }
 
@@ -117,7 +124,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         });
     }
 
-    private SwipeData createSwipeDataFromDocument(QueryDocumentSnapshot document) {
+    private SwipeData createSwipeDataFromDocument(QueryDocumentSnapshot document, String catId) {
         int age = document.getLong("age").intValue();
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
@@ -139,63 +146,139 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         String contact = document.getString("contact");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
-                             sex, foodPreference, bio, temperament, breed, medicalHistory, name, birthday, contact, true);
+                             sex, foodPreference, bio, temperament, breed, medicalHistory, name, birthday, contact, catId);
+    }
+
+    private void showPopupRight(View anchorView) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.dialog_swipe_right_cat, null);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+
+        int width = (int) (screenWidth * 0.8); 
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 30, 0);
+
+        View overlay = new View(this);
+        overlay.setBackgroundColor(Color.parseColor("#111111")); 
+        overlay.setAlpha(0.6f); // Adjust transparency
+
+        ViewGroup rootLayout = findViewById(android.R.id.content); 
+        rootLayout.addView(overlay);
+
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 30, 0);
+
+        Button closeButton = popupView.findViewById(R.id.close_button);
+        Button sendButton = popupView.findViewById(R.id.send_application_button);
+
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                rootLayout.removeView(overlay);
+            }
+        });
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Collect the input data (assuming there's an EditText in the popup)
+                EditText aboutMeEditText = popupView.findViewById(R.id.aboutMeEditText);
+                String applicationText = aboutMeEditText.getText().toString().trim();
+
+                // Perform validation if needed
+                if (applicationText.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please provide a reason for adoption.", Toast.LENGTH_SHORT).show();
+                } else {
+                    sendApplication(applicationText);
+
+                    popupWindow.dismiss();
+                    rootLayout.removeView(overlay);
+
+                    viewPager2.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            moveToNextCard();
+                            swipeAdapter.notifyItemChanged(viewPager2.getCurrentItem());
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+    private void sendApplication(String applicationText) {
+        Map<String, Object> applicationData = new HashMap<>();
+
+        String applicationId = FirebaseFirestore.getInstance().collection("Applications").document().getId();
+        String catId = swipeDataList.get(viewPager2.getCurrentItem()).getCatId();
+
+        applicationData.put("applicationDate", FieldValue.serverTimestamp());
+        applicationData.put("applicationId", applicationId);
+        applicationData.put("catId", catId); 
+        applicationData.put("reason", applicationText);
+        applicationData.put("status", "pending");
+        applicationData.put("userId", "user67890"); 
+        // no meetupData, meetupScheduled, meetupVenue or feedback YET
+
+        CollectionReference applicationsRef = FirebaseFirestore.getInstance().collection("Applications");
+
+        applicationsRef.document(applicationId)
+                .set(applicationData)
+                .addOnSuccessListener(aVoid -> {
+                    updateCatDocumentWithApplication(catId, applicationId);
+                    Toast.makeText(getApplicationContext(), "Application sent successfully!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getApplicationContext(), "Failed to send application.", Toast.LENGTH_SHORT).show();
+                });
     }
 
 
+    private void updateCatDocumentWithApplication(String catId, String applicationId) {
+        DocumentReference catRef = FirebaseFirestore.getInstance().collection("Cats").document(catId);
 
-    private void showPopupRight(View anchorView) {
-        // Inflate the popup layout
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_right_swipe, null);
-
-        // Create the PopupWindow
-        final PopupWindow popupWindow = new PopupWindow(
-                popupView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        // Set focusable to false so it auto-dismisses on touch outside
-        popupWindow.setFocusable(false);
-
-        // Show the popup near the anchor view (adjust offsets if needed)
-        popupWindow.showAsDropDown(anchorView, 0, -anchorView.getHeight());
-
-        // Auto-dismiss the popup after 2 seconds
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                popupWindow.dismiss();
-            }
-        }, 500);
+        catRef.update("pendingApplications", FieldValue.arrayUnion(applicationId))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Application ID successfully added to pendingApplications.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding application ID to pendingApplications.", e);
+                });
     }
 
     private void showPopupLeft(View anchorView) {
-        // Inflate the popup layout
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_left_swipe, null);
 
-        // Create the PopupWindow
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
 
-        // Set focusable to false so it auto-dismisses on touch outside
         popupWindow.setFocusable(false);
-
-        // Show the popup near the anchor view (adjust offsets if needed)
         popupWindow.showAsDropDown(anchorView, 0, -anchorView.getHeight());
-
-        // Auto-dismiss the popup after 2 seconds
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 popupWindow.dismiss();
             }
         }, 500);
+
+        viewPager2.post(new Runnable() {
+            @Override
+            public void run() {
+                moveToNextCard();
+                swipeAdapter.notifyItemChanged(viewPager2.getCurrentItem());
+            }
+        });
     }
 
 
@@ -223,10 +306,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                 if(Math.abs(valueX) > MIN_DISTANCE){
                     if(x2>x1){
                         System.out.println("Swipe Right");
-                        swipeAdapter.setFlip(true);
-                        viewPager2.setRotationY(180);
-                        //moveToNextCard();
                         showPopupRight(viewPager2);
+
                     }else{
                         System.out.println("Swipe Left");
                         swipeAdapter.setFlip(false);
@@ -235,13 +316,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                         showPopupLeft(viewPager2);
                     }
 
-                    viewPager2.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            moveToNextCard();
-                            swipeAdapter.notifyItemChanged(viewPager2.getCurrentItem());
-                        }
-                    });
+ 
                 }else if (Math.abs(valueY) > MIN_DISTANCE){
                     if(x2>y1){
                         System.out.println("Swipe Down");
