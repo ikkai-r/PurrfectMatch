@@ -63,6 +63,12 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     private static final float MIN_SCALE = 0.85f;
     private static final float MIN_ALPHA = 0.5f;
 
+    // filter variables
+    private int maxAge = Integer.MAX_VALUE;
+    private int maxAdoptionFee = Integer.MAX_VALUE;
+    private String selectedSex = "All";
+
+
     ImageView catPic;
     int[] catPicSet0= {R.drawable.cat0, R.drawable.cat1, R.drawable.cat2};
     int[] catPicSet1= {R.drawable.cat3, R.drawable.cat6};
