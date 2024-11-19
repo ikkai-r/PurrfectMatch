@@ -5,7 +5,19 @@
     android:layout_width="match_parent"
     android:background="#fff"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"> <!-- Ensure this tag is inside the root layout only -->
+    android:fitsSystemWindows="true">
+
+    <!-- Filter -->
+    <TextView
+        android:id="@+id/filterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:textSize="12sp"
+        android:textColor="#666"
+        android:layout_gravity="start"
+        android:padding="10dp"
+        android:paddingEnd="8dp" />
 
     <!-- ViewPager2 for swipe functionality -->
     <androidx.viewpager2.widget.ViewPager2
@@ -13,6 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="10dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"

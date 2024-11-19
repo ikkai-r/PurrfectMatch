@@ -62,7 +62,6 @@ public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     if (flip) {
         holder.scrollView.setRotationY(180);
     } else {
-        // Reset rotation if not flipped
         holder.scrollView.setRotationY(0);
     }
 
