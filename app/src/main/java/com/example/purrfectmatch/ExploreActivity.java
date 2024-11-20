@@ -10,11 +10,15 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.List;  
 
 public class ExploreActivity extends AppCompatActivity {
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private ExploreAdapter adapter;
     private List<ExploreData> exploreList;
     private List<ExploreData> filteredList;

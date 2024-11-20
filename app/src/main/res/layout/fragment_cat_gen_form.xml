@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:orientation="vertical"
         android:paddingStart="0dp"
         android:paddingEnd="0dp"
-        android:orientation="vertical"
         android:textAlignment="center">
 
         <ImageView
@@ -28,9 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="18dp"
             android:fontFamily="@font/poppins_bold"
             android:text="Add a cat"
-            android:layout_marginTop="18dp"
             android:textAlignment="center"
             android:textSize="30sp" />
 
@@ -39,10 +39,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="-10dp"
             android:fontFamily="@font/poppins_regular"
             android:text="General Information"
             android:textAlignment="center"
-            android:layout_marginTop="-10dp"
             android:textSize="15sp" />
 
 
@@ -73,11 +73,11 @@
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="*"
                     android:textColor="#CE0000"
-                    android:textSize="10sp"
-                    android:layout_marginStart="3dp"/>
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -118,11 +118,11 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="*"
                     android:textColor="#CE0000"
-                    android:textSize="10sp"
-                    android:layout_marginStart="3dp"/>
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -132,9 +132,12 @@
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
+                android:inputType="number"
+                android:min="1"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxLines="1"/>
 
         </LinearLayout>
 
@@ -164,24 +167,41 @@
                     android:id="@+id/textView14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="*"
                     android:textColor="#CE0000"
-                    android:textSize="10sp"
-                    android:layout_marginStart="3dp"/>
+                    android:textSize="10sp" />
 
 
             </LinearLayout>
 
-            <EditText
+            <RadioGroup
+                android:id="@+id/genderRadioGroup"
                 android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:background="@drawable/edittext_bg"
-                android:backgroundTint="#DDDDDD"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="12dp"
-                android:textColor="#000000"
-                android:textSize="12sp" />
+                android:layout_height="28dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Female"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Male"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+            </RadioGroup>
+
 
         </LinearLayout>
 
@@ -211,11 +231,11 @@
                     android:id="@+id/textView13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="*"
                     android:textColor="#CE0000"
-                    android:textSize="10sp"
-                    android:layout_marginStart="3dp"/>
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -225,9 +245,11 @@
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
+                android:inputType="numberDecimal"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -258,11 +280,11 @@
                     android:id="@+id/textView16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="*"
                     android:textColor="#CE0000"
-                    android:textSize="10sp"
-                    android:layout_marginStart="3dp"/>
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
@@ -274,7 +296,8 @@
                 android:fontFamily="@font/poppins_regular"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxLines="1" />
         </LinearLayout>
 
     </LinearLayout>
