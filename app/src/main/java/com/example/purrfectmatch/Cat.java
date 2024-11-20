@@ -5,6 +5,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Cat {
 
+    private String name;
     private int age;
     private int weight;
     private int adoptionFee;
@@ -14,7 +15,8 @@ public class Cat {
     private String description;
     private String temperament;
     private String breed;
-    private String medicalHistory;
+    private String compatibleWith;
+//    private String medicalHistory;
     private String ownerName;
     private String birthday;
     private String contactNumber;
@@ -23,9 +25,10 @@ public class Cat {
     // Default constructor required for calls to DataSnapshot.getValue(Cat.class)
     public Cat() {}
 
-    public Cat(int age, int weight, int adoptionFee, int[] catPics, char sex, String foodPreference, String description,
-               String temperament, String breed, String medicalHistory, String ownerName, String birthday,
+    public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, char sex, String foodPreference, String description,
+               String temperament, String breed, String compatibleWith, String medicalHistory, String ownerName, String birthday,
                String contactNumber, boolean isAvailable) {
+        this.name = name;
         this.age = age;
         this.weight = weight;
         this.adoptionFee = adoptionFee;
@@ -35,7 +38,8 @@ public class Cat {
         this.description = description;
         this.temperament = temperament;
         this.breed = breed;
-        this.medicalHistory = medicalHistory;
+//        this.medicalHistory = medicalHistory;
+        this.compatibleWith = compatibleWith;
         this.ownerName = ownerName;
         this.birthday = birthday;
         this.contactNumber = contactNumber;
@@ -43,6 +47,11 @@ public class Cat {
     }
 
     // Getters and Setters
+    public String getName() { return name; }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getAge() {
         return age;
@@ -116,13 +125,21 @@ public class Cat {
         this.breed = breed;
     }
 
-    public String getMedicalHistory() {
-        return medicalHistory;
+    public String getCompatibleWith() {
+        return compatibleWith;
     }
 
-    public void setMedicalHistory(String medicalHistory) {
-        this.medicalHistory = medicalHistory;
+    public void setCompatibleWith(String compatibleWith) {
+        this.compatibleWith = compatibleWith;
     }
+
+//    public String getMedicalHistory() {
+//        return medicalHistory;
+//    }
+//
+//    public void setMedicalHistory(String medicalHistory) {
+//        this.medicalHistory = medicalHistory;
+//    }
 
     public String getOwnerName() {
         return ownerName;
