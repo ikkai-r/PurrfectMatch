@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="NEUTERED/SPAYED"
+                    android:text="NEUTERED?"
                     android:textSize="10sp" />
 
                 <TextView
@@ -81,16 +81,32 @@
 
             </LinearLayout>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:background="@drawable/edittext_bg"
-                android:backgroundTint="#DDDDDD"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="12dp"
-                android:text="Neutered"
-                android:textColor="#000000"
-                android:textSize="12sp" />
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:orientation="horizontal"
+                android:layout_marginStart="3dp">
+
+                <RadioButton
+                    android:id="@+id/radioYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Yes"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <RadioButton
+                    android:id="@+id/radioNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="No"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+            </RadioGroup>
 
         </LinearLayout>
 
@@ -136,7 +152,8 @@
                 android:fontFamily="@font/poppins_regular"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -184,7 +201,8 @@
                 android:text="Children"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -207,7 +225,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="LIKES"
+                    android:text="FOOD PREFERENCES"
                     android:textSize="10sp" />
 
                 <TextView
@@ -231,7 +249,8 @@
                 android:fontFamily="@font/poppins_regular"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxLines="1" />
 
         </LinearLayout>
 
@@ -255,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="DISLIKES"
+                    android:text="ADOPTION FEE"
                     android:textSize="10sp" />
 
                 <TextView
@@ -271,7 +290,7 @@
             </LinearLayout>
 
             <EditText
-                android:text="Noise"
+                android:id="@+id/editTextCash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg"
@@ -279,7 +298,10 @@
                 android:fontFamily="@font/poppins_regular"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:inputType="numberDecimal"
+                android:maxLines="1" />
+
         </LinearLayout>
 
     </LinearLayout>

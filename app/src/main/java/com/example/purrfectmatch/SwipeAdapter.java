@@ -51,10 +51,12 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
         holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
         holder.sexText.setText(String.valueOf(swipeDataItem.sex));
         holder.breedText.setText(swipeDataItem.breed);
-        holder.birthdayText.setText(swipeDataItem.birthday);
+//        holder.birthdayText.setText(swipeDataItem.birthday);
+        if(swipeDataItem.isNeutered == true) { holder.neuterText.setText("Neutered");}
+        else {  holder.neuterText.setText("Not neutered"); }
         holder.temperamentText.setText(swipeDataItem.temperament);
         holder.bioText.setText(swipeDataItem.bio);
-        holder.medicalHistoryText.setText(swipeDataItem.medicalHistory);
+        holder.compatibleWithText.setText(swipeDataItem.compatibleWith);
         holder.adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee));
         holder.contactInformationText.setText(swipeDataItem.contactInformation);
         holder.nameText.setText(swipeDataItem.name);
@@ -117,7 +119,7 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView catImage, bookmarkIcon;
-        TextView ageText, weightText, sexText, breedText, birthdayText, temperamentText, bioText, medicalHistoryText, adoptionFeeText, contactInformationText, nameText;
+        TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText, compatibleWithText, adoptionFeeText, contactInformationText, nameText;
         ScrollView scrollView;
 
 
@@ -129,10 +131,10 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             weightText = itemView.findViewById(R.id.weightText);
             sexText = itemView.findViewById(R.id.sexText);
             breedText = itemView.findViewById(R.id.breedText);
-            birthdayText = itemView.findViewById(R.id.birthdayText);
+            neuterText = itemView.findViewById(R.id.neuterText);
             temperamentText = itemView.findViewById(R.id.tempermentText);
             bioText = itemView.findViewById(R.id.bioText);
-            medicalHistoryText = itemView.findViewById(R.id.medicalHistoryText);
+            compatibleWithText = itemView.findViewById(R.id.compatibleWithText);
             adoptionFeeText = itemView.findViewById(R.id.adoptionFeeText);
             contactInformationText = itemView.findViewById(R.id.contactInformationText);
             nameText = itemView.findViewById(R.id.nameText);
