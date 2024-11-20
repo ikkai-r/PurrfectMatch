@@ -49,4 +49,10 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(i);
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        // Do nothing, so back navigation is disabled
+    }
+
 }
