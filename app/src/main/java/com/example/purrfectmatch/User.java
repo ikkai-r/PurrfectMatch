@@ -9,6 +9,7 @@ public class User {
     private String country;
     private String region;
     private String city;
+    private String userType;
     private int age;
     private String gender;
     private String householdMembers;
@@ -19,7 +20,7 @@ public class User {
     // Constructor, getters, and setters
     public User(String username, String firstName, String lastName, String email, String phoneNumber, String country,
                 String region, String city, int age, String gender, String householdMembers,
-                String otherPets, String preferences1, String preferences2) {
+                String otherPets, String preferences1, String preferences2, String userType) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,6 +35,7 @@ public class User {
         this.otherPets = otherPets;
         this.preferences1 = preferences1;
         this.preferences2 = preferences2;
+        this.userType = userType;
     }
 
     public String getFirstName() {

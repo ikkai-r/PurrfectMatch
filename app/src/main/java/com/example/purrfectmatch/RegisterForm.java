@@ -55,6 +55,12 @@ public class RegisterForm extends Fragment {
                     return;
                 }
 
+                //require password to be 6 characters long
+                if(passwordText.length() < 6) {
+                    Toast.makeText(getActivity(), "Password should be 6 characters long.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // check if match_pass and password are matching
                 if (!passwordText.equals(matchPassText)) {
                     Toast.makeText(getActivity(), "Passwords do not match!", Toast.LENGTH_SHORT).show();
