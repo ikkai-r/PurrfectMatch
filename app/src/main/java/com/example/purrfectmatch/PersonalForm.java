@@ -19,7 +19,7 @@ public class PersonalForm extends Fragment {
     }
 
     private Spinner genderSpinner;
-    private EditText firstname, lastname;
+    private EditText firstname, lastname, age;
     private Button buttonNext;
 
     @Override
@@ -43,6 +43,7 @@ public class PersonalForm extends Fragment {
         // Initialize text fields and button
         firstname = view.findViewById(R.id.firstname);
         lastname = view.findViewById(R.id.lastname);
+        age = view.findViewById(R.id.age);
         buttonNext = view.findViewById(R.id.buttonNext);
 
         buttonNext.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +61,7 @@ public class PersonalForm extends Fragment {
                 // Check if all required fields are filled
                 String firstnameText = firstname.getText().toString();
                 String lastnameText = lastname.getText().toString();
+                String ageText = age.getText().toString();
 
                 if (TextUtils.isEmpty(firstnameText) || TextUtils.isEmpty(lastnameText)
                         || genderSpinner.getSelectedItem() == null) {
@@ -71,7 +73,8 @@ public class PersonalForm extends Fragment {
                     // Add data to the bundle
                     previousBundle.putString("firstname", firstnameText);
                     previousBundle.putString("lastname", lastnameText);
-                    previousBundle.putString("gender", gender);
+                    previousBundle.putString("age", ageText);
+                    previousBundle.putString("gender", gender.toString());
 
                     // Pass bundle to the next form
                     ContactForm contactForm = new ContactForm();

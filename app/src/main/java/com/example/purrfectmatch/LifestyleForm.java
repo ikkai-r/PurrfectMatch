@@ -73,8 +73,24 @@ public class LifestyleForm extends Fragment {
                 return;
             }
 
-           //register user
+            //pass to main activity
 
+            Bundle previousBundle = getArguments();
+            if (previousBundle == null) {
+                previousBundle = new Bundle();
+            }
+
+            // pass data
+            previousBundle.putString("householdMembers", householdMembers);
+            previousBundle.putString("otherPets", otherPets);
+            previousBundle.putString("preferences1", preferences1);
+            previousBundle.putString("preferences2", preferences2);
+
+            // Pass the bundle to sign up
+            SignUp signUp = (SignUp) getActivity();
+            if (signUp != null) {
+                signUp.onLifestyleDataPassed(previousBundle);
+            }
         });
 
         return view;

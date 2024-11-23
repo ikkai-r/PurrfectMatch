@@ -23,13 +23,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
 public class SignUp extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-
+    private Bundle finalBundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,18 +48,10 @@ public class SignUp extends AppCompatActivity {
         if (savedInstanceState == null) {
             RegisterForm registerForm = new RegisterForm();
 
-            // Begin the fragment transaction and replace the container with the fragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.form, registerForm)  // Fragment will be added to the container
                     .commit();
         }
-
-//        viewPager = findViewById(R.id.form);
-//
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-//        viewPager.setAdapter(adapter);
-//
-//        viewPager.setUserInputEnabled(false);
     }
 
     @Override
@@ -66,6 +60,7 @@ public class SignUp extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
+            //check if currentuser is user or shelter
             Intent i = new Intent(this, SwipeActivity.class);
             SignUp.this.startActivity(i);
             finish();
@@ -76,5 +71,95 @@ public class SignUp extends AppCompatActivity {
         Intent i = new Intent(this, Login.class);
         this.startActivity(i);
         finish();
+    }
+
+    public void onLifestyleDataPassed(Bundle bundle) {
+        // Retrieve data from the bundle
+        finalBundle = bundle;
+        registerUser();
+    }
+
+    private void registerUser() {
+
+        // Retrieve data from the previous bundle
+        String email = finalBundle.getString("email");
+        String password = finalBundle.getString("password");
+        String firstName = finalBundle.getString("firstname");
+        String lastName = finalBundle.getString("lastname");
+        String householdMembers = finalBundle.getString("householdMembers");
+        String otherPets = finalBundle.getString("otherPets");
+        String preferences1 = finalBundle.getString("preferences1");
+        String preferences2 = finalBundle.getString("preferences2");
+        String username = finalBundle.getString("username");
+
+        String phoneNumber = finalBundle.getString("phoneNumber");
+        String country = finalBundle.getString("country");
+        String region = finalBundle.getString("region");
+        String city = finalBundle.getString("city");
+        String age = finalBundle.getString("age");
+        String gender = finalBundle.getString("gender");
+
+        Log.d("process", "im now here before");
+
+
+        // Check if all values are retrieved properly
+        if (email != null && password != null && firstName != null && lastName != null &&
+                householdMembers != null && otherPets != null && preferences1 != null && preferences2 != null &&
+                phoneNumber != null && country != null && region != null && city != null && age != null && gender != null) {
+
+            Log.d("finish", "values are retrieved properlyh");
+            //create user
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                FirebaseUser user = mAuth.getCurrentUser();
+
+                                // Create user data map for Firestore
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                DocumentReference userRef = db.collection("Users").document(user.getUid());
+
+                                // User data to be stored
+                                User userData = new User(username, firstName, lastName, email, phoneNumber, country, region, city, Integer.parseInt(age), gender,
+                                        householdMembers, otherPets, preferences1, preferences2);
+
+                                // Store the user data in Firestore
+                                userRef.set(userData)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Log.d("empass", "User data successfully written to Firestore");
+                                            // Move to the next screen
+                                            Intent i = new Intent(SignUp.this, SuccessForm.class);
+                                            i.putExtra("title", "Sign up");
+                                            i.putExtra("title_big", "Success");
+                                            i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
+                                            i.putExtra("subtitle_2", "Are you ready to meet the cat of your dreams?");
+                                            i.putExtra("button_text", "Yes!");
+                                            i.putExtra("user_type", "user");
+                                            SignUp.this.startActivity(i);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.w("empass", "Error writing document", e);
+                                            Toast.makeText(SignUp.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
+                                        });
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("empass", "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(SignUp.this, "Sign up failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+        } else {
+            Log.d("finish", "values aren't retrieved properlyh");
+
+            // Handle the case where any required field is missing
+            Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
