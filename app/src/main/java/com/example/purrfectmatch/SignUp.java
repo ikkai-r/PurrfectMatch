@@ -2,21 +2,33 @@ package com.example.purrfectmatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class SignUp extends AppCompatActivity {
 
-    private ViewPager2 viewPager;
-    private Button nextButton;
-    private static final int NUM_PAGES = 4; // Adjust this based on the number of fragments (sections)
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,49 +41,40 @@ public class SignUp extends AppCompatActivity {
             return insets;
         });
 
-        viewPager = findViewById(R.id.form);
-        nextButton = findViewById(R.id.buttonNext);
+        mAuth = FirebaseAuth.getInstance();
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-        viewPager.setAdapter(adapter);
+        if (savedInstanceState == null) {
+            RegisterForm registerForm = new RegisterForm();
 
-        viewPager.setUserInputEnabled(false);
+            // Begin the fragment transaction and replace the container with the fragment
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.form, registerForm)  // Fragment will be added to the container
+                    .commit();
+        }
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
+//        viewPager = findViewById(R.id.form);
+//
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+//        viewPager.setAdapter(adapter);
+//
+//        viewPager.setUserInputEnabled(false);
+    }
 
-                if (position == viewPager.getAdapter().getItemCount() - 1) {
-                    nextButton.setText("Register");
-                } else {
-                    nextButton.setText("Next");
-                }
-            }
-        });
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewPager.getCurrentItem() < NUM_PAGES - 1) {
-                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-                } else if(viewPager.getCurrentItem() == NUM_PAGES-1) {
-                    Intent i = new Intent(SignUp.this, SuccessForm.class);
-                    i.putExtra("title", "Sign up");
-                    i.putExtra("title_big", "Success");
-                    i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
-                    i.putExtra("subtitle_2", "Are you ready to meet the cat of your dreams?");
-                    i.putExtra("button_text", "Yes!");
-                    i.putExtra("user_type", "user");
-                    SignUp.this.startActivity(i);
-                    finish();
-                }
-            }
-        });
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Intent i = new Intent(this, SwipeActivity.class);
+            SignUp.this.startActivity(i);
+            finish();
+        }
     }
 
     public void login(View v) {
         Intent i = new Intent(this, Login.class);
         this.startActivity(i);
+        finish();
     }
 }

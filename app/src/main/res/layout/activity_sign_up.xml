@@ -23,8 +23,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="428dp"
-        android:layout_height="636dp"
+        android:layout_width="433dp"
+        android:layout_height="656dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="157dp"
         android:background="@drawable/box"
@@ -38,30 +38,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
-        <androidx.viewpager2.widget.ViewPager2
+        <FrameLayout
             android:id="@+id/form"
-            android:layout_width="332dp"
-            android:layout_height="476dp">
+            android:layout_width="342dp"
+            android:layout_height="574dp" />
 
-        </androidx.viewpager2.widget.ViewPager2>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonNext"
-            android:layout_width="304dp"
-            android:layout_height="61dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/background_button"
-            android:drawableEnd="@drawable/arrow_front"
-            android:fontFamily="@font/poppins_bold"
-            android:paddingStart="40dp"
-            android:paddingEnd="20dp"
-            android:text="Next"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:iconTint="#0D0B0B" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -71,7 +52,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/logintxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_regular"

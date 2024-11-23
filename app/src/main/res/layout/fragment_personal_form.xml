@@ -82,6 +82,7 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/firstname"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
@@ -127,6 +128,7 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/lastname"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
@@ -138,41 +140,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="MIDDLE NAME"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:background="@drawable/edittext_bg"
-                android:backgroundTint="#DDDDDD"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="12dp"
-                android:textColor="#000000"
-                android:textSize="12sp" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -193,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="BIRTHDATE"
+                    android:text="AGE"
                     android:textSize="10sp" />
 
                 <TextView
@@ -209,7 +176,9 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/age"
                 android:layout_width="match_parent"
+                android:inputType="number"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
@@ -255,16 +224,33 @@
 
             </LinearLayout>
 
-            <EditText
+            <Spinner
+                android:id="@+id/gender_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
-                android:fontFamily="@font/poppins_regular"
                 android:padding="12dp"
-                android:textColor="#000000"
-                android:textSize="12sp" />
+                android:spinnerMode="dropdown" />
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonNext"
+            android:layout_width="304dp"
+            android:layout_height="61dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/background_button"
+            android:drawableEnd="@drawable/arrow_front"
+            android:fontFamily="@font/poppins_bold"
+            android:paddingStart="40dp"
+            android:paddingEnd="20dp"
+            android:text="Next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:iconTint="#0D0B0B" />
 
     </LinearLayout>
 
