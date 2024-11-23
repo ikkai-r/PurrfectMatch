@@ -78,7 +78,7 @@ public class RegisterForm extends Fragment {
                 personalForm.setArguments(bundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.form, personalForm).commit();
+                        .replace(R.id.form, personalForm).addToBackStack(null).commit();
             }
         });
 

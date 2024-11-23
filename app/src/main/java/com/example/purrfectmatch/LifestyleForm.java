@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -58,6 +59,15 @@ public class LifestyleForm extends Fragment {
 
         // Initialize Button
         buttonNext = view.findViewById(R.id.buttonNext);
+        TextView backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pop the fragment back stack
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
         buttonNext.setOnClickListener(view1 -> {
             // Collect data from spinners and checkboxes
             String householdMembers = spinnerHousehold.getSelectedItem().toString();

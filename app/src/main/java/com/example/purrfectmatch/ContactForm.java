@@ -38,6 +38,16 @@ public class ContactForm extends Fragment {
         city = view.findViewById(R.id.city);
         buttonNext = view.findViewById(R.id.buttonNext);
 
+        TextView backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pop the fragment back stack
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +79,7 @@ public class ContactForm extends Fragment {
                 lifestyleForm.setArguments(previousBundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.form, lifestyleForm).commit();
+                        .replace(R.id.form, lifestyleForm).addToBackStack(null).commit();
             }
         });
 

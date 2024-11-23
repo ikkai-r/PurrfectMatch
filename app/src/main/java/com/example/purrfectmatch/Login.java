@@ -71,9 +71,6 @@ public class Login extends AppCompatActivity {
                                     // User is a shelter, navigate to ShelterActivity (or another activity)
                                     Intent i = new Intent(Login.this, ShelterPage.class);
                                     Login.this.startActivity(i);
-                                } else {
-                                    // Handle unexpected userType (if needed)
-                                    Toast.makeText(Login.this, "Unknown user type", Toast.LENGTH_SHORT).show();
                                 }
                                 finish(); // Close the current activity
                             } else {

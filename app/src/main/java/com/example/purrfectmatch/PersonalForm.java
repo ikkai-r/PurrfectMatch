@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -46,6 +47,15 @@ public class PersonalForm extends Fragment {
         age = view.findViewById(R.id.age);
         buttonNext = view.findViewById(R.id.buttonNext);
 
+        TextView backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pop the fragment back stack
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +91,7 @@ public class PersonalForm extends Fragment {
                     contactForm.setArguments(previousBundle);
 
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.form, contactForm).commit();
+                            .replace(R.id.form, contactForm).addToBackStack(null).commit();
 
             }
         });
