@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,22 @@ public class ContactForm extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+        Bundle bundle = getArguments();
+
+        if (bundle != null) {
+            // Retrieve values from the bundle and set them to TextViews
+            String countryText = bundle.getString("country", ""); // Default empty if null
+            String regionText = bundle.getString("region", "");
+            String cityText = bundle.getString("city", "");
+
+            Log.d("c", countryText + " " + regionText + " " + cityText);
+
+
+            country.setText(countryText);
+            region.setText(regionText);
+            city.setText(cityText);
+        }
 
 
         buttonNext.setOnClickListener(new View.OnClickListener() {
