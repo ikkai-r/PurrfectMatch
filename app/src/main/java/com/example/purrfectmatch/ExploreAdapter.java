@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
     private List<ExploreData> exploreList;
     private Context context;
+    private OnItemClickListener listener;
 
     public ExploreAdapter(List<ExploreData> exploreList, Context context) {
         this.exploreList = exploreList;
@@ -57,6 +59,18 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             holder.catNeutered.setText("Not Neutered");
             holder.catNeutered.setBackgroundTintList(ColorStateList.valueOf(0xFFE96D6D));
         }
+
+        holder.itemView.setOnClickListener(view -> {
+            if (listener != null) {
+                listener.onItemClick(currentCat);
+            }
+            Toast.makeText(context, "Clicked on: " + currentCat.getName() + " " +
+                        "(ID: " + currentCat.getId() + ")", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -82,5 +96,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             catNeutered = itemView.findViewById(R.id.catNeutered);
             catBreed = itemView.findViewById(R.id.catBreed);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ExploreData cat);
     }
 }

@@ -68,6 +68,15 @@ public class ExploreActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {}
         });
 
+        adapter.setOnItemClickListener(new ExploreAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ExploreData cat) {
+                Intent i = new Intent(ExploreActivity.this, ClickedExploreActivity.class);
+//                i.putExtra("documentId", cat.getId());
+                startActivity(i);
+            }
+        });
+
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
             startActivity(i);
@@ -100,6 +109,7 @@ public class ExploreActivity extends AppCompatActivity {
                             try {
                                 ExploreData cat = snapshot.toObject(ExploreData.class);
                                 if (cat != null) {
+                                    cat.setId(snapshot.getId());
                                     exploreList.add(cat);
                                 }
                             } catch (Exception e) {
@@ -112,7 +122,6 @@ public class ExploreActivity extends AppCompatActivity {
                     }
                 });
     }
-
 
     private void filterCats(String query) {
         List<ExploreData> filteredList = new ArrayList<>();

@@ -48,7 +48,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<SwipeData> swipeDataList = new ArrayList<>();
-    
+
 
     ViewPager2 viewPager2;
     SwipeAdapter swipeAdapter;
@@ -90,7 +90,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         explore = findViewById(R.id.imageView19);
         swipe = findViewById(R.id.imageView17);
         filter = findViewById(R.id.filterText);
-    
+
 
         this.gestureDetector = new GestureDetector(this, this);
 
@@ -113,10 +113,10 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
         filter.setOnClickListener(view -> {
             List<Object> result = createPopup(R.layout.popup_filter, view);
-        
-            View popupView = (View) result.get(0);  
-            PopupWindow popupWindow = (PopupWindow) result.get(1); 
-            ViewGroup rootLayout = (ViewGroup) result.get(2); 
+
+            View popupView = (View) result.get(0);
+            PopupWindow popupWindow = (PopupWindow) result.get(1);
+            ViewGroup rootLayout = (ViewGroup) result.get(2);
 
             EditText ageEditText = popupView.findViewById(R.id.filterAgeEditText);
             EditText feeEditText = popupView.findViewById(R.id.filterAdoptionFeeEditText);
@@ -162,11 +162,11 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
     private void applyFilter() {
         List<SwipeData> filteredList = new ArrayList<>();
-        
+
         // Filter swipeDataList based on the conditions
         for (SwipeData data : swipeDataList) {
             boolean isValid = true;
-            
+
             // Check max age
             if (data.getAge() > maxAge) {
                 isValid = false;
@@ -195,7 +195,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
 
-        int width = (int) (screenWidth * 0.8); 
+        int width = (int) (screenWidth * 0.8);
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
@@ -204,10 +204,10 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         popupWindow.showAtLocation(view, Gravity.CENTER, 30, 0);
 
         View overlay = new View(this);
-        overlay.setBackgroundColor(Color.parseColor("#111111")); 
+        overlay.setBackgroundColor(Color.parseColor("#111111"));
         overlay.setAlpha(0.6f); // Adjust transparency
 
-        ViewGroup rootLayout = findViewById(android.R.id.content); 
+        ViewGroup rootLayout = findViewById(android.R.id.content);
         rootLayout.addView(overlay);
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 30, 0);
@@ -228,7 +228,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         return result;
     }
 
-    
+
 
     private void loadCatData() {
         CollectionReference catsRef = db.collection("Cats");
@@ -260,7 +260,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         int age = document.getLong("age").intValue();
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
-        
+
         List<String> catImages = (List<String>) document.get("catImages");
         int[] catPicSet = new int[catImages.size()];
         for (int i = 0; i < catImages.size(); i++) {
@@ -280,15 +280,15 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         boolean isNeutered = document.getBoolean("isNeutered");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
-                             sex, foodPreference, bio, temperament, breed, name,
-                             contact, catId, compatibleWith, isNeutered);
+                sex, foodPreference, bio, temperament, breed, name,
+                contact, catId, compatibleWith, isNeutered);
     }
 
     private void showPopupRight(View anchorView) {
         List<Object> result = createPopup(R.layout.dialog_swipe_right_cat, anchorView);
-        View popupView = (View) result.get(0);  
-        PopupWindow popupWindow = (PopupWindow) result.get(1); 
-        ViewGroup rootLayout = (ViewGroup) result.get(2); 
+        View popupView = (View) result.get(0);
+        PopupWindow popupWindow = (PopupWindow) result.get(1);
+        ViewGroup rootLayout = (ViewGroup) result.get(2);
         View overlay = (View) result.get(3);
 
         Button closeButton = popupView.findViewById(R.id.close_button);
@@ -339,10 +339,10 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
         applicationData.put("applicationDate", FieldValue.serverTimestamp());
         applicationData.put("applicationId", applicationId);
-        applicationData.put("catId", catId); 
+        applicationData.put("catId", catId);
         applicationData.put("reason", applicationText);
         applicationData.put("status", "pending");
-        applicationData.put("userId", "user67890"); 
+        applicationData.put("userId", "user67890");
         // no meetupData, meetupScheduled, meetupVenue or feedback YET
 
         CollectionReference applicationsRef = FirebaseFirestore.getInstance().collection("Applications");
@@ -434,7 +434,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                         showPopupLeft(viewPager2);
                     }
 
- 
+
                 }else if (Math.abs(valueY) > MIN_DISTANCE){
                     if(x2>y1){
                         System.out.println("Swipe Down");
@@ -477,7 +477,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         return false;
     }
 
-    
+
     @Override
     public void onBackPressed() {
         // Do nothing, so back navigation is disabled

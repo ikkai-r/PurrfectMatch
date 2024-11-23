@@ -7,11 +7,13 @@ public class ExploreData {
     private String sex;
     private String breed;
     private boolean isNeutered;
+    private String id;
 
     public ExploreData(){}
 
-    public ExploreData(int imageResId, String name, int age, String sex, String breed,
+    public ExploreData(String id, int imageResId, String name, int age, String sex, String breed,
                        boolean isNeutered) {
+        this.id = id;
         this.imageResId = imageResId;
         this.name = name;
         this.age = age;
@@ -19,6 +21,10 @@ public class ExploreData {
         this.breed = breed;
         this.isNeutered = isNeutered;
     }
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public int getImageResId() {
         return imageResId;
