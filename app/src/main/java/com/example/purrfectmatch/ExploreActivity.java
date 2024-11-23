@@ -6,24 +6,32 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;  
+import java.util.List;
 
 public class ExploreActivity extends AppCompatActivity {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private RecyclerView recyclerView;
     private ExploreAdapter adapter;
     private List<ExploreData> exploreList;
     private List<ExploreData> filteredList;
+    private FirebaseFirestore db;
+
     private EditText searchBar;
-    ImageView profile, explore, swipe;
+    private ImageView profile, explore, swipe;
 
 
     @Override
@@ -36,24 +44,16 @@ public class ExploreActivity extends AppCompatActivity {
         swipe = findViewById(R.id.swipe);
 
         exploreList = new ArrayList<>();
+        filteredList = new ArrayList<>(exploreList);
 
-        //TODO: Get data from firebase instead.
-        //TODO: Change age to int
-        exploreList.add(new ExploreData(R.drawable.cat0, "Dweety", "47 months old", "Female", "Puspin", true));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Fluffy", "32 months old", "Male", "Puspin", false));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Milo", "32 months old", "Female", "Puspin", false));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Mikmik", "12 months old", "Male", "Puspin", false));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Female", "Puspin", false));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Male", "Puspin", false));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Female", "Puspin", false));
-        exploreList.add(new ExploreData(R.drawable.cat1, "Mia", "14 months old", "Male", "Puspin", false));
-
-        filteredList = new ArrayList<>(exploreList); // Initially, the filtered list is the same as exploreList
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
         adapter = new ExploreAdapter(exploreList, ExploreActivity.this);
         recyclerView.setAdapter(adapter);
+
+        db = FirebaseFirestore.getInstance();
+        fetchCats();
 
         searchBar = findViewById(R.id.searchBar);
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -75,7 +75,7 @@ public class ExploreActivity extends AppCompatActivity {
 
         swipe.setOnClickListener(view -> {
             Intent i = new Intent(this, SwipeActivity.class);
-                startActivity(i);
+            startActivity(i);
         });
 
         explore.setOnClickListener(view -> {
@@ -83,6 +83,36 @@ public class ExploreActivity extends AppCompatActivity {
             startActivity(i);
         });
     }
+
+    private void fetchCats() {
+        db.collection("Cats")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value,
+                                        @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Toast.makeText(ExploreActivity.this, "Error fetching data: "
+                                    + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        exploreList.clear();
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            try {
+                                ExploreData cat = snapshot.toObject(ExploreData.class);
+                                if (cat != null) {
+                                    exploreList.add(cat);
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(ExploreActivity.this, "Error parsing data: "
+                                        + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        filteredList = new ArrayList<>(exploreList);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
 
     private void filterCats(String query) {
         List<ExploreData> filteredList = new ArrayList<>();

@@ -18,15 +18,15 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     private List<ExploreData> exploreList;
     private Context context;
 
-    public ExploreAdapter(List<ExploreData> exploreList, ExploreActivity activity) {
+    public ExploreAdapter(List<ExploreData> exploreList, Context context) {
         this.exploreList = exploreList;
-        this.context = activity;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.explore_cat_card, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.explore_cat_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -34,21 +34,20 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExploreData currentCat = exploreList.get(position);
 
-        holder.catImage.setImageResource(currentCat.getImageResId());
-        holder.catName.setText(currentCat.getName());
-        holder.catAge.setText(currentCat.getAge());
-        holder.catSex.setText(currentCat.getSex());
+        // TODO: Change setImageResource to actual link of image in db
+        holder.catImage.setImageResource(R.drawable.cat0);
 
-        // Check if the cat is female/male and update text and background color accordingly
-        if (currentCat.getSex() == "Female") {
+        holder.catName.setText(currentCat.getName());
+        holder.catAge.setText(currentCat.getAge() + " months old");
+
+        // Check if the cat is female/male and update text and color accordingly
+        if (currentCat.getSex().equals("F")) {
             holder.catSex.setText("♀");
             holder.catSex.setTextColor(ColorStateList.valueOf(0xFFEC3B8B));
         } else {
             holder.catSex.setText("♂");
             holder.catSex.setTextColor(ColorStateList.valueOf(0xFF0000FF));
         }
-
-        holder.catBreed.setText(currentCat.getBreed());
 
         // Check if the cat is neutered and update text and background color accordingly
         if (currentCat.getIsNeutered()) {
