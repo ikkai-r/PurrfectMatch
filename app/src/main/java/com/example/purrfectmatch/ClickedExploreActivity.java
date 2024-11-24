@@ -259,8 +259,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         popupWindow.setOnDismissListener(() -> rootLayout.removeView(overlay));
     }
 
-
-
     private void sendApplication(String applicationText) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -328,7 +326,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                     Log.e(TAG, "Error adding application ID to pendingApplications.", e);
                 });
     }
-
 
     private void loadCatData() {
         if (documentId != null) {
