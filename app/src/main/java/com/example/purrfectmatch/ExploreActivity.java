@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ public class ExploreActivity extends AppCompatActivity {
 
     private int maxAge = -1, maxAdoptionFee = -1;
     private String selectedSex = "All";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,8 +307,4 @@ public class ExploreActivity extends AppCompatActivity {
 
         adapter.updateList(filteredList);
     }
-
-
-    // TODO: Redirect to "swipe view" when a card is tapped
-    // TODO: Filter based on applied filters
 }
