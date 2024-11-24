@@ -5,32 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
+
 
     <TextView
         android:id="@+id/textView22"
         android:layout_width="184dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="211dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_linear_layout_view"
         android:backgroundTint="#FBA526"
         android:fontFamily="@font/poppins_medium"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
         android:paddingTop="2dp"
+        android:paddingRight="5dp"
         android:text="View Submitted Applications"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@+id/scrollView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -118,7 +112,6 @@
         <TextView
             android:id="@+id/editProfileBtn"
             android:layout_width="70dp"
-            android:textColor="#4C0000"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
@@ -132,6 +125,7 @@
             android:padding="2dp"
             android:paddingStart="10dp"
             android:text="Edit Profile"
+            android:textColor="#4C0000"
             android:textSize="10dp" />
 
 
@@ -139,8 +133,8 @@
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="409dp"
-        android:layout_height="518dp"
+        android:layout_width="410dp"
+        android:layout_height="487dp"
 
         android:paddingBottom="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -251,13 +245,13 @@
                     <TextView
                         android:id="@+id/textView18"
                         android:layout_width="187dp"
-                        android:textColor="#4C0000"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginBottom="5dp"
                         android:fontFamily="@font/poppins_medium"
-                        android:textSize="14dp"
-                        android:text="SUBMITTED APPLICATIONS" />
+                        android:text="SUBMITTED APPLICATIONS"
+                        android:textColor="#4C0000"
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -265,11 +259,11 @@
                         android:layout_height="match_parent"
                         android:layout_marginRight="25dp"
                         android:layout_weight="1"
-                        android:textSize="12dp"
-                        android:textColor="#4C0000"
                         android:fontFamily="@font/poppins_light"
                         android:text="> See all"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="#4C0000"
+                        android:textSize="12dp" />
                 </LinearLayout>
 
                 <View
@@ -357,8 +351,8 @@
                         android:layout_marginBottom="5dp"
                         android:fontFamily="@font/poppins_medium"
                         android:text="BOOKMARKED CATS"
-                        android:textSize="14dp"
-                        android:textColor="#4C0000"/>
+                        android:textColor="#4C0000"
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/textView26"
@@ -366,11 +360,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="25dp"
                         android:layout_weight="1"
-                        android:textSize="12dp"
-                        android:textColor="#4C0000"
                         android:fontFamily="@font/poppins_light"
                         android:text="> See all"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        android:textColor="#4C0000"
+                        android:textSize="12dp" />
                 </LinearLayout>
 
                 <View
@@ -459,10 +453,10 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="#FDA626"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:paddingBottom="0dp"
+        android:orientation="horizontal"
         android:padding="4dp"
+        android:paddingBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -489,5 +483,24 @@
             android:src="@drawable/ic_list" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/logoutBtn"
+        android:layout_width="75dp"
+        android:layout_height="22dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_button_red"
+        android:fontFamily="@font/poppins_bold"
+        android:paddingLeft="5dp"
+        android:paddingTop="2dp"
+        android:paddingRight="5dp"
+        android:text="Logout"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintStart_toEndOf="@+id/textView22" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
