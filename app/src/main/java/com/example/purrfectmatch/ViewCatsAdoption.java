@@ -81,7 +81,7 @@ public class ViewCatsAdoption extends AppCompatActivity {
 
         adapter.setOnItemClickListener(cat -> {
             Intent i = new Intent(ViewCatsAdoption.this, CatProfile.class);
-            i.putExtra("documentId", cat.getId());
+            i.putExtra("catId", cat.getId());
             startActivity(i);
         });
 
