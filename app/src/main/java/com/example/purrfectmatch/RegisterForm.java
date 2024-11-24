@@ -1,5 +1,6 @@
 package com.example.purrfectmatch;
 
+import android.app.Activity;
 import android.location.LocationListener;
 import android.Manifest;
 
@@ -53,17 +54,21 @@ public class RegisterForm extends Fragment implements LocationListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_form, container, false);
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+        // Check permissions first
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            // Request permissions if not granted
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
                     101);
         } else {
-            // Permissions are already granted, proceed with getting the location
             getLocation();
         }
+
+
+        //locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        //locationEnabled();
+        //getLocation();
 
 
         email = view.findViewById(R.id.email);
@@ -71,10 +76,6 @@ public class RegisterForm extends Fragment implements LocationListener {
         username = view.findViewById(R.id.username);
         match_pass = view.findViewById(R.id.match_pass);
         buttonNext = view.findViewById(R.id.buttonNext);
-
-        locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-        locationEnabled();
-        getLocation();
 
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,42 +129,70 @@ public class RegisterForm extends Fragment implements LocationListener {
         return view;
     }
 
-    private void locationEnabled() {
-        LocationManager lm = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (!gps_enabled && !network_enabled) {
-            new AlertDialog.Builder(this.getContext())
-                    .setTitle("Enable GPS Service")
-                    .setMessage("We need your GPS location.")
-                    .setCancelable(false)
-                    .setPositiveButton("Enable", new
-                            DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                }
-                            })
-                    .setNegativeButton("Cancel", null)
-                    .show();
-        }
-    }
+//    private void locationEnabled() {
+//        LocationManager lm = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+//        boolean gps_enabled = false;
+//        boolean network_enabled = false;
+//        try {
+//            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (!gps_enabled && !network_enabled) {
+//            new AlertDialog.Builder(this.getContext())
+//                    .setTitle("Enable GPS Service")
+//                    .setMessage("We need your GPS location.")
+//                    .setCancelable(false)
+//                    .setPositiveButton("Enable", new
+//                            DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+//                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+//                                }
+//                            })
+//                    .setNegativeButton("Cancel", null)
+//                    .show();
+//        }
+//    }
 
     void getLocation() {
         try {
             Log.d("loc", "getting location");
             locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 50, 5, this);
+
+            // Check if the GPS is enabled
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+            } else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
+            } else {
+                // Prompt to enable location services
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Enable Location Services")
+                        .setMessage("Location services are turned off. Please enable to proceed.")
+                        .setPositiveButton("Enable", (dialog, which) -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            }
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void getLocationA() {
+        try {
+            Log.d("loc", "getting location");
+            locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 5, this);
+            if(locationManager!=null) {
+                Log.d("did location", "location manager not null");
+            }
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -171,26 +200,20 @@ public class RegisterForm extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-
         Log.d("ca", "Location changed triggered");
         if (location != null) {
             try {
                 Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
                 if (addresses != null && !addresses.isEmpty()) {
                     country = addresses.get(0).getCountryName();
                     city = addresses.get(0).getLocality();
                     region = addresses.get(0).getAdminArea();
-                    Log.d("c", "got it!");
-                } else {
-                    Log.e("Location Error", "No addresses found");
+                    Log.d("c", "Location found: " + country + ", " + city + ", " + region);
                 }
             } catch (Exception e) {
                 Log.e("Location Error", "Error getting location", e);
             }
-        } else {
-            Log.e("Location Error", "Location is null");
         }
     }
 
