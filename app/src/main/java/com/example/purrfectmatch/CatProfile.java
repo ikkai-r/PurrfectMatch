@@ -31,7 +31,7 @@ public class CatProfile extends AppCompatActivity {
     private ImageView profile, explore, swipe, catImage, bookmarkIcon;
     private TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText,
             compatibleWithText, adoptionFeeText, contactInformationText, nameText;
-    private String catId;
+    private String catId, catName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,16 @@ public class CatProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Perform the delete action here
+                if (catId != null && !catId.isEmpty()) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Cats")
+                            .document(catId)
+                            .delete();
+                }
+
                 Intent i = new Intent(CatProfile.this, SuccessForm.class);
                 i.putExtra("title", "Profile successfully deleted:");
-                i.putExtra("title_big", "Dweety");
+                i.putExtra("title_big", catName);
                 i.putExtra("subtitle_1", "Sad to see you go :(");
                 i.putExtra("subtitle_2", "");
                 i.putExtra("button_text", "Okay");
@@ -128,6 +135,7 @@ public class CatProfile extends AppCompatActivity {
                         adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee));
                         contactInformationText.setText(swipeDataItem.contactInformation);
                         nameText.setText(swipeDataItem.name);
+                        catName = swipeDataItem.name;
                     } else {
                         Toast.makeText(this, "Cat document not found.", Toast.LENGTH_SHORT).show();
                     }
