@@ -18,7 +18,7 @@ import org.w3c.dom.Text;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView applications, bioText, locationProfile, nameProfile, phoneNumberProfile, lifestyleText;
+    TextView applications, editProfileBtn, bioText, locationProfile, nameProfile, phoneNumberProfile, lifestyleText;
     private FirebaseAuth mAuth;
 
     @Override
@@ -39,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         nameProfile = findViewById(R.id.nameProfile);
         phoneNumberProfile = findViewById(R.id.phoneNumberProfile);
         lifestyleText = findViewById(R.id.lifestyleText);
+        editProfileBtn = findViewById(R.id.editProfileBtn);
 
         setUserInfo();
 
@@ -49,6 +50,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         logoutBtn.setOnClickListener(view -> {
             signOutUser();
+        });
+
+        editProfileBtn.setOnClickListener(view -> {
+            Intent i = new Intent(this, EditUser.class);
+            startActivity(i);
         });
 
         explore = findViewById(R.id.imageView19);
