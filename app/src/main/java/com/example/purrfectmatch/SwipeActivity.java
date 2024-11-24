@@ -27,6 +27,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.viewpager2.widget.ViewPager2;
 
 
@@ -249,6 +250,53 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
         return result;
     }
+
+    private List<Object> createNonDismissablePopup(int layoutRes, View view) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(layoutRes, null);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+
+        int width = (int) (screenWidth * 0.8);
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOutsideTouchable(false);
+        popupWindow.setTouchable(true);
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        View overlay = new View(this);
+        overlay.setBackgroundColor(Color.parseColor("#111111"));
+        overlay.setAlpha(0.6f); // Adjust transparency to your preference
+
+        // Add the overlay to the root layout
+        ViewGroup rootLayout = findViewById(android.R.id.content);
+        rootLayout.addView(overlay);
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                rootLayout.removeView(overlay); 
+                popupWindow.dismiss();
+                viewPager2.setCurrentItem(0);
+
+            }
+        });
+
+        // Return the necessary objects for further interaction
+        List<Object> result = new ArrayList<>();
+        result.add(popupView);       // Index 0: popupView
+        result.add(popupWindow);     // Index 1: popupWindow
+        result.add(rootLayout);      // Index 2: rootLayout
+        result.add(overlay);         // Index 3: Overlay
+
+        return result;
+    }
+
 
 
     private void loadCatData() {
@@ -587,17 +635,38 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     private void moveToNextCard() {
         int currentItem = viewPager2.getCurrentItem();
         if (currentItem < swipeAdapter.getItemCount() - 1) {
-
             viewPager2.setCurrentItem(currentItem + 1, true);
-
-
-            if(currentItem >= swipeAdapter.getItemCount() - 2){
-                viewPager2.setUserInputEnabled(false);
-                Toast.makeText(this, "End of Cards!", Toast.LENGTH_SHORT).show();
-            }
         } else {
             viewPager2.setUserInputEnabled(false);
-            Toast.makeText(this, "End of Cards!", Toast.LENGTH_SHORT).show();
+            clearLastCardView();
+            showNoMoreCatsPopup();
         }
     }
+
+    // Method to clear the last card view when no more cats are available
+    private void clearLastCardView() {
+        // Assuming your ViewPager2's adapter can be notified to handle the "no more cats" case
+        if (swipeAdapter.getItemCount() > 0) {
+            swipeAdapter.notifyItemRemoved(swipeAdapter.getItemCount() - 1);
+        }
+    }
+
+    // Method to show the No More Cats popup
+    private void showNoMoreCatsPopup() {
+        List<Object> popupData = createNonDismissablePopup(R.layout.no_more_cats, findViewById(android.R.id.content));
+
+        // Get the PopupView, PopupWindow, and other components
+        View popupView = (View) popupData.get(0);
+        final PopupWindow popupWindow = (PopupWindow) popupData.get(1);
+        final View rootLayout = (ViewGroup) popupData.get(2);
+
+        // Find the Reload button and set its click listener
+        AppCompatButton reloadButton = popupView.findViewById(R.id.reload_rejected_button);
+        reloadButton.setOnClickListener(v -> {
+            viewPager2.setCurrentItem(0);
+            popupWindow.dismiss();
+        });
+    }
+
+
 }

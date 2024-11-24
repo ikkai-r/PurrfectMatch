@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context=".SwipeActivity">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/white_bg"
+    android:padding="24dp"
+    android:gravity="center"
+    android:layout_marginRight="50dp"
+    android:layout_marginLeft="50dp">
 
-    <!-- Message Text -->
     <TextView
-        android:id="@+id/noMoreItemsText"
+        android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No more cats to swipe through!"
+        android:text="No More Cats"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_bold"
         android:textSize="20sp"
-        android:textColor="#333333"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
         android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:textAlignment="center" />
 
-    <!-- Icon for Sad Face or Swipe Symbol -->
-    <ImageView
-        android:id="@+id/sadFaceIcon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_sad_face"
-        app:layout_constraintTop_toBottomOf="@id/noMoreItemsText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/dialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You've reached the end of available cats. Would you like to reload the rejected ones?"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_regular"
+        android:textSize="14sp"
+        android:layout_marginBottom="24dp"
+        android:textAlignment="center" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/reload_rejected_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reload"
+        android:textColor="#11CF83"
+        android:background="#FFF"
+        android:fontFamily="@font/poppins_bold"
+        android:paddingVertical="10dp"
+        android:elevation="0dp" />
+</LinearLayout>
