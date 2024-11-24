@@ -79,9 +79,6 @@ public class ShelterPage extends AppCompatActivity {
                 .addOnSuccessListener(querySnapshot -> {
                     numScheduledAppointments = querySnapshot.size();
                     txtScheduled.setText(String.valueOf(numScheduledAppointments));
-                    Toast.makeText(ShelterPage.this, "Number of Meeting Scheduled applications: "
-                                    + numScheduledAppointments,
-                            Toast.LENGTH_SHORT).show();
                 });
 
         // Fetch number of pending applications
@@ -91,9 +88,6 @@ public class ShelterPage extends AppCompatActivity {
                 .addOnSuccessListener(querySnapshot -> {
                     numPendingApplications = querySnapshot.size();
                     txtPending.setText(String.valueOf(numPendingApplications));
-                    Toast.makeText(ShelterPage.this, "Number of Pending or Reviewed " +
-                                    "applications: " + numPendingApplications,
-                            Toast.LENGTH_SHORT).show();
                 });
     }
 }
