@@ -15,6 +15,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -26,18 +31,22 @@ public class ContactEditForm extends Fragment {
 
     private EditText phoneNumber, country, region, city;
     private Button buttonNext;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_contact_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_contact_form_edit, container, false);
 
         phoneNumber = view.findViewById(R.id.phoneNumber);
         country = view.findViewById(R.id.country);
         region = view.findViewById(R.id.region);
         city = view.findViewById(R.id.city);
         buttonNext = view.findViewById(R.id.buttonNext);
+
+        mAuth = FirebaseAuth.getInstance();
+        setUserInfo();
 
         TextView backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -47,23 +56,6 @@ public class ContactEditForm extends Fragment {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-
-        Bundle bundle = getArguments();
-
-        if (bundle != null) {
-            // Retrieve values from the bundle and set them to TextViews
-            String countryText = bundle.getString("country", ""); // Default empty if null
-            String regionText = bundle.getString("region", "");
-            String cityText = bundle.getString("city", "");
-
-            Log.d("c", countryText + " " + regionText + " " + cityText);
-
-
-            country.setText(countryText);
-            region.setText(regionText);
-            city.setText(cityText);
-        }
-
 
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,11 +88,56 @@ public class ContactEditForm extends Fragment {
                 lifestyleForm.setArguments(previousBundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.form, lifestyleForm).addToBackStack(null).commit();
+                        .replace(R.id.formEdit, lifestyleForm).addToBackStack(null).commit();
             }
         });
 
 
         return view;
+    }
+
+
+    private void setUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        Bundle bundle = getArguments();
+
+
+        if (user != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("Users").document(user.getUid());
+
+            // Fetch data from Firestore using the reference
+            userRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Extract data from the document snapshot
+                            String phonenumberTxt = documentSnapshot.getString("phoneNumber");
+
+                            if (bundle != null) {
+                                // Retrieve values from the bundle and set them to TextViews
+                                String countryText = bundle.getString("country", documentSnapshot.getString("country")); // Default empty if null
+                                String regionText = bundle.getString("region", documentSnapshot.getString("region"));
+                                String cityText = bundle.getString("city", documentSnapshot.getString("city"));
+
+                                Log.d("c", countryText + " " + regionText + " " + cityText);
+
+                                country.setText(countryText);
+                                region.setText(regionText);
+                                city.setText(cityText);
+                            }
+
+                            // Display the data in the UI
+                            phoneNumber.setText(phonenumberTxt);
+                        } else {
+                            Log.d("fe", "user doesnt exist");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d("fe", "failed to get info");
+                    });
+        } else {
+            Log.d("fe", "user is not signed in");
+        }
     }
 }

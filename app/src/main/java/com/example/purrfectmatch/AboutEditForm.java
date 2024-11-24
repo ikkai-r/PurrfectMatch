@@ -19,6 +19,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -32,17 +37,22 @@ public class AboutEditForm extends Fragment {
     private Button buttonNext, buttonUpload;
     private ImageView profileImageView;
     private Uri photoUri;
+    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_about_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_about_form_edit, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
 
         bio = view.findViewById(R.id.bio);
         buttonUpload = view.findViewById(R.id.buttonUpload);
         buttonNext = view.findViewById(R.id.buttonNext);
         profileImageView = view.findViewById(R.id.profileImageView);  // ImageView to show selected image
+
+        setUserInfo();
 
         TextView backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
@@ -86,6 +96,37 @@ public class AboutEditForm extends Fragment {
         });
 
         return view;
+    }
+
+    private void setUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        Bundle bundle = getArguments();
+
+
+        if (user != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("Users").document(user.getUid());
+
+            // Fetch data from Firestore using the reference
+            userRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Extract data from the document snapshot
+                            String bioTxt = documentSnapshot.getString("bio");
+
+                            // Display the data in the UI
+                            bio.setText(bioTxt);
+                        } else {
+                            Log.d("fe", "user doesnt exist");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d("fe", "failed to get info");
+                    });
+        } else {
+            Log.d("fe", "user is not signed in");
+        }
     }
 
     // Launch intent to select an image

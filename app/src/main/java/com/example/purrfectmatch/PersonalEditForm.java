@@ -126,7 +126,7 @@ public class PersonalEditForm extends Fragment {
                             // Extract data from the document snapshot
                             String firstnameTxt = documentSnapshot.getString("firstName");
                             String lastnameTxt = documentSnapshot.getString("lastName");
-                            String ageTxt = String.valueOf(documentSnapshot.getLong("age"));
+                            Long ageTxt = documentSnapshot.getLong("age");
 
                             String genderTxt = documentSnapshot.getString("gender");
                             setGenderSpinnerValue(genderTxt);
@@ -134,7 +134,7 @@ public class PersonalEditForm extends Fragment {
                             // Display the data in the UI
                             firstname.setText(firstnameTxt);
                             lastname.setText(lastnameTxt);
-                            age.setText(ageTxt);
+                            age.setText(String.valueOf(ageTxt));
                         } else {
                             Log.d("fe", "user doesnt exist");
                         }

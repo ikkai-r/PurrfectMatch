@@ -174,7 +174,7 @@
                     android:fontFamily="@font/poppins_bold"
                     android:paddingStart="30dp"
                     android:paddingEnd="20dp"
-                    android:text="Register"
+                    android:text="Next"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp"
