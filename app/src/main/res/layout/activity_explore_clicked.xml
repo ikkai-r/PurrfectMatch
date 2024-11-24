@@ -8,14 +8,6 @@
     android:background="#fff"
     android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="339dp"
-        android:layout_height="273dp"
-        android:text="SUCCESS"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="50dp" />
-
     <!-- ScrollView containing Profile and Info -->
     <ScrollView
         android:id="@+id/scrollView2"
