@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context=".LifestyleForm">
+    tools:context=".LifestyleEditForm">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="0dp"
-        tools:context=".LifestyleForm">
+        tools:context=".LifestyleEditForm">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="18dp"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Create your profile"
+                android:text="Edit your profile"
                 android:textAlignment="center"
                 android:textSize="30sp" />
 
@@ -174,7 +174,7 @@
                     android:fontFamily="@font/poppins_bold"
                     android:paddingStart="30dp"
                     android:paddingEnd="20dp"
-                    android:text="Next"
+                    android:text="Register"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp"

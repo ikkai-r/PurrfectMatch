@@ -27,7 +27,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Locale;
@@ -42,8 +50,11 @@ public class RegisterEditForm extends Fragment implements LocationListener {
     }
 
     LocationManager locationManager;
+    private FirebaseAuth mAuth;
 
-    private EditText email, password, username, match_pass;
+
+    private TextView email;
+    private EditText oldPassword, username, newPassword;
     private String country, city, region;
     private Button buttonNext;
 
@@ -51,7 +62,7 @@ public class RegisterEditForm extends Fragment implements LocationListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_form_edit, container, false);
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -65,12 +76,16 @@ public class RegisterEditForm extends Fragment implements LocationListener {
             getLocation();
         }
 
+        mAuth = FirebaseAuth.getInstance();
 
         email = view.findViewById(R.id.email);
-        password = view.findViewById(R.id.password);
+        oldPassword = view.findViewById(R.id.oldPassword);
         username = view.findViewById(R.id.username);
-        match_pass = view.findViewById(R.id.match_pass);
+        newPassword = view.findViewById(R.id.newPassword);
         buttonNext = view.findViewById(R.id.buttonNext);
+
+        //set the text accordingly
+        setUserInfo();
 
         locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
         locationEnabled();
@@ -82,45 +97,70 @@ public class RegisterEditForm extends Fragment implements LocationListener {
 
                 // Check if all fields are not empty
                 String emailText = email.getText().toString().trim();
-                String oldPasswordText = password.getText().toString().trim();
                 String usernameText = username.getText().toString().trim();
-                String newPasswordText = match_pass.getText().toString().trim();
+                String newPasswordText = newPassword.getText().toString().trim();
+                String oldPasswordText = oldPassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(emailText) || TextUtils.isEmpty(oldPasswordText)
-                        || TextUtils.isEmpty(usernameText) || TextUtils.isEmpty(newPasswordText)) {
-                    Toast.makeText(getActivity(), "All fields are required!", Toast.LENGTH_SHORT).show();
+
+                if (TextUtils.isEmpty(emailText) || TextUtils.isEmpty(usernameText)) {
+                    Toast.makeText(getActivity(), "Username field is required!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 //require password to be 6 characters long
-                if(newPasswordText.length() < 6) {
+                if(!newPasswordText.isEmpty() && newPasswordText.length() < 6) {
                     Toast.makeText(getActivity(), "New password should be 6 characters long.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // check if match_pass and password are matching
-                if (!oldPasswordText.equals(oldPasswordText)) {
-                    Toast.makeText(getActivity(), "Passwords do not match!", Toast.LENGTH_SHORT).show();
-                    return;
+                if(newPasswordText.length() > 6) {
+                    //check if old password matches
+                    FirebaseUser user = mAuth.getCurrentUser();
+
+                    AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPasswordText);
+
+                    user.reauthenticate(credential).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+
+                            // if all yes then pass as bundle
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("password", newPasswordText);
+                            bundle.putString("username", usernameText);
+
+                            Log.d("c", country + " " + city + " " + region);
+                            bundle.putString("country", country);
+                            bundle.putString("city", city);
+                            bundle.putString("region", region);
+
+                            PersonalEditForm personalForm = new PersonalEditForm();
+                            personalForm.setArguments(bundle);
+
+                            getActivity().getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.form, personalForm).addToBackStack(null).commit();
+
+                        } else {
+                            Toast.makeText(getActivity(), "Old password is incorrect!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    // if all yes then pass as bundle
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", usernameText);
+
+                    Log.d("c", country + " " + city + " " + region);
+                    bundle.putString("country", country);
+                    bundle.putString("city", city);
+                    bundle.putString("region", region);
+
+                    PersonalEditForm personalForm = new PersonalEditForm();
+                    personalForm.setArguments(bundle);
+
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.formEdit, personalForm).addToBackStack(null).commit();
                 }
 
-                // if all yes then pass as bundle
-
-                Bundle bundle = new Bundle();
-                bundle.putString("email", emailText);
-                bundle.putString("password", newPasswordText);
-                bundle.putString("username", usernameText);
-
-                Log.d("c", country + " " + city + " " + region);
-                bundle.putString("country", country);
-                bundle.putString("city", city);
-                bundle.putString("region", region);
-
-                PersonalEditForm personalForm = new PersonalEditForm();
-                personalForm.setArguments(bundle);
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.form, personalForm).addToBackStack(null).commit();
             }
         });
 
@@ -166,6 +206,36 @@ public class RegisterEditForm extends Fragment implements LocationListener {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 50, 5, this);
         } catch (SecurityException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("Users").document(user.getUid());
+
+            // Fetch data from Firestore using the reference
+            userRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Extract data from the document snapshot
+                            String emailTxt = documentSnapshot.getString("email");
+                            String usernameTxt = documentSnapshot.getString("username");
+
+                            // Display the data in the UI
+                            email.setText(emailTxt);
+                            username.setText(usernameTxt);
+                        } else {
+                            Log.d("fe", "user doesnt exist");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d("fe", "failed to get info");
+                    });
+        } else {
+            Log.d("fe", "user is not signed in");
         }
     }
 

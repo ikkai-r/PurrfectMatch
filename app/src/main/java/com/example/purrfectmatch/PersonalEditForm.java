@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class PersonalEditForm extends Fragment {
 
     public PersonalEditForm() {
@@ -22,17 +28,19 @@ public class PersonalEditForm extends Fragment {
     private Spinner genderSpinner;
     private EditText firstname, lastname, age;
     private Button buttonNext;
+    private FirebaseAuth mAuth;
+    private ArrayAdapter<String> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_personal_form, container, false);
+        View view = inflater.inflate(R.layout.fragment_personal_form_edit, container, false);
 
         // Initialize spinner
         genderSpinner = view.findViewById(R.id.gender_spinner);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        adapter = new ArrayAdapter<>(
                 getContext(),
                 R.layout.spinner_item,
                 new String[]{"Female", "Male", "Others", "Doesn't want to disclose"}
@@ -46,6 +54,11 @@ public class PersonalEditForm extends Fragment {
         lastname = view.findViewById(R.id.lastname);
         age = view.findViewById(R.id.age);
         buttonNext = view.findViewById(R.id.buttonNext);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        //set known values
+        setUserInfo();
 
         TextView backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -91,13 +104,54 @@ public class PersonalEditForm extends Fragment {
                 contactForm.setArguments(previousBundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.form, contactForm).addToBackStack(null).commit();
+                        .replace(R.id.formEdit, contactForm).addToBackStack(null).commit();
 
             }
         });
 
         return view;
     }
+
+    private void setUserInfo() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("Users").document(user.getUid());
+
+            // Fetch data from Firestore using the reference
+            userRef.get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Extract data from the document snapshot
+                            String firstnameTxt = documentSnapshot.getString("firstName");
+                            String lastnameTxt = documentSnapshot.getString("lastName");
+                            String ageTxt = String.valueOf(documentSnapshot.getLong("age"));
+
+                            String genderTxt = documentSnapshot.getString("gender");
+                            setGenderSpinnerValue(genderTxt);
+
+                            // Display the data in the UI
+                            firstname.setText(firstnameTxt);
+                            lastname.setText(lastnameTxt);
+                            age.setText(ageTxt);
+                        } else {
+                            Log.d("fe", "user doesnt exist");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d("fe", "failed to get info");
+                    });
+        } else {
+            Log.d("fe", "user is not signed in");
+        }
+    }
+
+    private void setGenderSpinnerValue(String genderTxt) {
+        int spinnerPosition = adapter.getPosition(genderTxt);
+        genderSpinner.setSelection(spinnerPosition);
+    }
+
 
     public String getSelectedGender() {
         return genderSpinner.getSelectedItem().toString();
