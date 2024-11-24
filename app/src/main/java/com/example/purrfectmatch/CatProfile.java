@@ -67,4 +67,10 @@ public class CatProfile extends AppCompatActivity {
     public void deleteCat(View v) {
         dialog.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

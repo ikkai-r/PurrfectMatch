@@ -126,17 +126,21 @@ public class ViewCatsAdoption extends AppCompatActivity {
         filteredList = new ArrayList<>();
 
         for (ExploreData cat : exploreList) {
-            // Only add cat if the name contains the search query (case insensitive)
             if (cat.getName().toLowerCase().contains(query.toLowerCase())) {
                 filteredList.add(cat);
             }
         }
-
         adapter.updateList(filteredList);
     }
 
-    public void viewCatProfile(View v) {
-        Intent i = new Intent(this, CatProfile.class);
-        this.startActivity(i);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
+
+//    public void viewCatProfile(View v) {
+//        Intent i = new Intent(this, CatProfile.class);
+//        this.startActivity(i);
+//    }
 }

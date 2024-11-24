@@ -41,6 +41,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
         holder.catName.setText(currentCat.getName());
         holder.catAge.setText(currentCat.getAge() + " months old");
+        holder.catBreed.setText(currentCat.getBreed());
 
         // Check if the cat is female/male and update text and color accordingly
         if (currentCat.getSex().equals("F")) {
@@ -64,8 +65,8 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             if (listener != null) {
                 listener.onItemClick(currentCat);
             }
-            Toast.makeText(context, "Clicked on: " + currentCat.getName() + " " +
-                        "(ID: " + currentCat.getId() + ")", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Clicked on: " + currentCat.getName() + " " +
+//                        "(ID: " + currentCat.getId() + ")", Toast.LENGTH_SHORT).show();
         });
     }
 
