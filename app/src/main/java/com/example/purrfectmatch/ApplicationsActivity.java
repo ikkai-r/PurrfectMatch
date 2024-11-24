@@ -37,16 +37,19 @@ public class ApplicationsActivity extends AppCompatActivity {
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
             startActivity(i);
+            finish();
         });
 
         swipe.setOnClickListener(view -> {
             Intent i = new Intent(this, SwipeActivity.class);
             startActivity(i);
+            finish();
         });
 
         explore.setOnClickListener(view -> {
             Intent i = new Intent(this, ExploreActivity.class);
             startActivity(i);
+            finish();
         });
     }
 }

@@ -160,16 +160,13 @@ public class ExploreActivity extends AppCompatActivity {
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
             startActivity(i);
+            finish();
         });
 
         swipe.setOnClickListener(view -> {
             Intent i = new Intent(this, SwipeActivity.class);
             startActivity(i);
-        });
-
-        explore.setOnClickListener(view -> {
-            Intent i = new Intent(this, ExploreActivity.class);
-            startActivity(i);
+            finish();
         });
     }
 

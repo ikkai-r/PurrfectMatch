@@ -99,16 +99,13 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
             startActivity(i);
-        });
-
-        swipe.setOnClickListener(view -> {
-            Intent i = new Intent(this, SwipeActivity.class);
-            startActivity(i);
+            finish();
         });
 
         explore.setOnClickListener(view -> {
             Intent i = new Intent(this, ExploreActivity.class);
             startActivity(i);
+            finish();
         });
 
         filter.setOnClickListener(view -> {

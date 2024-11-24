@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        checkIfUserSignedIn();
+
+
         button = findViewById(R.id.button);
 
         button.setOnClickListener(view -> {
@@ -46,11 +49,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void register(View v) {
+        Intent i = new Intent(this, SignUp.class);
+        this.startActivity(i);
+    }
+
+    private void checkIfUserSignedIn() {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseFirestore.setLoggingEnabled(true);
+
         if (currentUser != null) {
             // Retrieve the user data from Firestore to check userType
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -86,10 +94,5 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
-    }
-
-    public void register(View v) {
-        Intent i = new Intent(this, SignUp.class);
-        this.startActivity(i);
     }
 }

@@ -22,9 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 interface UsernameCheckCallback {
     void onUsernameCheckComplete(boolean usernameExists);
@@ -35,6 +34,8 @@ public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Bundle finalBundle;
     String profileImageUrl;
+    String userType = "user";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,25 +49,14 @@ public class SignUp extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        checkUserIfSignedIn();
+
         if (savedInstanceState == null) {
             RegisterForm registerForm = new RegisterForm();
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.form, registerForm)  // Fragment will be added to the container
                     .commit();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            //check if currentuser is user or shelter
-            Intent i = new Intent(this, SwipeActivity.class);
-            SignUp.this.startActivity(i);
-            finish();
         }
     }
 
@@ -132,11 +122,11 @@ public class SignUp extends AppCompatActivity {
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     DocumentReference userRef = db.collection("Users").document(user.getUid());
 
-                                    uploadImageToFirebase(Uri.parse(profileimg), user.getUid());
+                                    //uploadImageToFirebase(Uri.parse(profileimg), user.getUid());
 
                                     // User data to be stored
                                     User userData = new User(username, firstName, lastName, email, phoneNumber, country, region, city, Integer.parseInt(age), gender,
-                                            householdMembers,otherPets, preferences1, preferences2, "user", bio, profileImageUrl);
+                                            householdMembers,otherPets, preferences1, preferences2, userType, bio, profileimg);
 
                                     // Store the user data in Firestore
                                     userRef.set(userData)
@@ -179,30 +169,70 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-    // Upload the image to Firebase Storage
-    private void uploadImageToFirebase(Uri photoUri, String UUID) {
-        if (photoUri != null) {
-            // Create a reference to Firebase Storage in the "profile_images" folder
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference("profile_images/" + UUID);
+//    // Upload the image to Firebase Storage
+//    private void uploadImageToFirebase(Uri photoUri, String UUID) {
+//        if (photoUri != null) {
+//            // Create a reference to Firebase Storage in the "profile_images" folder
+//            StorageReference storageReference = FirebaseStorage.getInstance().getReference("profile_images/" + UUID);
+//
+//            // Upload the image file
+//            storageReference.putFile(photoUri)
+//                    .addOnSuccessListener(taskSnapshot -> {
+//                        // Get the download URL after the image has been uploaded
+//                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+//                                    // Get the URL of the uploaded image
+//                                    profileImageUrl = uri.toString();
+//                                    Log.d("Firebase", "Image uploaded successfully. URL: " + profileImageUrl);
+//                                    // Now you can save the image URL to your Firestore or perform further actions
+//                                })
+//                                .addOnFailureListener(e -> {
+//                                    // Handle errors
+//                                    Log.e("Firebase", "Failed to get download URL", e);
+//                                });
+//                    })
+//                    .addOnFailureListener(e -> {
+//                        // Handle upload errors
+//                        Log.e("Firebase", "Failed to upload image", e);
+//                    });
+//        }
+//    }
 
-            // Upload the image file
-            storageReference.putFile(photoUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        // Get the download URL after the image has been uploaded
-                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    // Get the URL of the uploaded image
-                                    profileImageUrl = uri.toString();
-                                    Log.d("Firebase", "Image uploaded successfully. URL: " + profileImageUrl);
-                                    // Now you can save the image URL to your Firestore or perform further actions
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Handle errors
-                                    Log.e("Firebase", "Failed to get download URL", e);
-                                });
-                    })
-                    .addOnFailureListener(e -> {
-                        // Handle upload errors
-                        Log.e("Firebase", "Failed to upload image", e);
+    private void checkUserIfSignedIn() {
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            // Retrieve the user data from Firestore to check userType
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("Users").document(currentUser.getUid());
+
+            userRef.get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Document retrieved successfully
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String userType = document.getString("userType");
+
+                                // Check userType and navigate accordingly
+                                if ("user".equals(userType)) {
+                                    // User is a regular user, navigate to SwipeActivity
+                                    Intent i = new Intent(SignUp.this, SwipeActivity.class);
+                                    SignUp.this.startActivity(i);
+                                } else if ("shelter".equals(userType)) {
+                                    // User is a shelter, navigate to ShelterActivity (or another activity)
+                                    Intent i = new Intent(SignUp.this, ShelterPage.class);
+                                    SignUp.this.startActivity(i);
+                                }
+                                finish(); // Close the current activity
+                            } else {
+                                // Document does not exist, handle this case if needed
+                                Toast.makeText(SignUp.this, "User data not found", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // If the task fails, log the error and show a message
+                            Log.w("SignUp", "Error getting document", task.getException());
+                            Toast.makeText(SignUp.this, "Failed to retrieve user data", Toast.LENGTH_SHORT).show();
+                        }
                     });
         }
     }

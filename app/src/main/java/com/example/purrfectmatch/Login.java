@@ -41,13 +41,10 @@ public class Login extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
-
-
+        checkUserIfSignedIn();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void checkUserIfSignedIn() {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
