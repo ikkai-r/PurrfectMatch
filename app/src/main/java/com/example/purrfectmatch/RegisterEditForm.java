@@ -98,8 +98,8 @@ public class RegisterEditForm extends Fragment implements LocationListener {
                 // Check if all fields are not empty
                 String emailText = email.getText().toString().trim();
                 String usernameText = username.getText().toString().trim();
-                String newPasswordText = username.getText().toString().trim();
-                String oldPasswordText = username.getText().toString().trim();
+                String newPasswordText = newPassword.getText().toString().trim();
+                String oldPasswordText = oldPassword.getText().toString().trim();
 
 
                 if (TextUtils.isEmpty(emailText) || TextUtils.isEmpty(usernameText)) {
@@ -108,7 +108,7 @@ public class RegisterEditForm extends Fragment implements LocationListener {
                 }
 
                 //require password to be 6 characters long
-                if(!TextUtils.isEmpty(newPasswordText) && newPasswordText.length() < 6) {
+                if(!newPasswordText.isEmpty() && newPasswordText.length() < 6) {
                     Toast.makeText(getActivity(), "New password should be 6 characters long.", Toast.LENGTH_SHORT).show();
                     return;
                 }
