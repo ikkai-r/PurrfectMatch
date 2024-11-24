@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/nameProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/fredoka_medium"
@@ -73,7 +73,7 @@
                     android:src="@drawable/ic_location" />
 
                 <TextView
-                    android:id="@+id/textView8"
+                    android:id="@+id/locationProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_light"
@@ -85,7 +85,7 @@
 
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/phoneNumberProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_light"
@@ -151,7 +151,7 @@
             <!-- Add your bottom layout elements here -->
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/bioText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
@@ -171,7 +171,7 @@
                 android:scaleY="5" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/bioTextProfile"
                 android:layout_width="match_parent"
                 android:layout_height="83dp"
                 android:layout_marginLeft="25dp"
@@ -212,19 +212,17 @@
                     android:scaleY="5" />
 
                 <TextView
-                    android:id="@+id/textView100"
+                    android:id="@+id/lifestyleText"
                     android:layout_width="match_parent"
-                    android:layout_height="83dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="25dp"
                     android:background="@drawable/rounded_linear_layout_view"
                     android:backgroundTint="#F4F2F2"
                     android:fontFamily="@font/poppins_light"
                     android:padding="15dp"
-                    android:text=" Living Situation:
-                                    \n Household Members:
+                    android:text=" Household Members:
                                     \n Other pets:
-                                    \n Experience taking care of cats:
                                     \n Cat Preferences:"
                     android:textSize="10dp" />
             </LinearLayout>
