@@ -30,8 +30,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -248,16 +251,74 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     }
 
 
-
     private void loadCatData() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser == null) {
+            Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = currentUser.getUid();
+        DocumentReference userRef = db.collection("Users").document(userId);
+
+        // Fetch user's application IDs first
+        userRef.get().addOnSuccessListener(userSnapshot -> {
+            if (userSnapshot.exists()) {
+                List<String> applicationIds = (List<String>) userSnapshot.get("catApplications");
+
+                if (applicationIds == null) {
+                    applicationIds = new ArrayList<>();
+                }
+
+                // Fetch `catId`s from applications
+                fetchCatIdsFromApplications(applicationIds);
+            } else {
+                Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to load user data.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void fetchCatIdsFromApplications(List<String> applicationIds) {
+        if (applicationIds.isEmpty()) {
+            // If there are no applications, load all cats
+            fetchAndFilterCats(new ArrayList<>());
+            return;
+        }
+
+        CollectionReference applicationsRef = db.collection("Applications");
+        applicationsRef.whereIn(FieldPath.documentId(), applicationIds)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<String> excludedCatIds = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : querySnapshot) {
+                        String catId = document.getString("catId");
+                        if (catId != null) {
+                            excludedCatIds.add(catId);
+                        }
+                    }
+                    fetchAndFilterCats(excludedCatIds);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to fetch application data.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void fetchAndFilterCats(List<String> excludedCatIds) {
         CollectionReference catsRef = db.collection("Cats");
 
         catsRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String catId = document.getId();
-                    SwipeData swipeData = createSwipeDataFromDocument(document, catId);
-                    swipeDataList.add(swipeData);
+
+                    // Exclude cats already applied for
+                    if (!excludedCatIds.contains(catId)) {
+                        SwipeData swipeData = createSwipeDataFromDocument(document, catId);
+                        swipeDataList.add(swipeData);
+                    }
                 }
 
                 swipeAdapter = new SwipeAdapter(swipeDataList.toArray(new SwipeData[0]), SwipeActivity.this);
@@ -267,10 +328,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                     page.setAlpha(1.0f - absPos);
                     page.setScaleY(1.0f - absPos * 0.15f);
                 });
-
-
             } else {
-                Toast.makeText(this, "Failed to load data.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to load cat data.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -351,25 +410,24 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     }
 
     private void sendApplication(String applicationText) {
-        Map<String, Object> applicationData = new HashMap<>();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getApplicationContext(), "User not logged in.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String applicationId = FirebaseFirestore.getInstance().collection("Applications").document().getId();
         String catId = swipeDataList.get(viewPager2.getCurrentItem()).getCatId();
+        String userId = currentUser.getUid();
 
-        applicationData.put("applicationDate", FieldValue.serverTimestamp());
-        applicationData.put("applicationId", applicationId);
-        applicationData.put("catId", catId);
-        applicationData.put("reason", applicationText);
-        applicationData.put("status", "pending");
-        applicationData.put("userId", "user67890");
-        // no meetupData, meetupScheduled, meetupVenue or feedback YET
+        Map<String, Object> applicationData = createApplicationData(applicationId, catId, userId, applicationText);
 
         CollectionReference applicationsRef = FirebaseFirestore.getInstance().collection("Applications");
-
         applicationsRef.document(applicationId)
                 .set(applicationData)
                 .addOnSuccessListener(aVoid -> {
                     updateCatDocumentWithApplication(catId, applicationId);
+                    appendApplicationToUser(userId, applicationId);
                     Toast.makeText(getApplicationContext(), "Application sent successfully!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
@@ -377,6 +435,28 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                 });
     }
 
+    private Map<String, Object> createApplicationData(String applicationId, String catId, String userId, String applicationText) {
+        Map<String, Object> applicationData = new HashMap<>();
+        applicationData.put("applicationDate", FieldValue.serverTimestamp());
+        applicationData.put("applicationId", applicationId);
+        applicationData.put("catId", catId);
+        applicationData.put("reason", applicationText);
+        applicationData.put("status", "pending");
+        applicationData.put("userId", userId);
+        return applicationData;
+    }
+
+    private void appendApplicationToUser(String userId, String applicationId) {
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users").document(userId);
+
+        userRef.update("catApplications", FieldValue.arrayUnion(applicationId))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "Application ID added to user successfully!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Failed to add application ID to user: " + e.getMessage());
+                });
+    }
 
     private void updateCatDocumentWithApplication(String catId, String applicationId) {
         DocumentReference catRef = FirebaseFirestore.getInstance().collection("Cats").document(catId);
