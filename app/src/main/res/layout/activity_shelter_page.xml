@@ -30,7 +30,6 @@
                 android:textColor="@color/black"
                 android:textSize="24sp" />
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +41,6 @@
         </LinearLayout>
 
         <!-- Overview -->
-
         <LinearLayout
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
@@ -78,7 +76,7 @@
 
                     <!-- Large Bold Text -->
                     <TextView
-                        android:id="@+id/catsAdoptionTxt"
+                        android:id="@+id/totalCats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
@@ -98,6 +96,7 @@
                         android:gravity="center"
                         android:text="cats for adoption"
                         android:textColor="@color/black"
+                        android:onClick="viewCats"
                         android:textSize="8sp" />
                 </LinearLayout>
 
