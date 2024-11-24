@@ -119,40 +119,24 @@ public class LifestyleEditForm extends Fragment {
         return view;
     }
 
-    private void setUserInfo() {
-        FirebaseUser user = mAuth.getCurrentUser();
+        private void setUserInfo() {
 
-        if (user != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference userRef = db.collection("Users").document(user.getUid());
+            Bundle bundle = getArguments();
 
-            // Fetch data from Firestore using the reference
-            userRef.get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Extract data from the document snapshot
-                            String householdMembersTxt = documentSnapshot.getString("householdMembers");
-                            setSpinnerHousehold(householdMembersTxt);
+            if (bundle != null) {
+                // Retrieve values from the bundle and set them to TextViews
+                String householdMembersTxt = bundle.getString("householdMembers");
+                String otherPetsTxt = bundle.getString("otherPets");
+                String preferences1Txt = bundle.getString("preferences1");
+                String preferences2Txt = bundle.getString("preferences2");
 
-                            String otherPetsTxt = documentSnapshot.getString("otherPets");
-                            setSpinnerOtherPets(otherPetsTxt);
+                setSpinnerHousehold(householdMembersTxt);
+                setSpinnerOtherPets(otherPetsTxt);
+                setSpinnerPreferences1(preferences1Txt);
+                setSpinnerPreferences2(preferences2Txt);
+            }
 
-                            String preferences1Txt = documentSnapshot.getString("preferences1");
-                            setSpinnerPreferences1(preferences1Txt);
-
-                            String preferences2Txt = documentSnapshot.getString("preferences2");
-                            setSpinnerPreferences2(preferences2Txt);
-                        } else {
-                            Log.d("fe", "user doesnt exist");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.d("fe", "failed to get info");
-                    });
-        } else {
-            Log.d("fe", "user is not signed in");
         }
-    }
 
     private void setSpinnerPreferences1(String preferences1Txt) {
         int spinnerPosition = preferencesAdapter.getPosition(preferences1Txt);

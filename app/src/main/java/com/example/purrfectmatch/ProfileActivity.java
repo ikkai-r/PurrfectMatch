@@ -102,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     "Cat Preferences: " + documentSnapshot.getString("preferences1") + ", " + documentSnapshot.getString("preferences2");
                             String phoneNumberTxt = documentSnapshot.getString("phoneNumber");
                             String bioTxt = documentSnapshot.getString("bio");
-                            String locationTxt = documentSnapshot.getString("city") + ", " + documentSnapshot.get("province") + ", " + documentSnapshot.get("country");
+                            String locationTxt = documentSnapshot.getString("city") + ", " + documentSnapshot.get("region");
 
                             // Display the data in the UI
                             nameProfile.setText(nameText);

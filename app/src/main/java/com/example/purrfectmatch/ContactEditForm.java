@@ -31,7 +31,6 @@ public class ContactEditForm extends Fragment {
 
     private EditText phoneNumber, country, region, city;
     private Button buttonNext;
-    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,8 +43,6 @@ public class ContactEditForm extends Fragment {
         region = view.findViewById(R.id.region);
         city = view.findViewById(R.id.city);
         buttonNext = view.findViewById(R.id.buttonNext);
-
-        mAuth = FirebaseAuth.getInstance();
         setUserInfo();
 
         TextView backButton = view.findViewById(R.id.backButton);
@@ -98,46 +95,22 @@ public class ContactEditForm extends Fragment {
 
 
     private void setUserInfo() {
-        FirebaseUser user = mAuth.getCurrentUser();
-
         Bundle bundle = getArguments();
 
+        if (bundle != null) {
+            // Retrieve values from the bundle and set them to TextViews
+            String countryText = bundle.getString("country", ""); // Default empty if null
+            String regionText = bundle.getString("region", "");
+            String cityText = bundle.getString("city","");
+            String phoneNumberText = bundle.getString("phoneNumber");
 
-        if (user != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference userRef = db.collection("Users").document(user.getUid());
 
-            // Fetch data from Firestore using the reference
-            userRef.get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Extract data from the document snapshot
-                            String phonenumberTxt = documentSnapshot.getString("phoneNumber");
+            Log.d("c", countryText + " " + regionText + " " + cityText);
 
-                            if (bundle != null) {
-                                // Retrieve values from the bundle and set them to TextViews
-                                String countryText = bundle.getString("country", documentSnapshot.getString("country")); // Default empty if null
-                                String regionText = bundle.getString("region", documentSnapshot.getString("region"));
-                                String cityText = bundle.getString("city", documentSnapshot.getString("city"));
-
-                                Log.d("c", countryText + " " + regionText + " " + cityText);
-
-                                country.setText(countryText);
-                                region.setText(regionText);
-                                city.setText(cityText);
-                            }
-
-                            // Display the data in the UI
-                            phoneNumber.setText(phonenumberTxt);
-                        } else {
-                            Log.d("fe", "user doesnt exist");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.d("fe", "failed to get info");
-                    });
-        } else {
-            Log.d("fe", "user is not signed in");
+            country.setText(countryText);
+            region.setText(regionText);
+            city.setText(cityText);
+            phoneNumber.setText(phoneNumberText);
         }
     }
 }

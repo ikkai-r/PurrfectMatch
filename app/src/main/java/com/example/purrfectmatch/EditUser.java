@@ -25,6 +25,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EditUser extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -63,14 +66,11 @@ public class EditUser extends AppCompatActivity {
     public void onDataPassed(Bundle bundle) {
         // Retrieve data from the bundle
         finalBundle = bundle;
-        registerUser();
+        editUser();
     }
-
-    private void registerUser() {
-
+    private void editUser() {
         // Retrieve data from the previous bundle
-        String email = finalBundle.getString("email");
-        String password = finalBundle.getString("password");
+        String password = finalBundle.getString("newPassword");
         String firstName = finalBundle.getString("firstname");
         String lastName = finalBundle.getString("lastname");
         String householdMembers = finalBundle.getString("householdMembers");
@@ -91,77 +91,90 @@ public class EditUser extends AppCompatActivity {
 
         Log.d("process", "I'm now here before");
 
-        // Check if all values are retrieved properly
-        if (email != null && password != null && firstName != null && lastName != null &&
+        if (firstName != null && lastName != null &&
                 householdMembers != null && otherPets != null && preferences1 != null && preferences2 != null &&
                 profileimg != null && phoneNumber != null && country != null && region != null && city != null && age != null && gender != null) {
 
-            // Check if username exists asynchronously
-            checkIfUsernameExists(username, usernameExists -> {
-                if (usernameExists) {
-                    // If username exists, show a toast and do not proceed
-                    Toast.makeText(EditUser.this, "Username already exists. Please choose another one.", Toast.LENGTH_SHORT).show();
-                } else {
-                    // If username does not exist, proceed with user registration
-                    Log.d("finish", "values are retrieved properly");
-
-                    // Create user
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(EditUser.this, task -> {
-                                if (task.isSuccessful()) {
-                                    // Sign-in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
-
-                                    // Create user data map for Firestore
-                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    DocumentReference userRef = db.collection("Users").document(user.getUid());
-
-                                    //uploadImageToFirebase(Uri.parse(profileimg), user.getUid());
-
-                                    // User data to be stored
-                                    User userData = new User(username, firstName, lastName, email, phoneNumber, country, region, city, Integer.parseInt(age), gender,
-                                            householdMembers,otherPets, preferences1, preferences2, userType, bio, profileimg);
-
-                                    // Store the user data in Firestore
-                                    userRef.set(userData)
-                                            .addOnSuccessListener(aVoid -> {
-                                                Log.d("empass", "User data successfully written to Firestore");
-                                                // Move to the next screen
-                                                Intent i = new Intent(EditUser.this, SuccessForm.class);
-                                                i.putExtra("title", "Sign up");
-                                                i.putExtra("title_big", "Success");
-                                                i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
-                                                i.putExtra("subtitle_2", "Are you ready to meet the cat of your dreams?");
-                                                i.putExtra("button_text", "Yes!");
-                                                i.putExtra("user_type", "user");
-                                                EditUser.this.startActivity(i);
-                                                finish();
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Log.w("empass", "Error writing document", e);
-                                                Toast.makeText(EditUser.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
-                                            });
-                                } else {
-                                    // If sign-in fails, display a message to the user.
-                                    Log.w("empass", "createUserWithEmail:failure", task.getException());
-
-                                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                        Toast.makeText(EditUser.this, "Email is already registered.", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(EditUser.this, "Sign up failed.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-            });
-
-        } else {
-            Log.d("finish", "values aren't retrieved properly");
-
-            // Handle the case where any required field is missing
-            Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show();
+            // Check if username is not blank
+            if (username != null && !username.isEmpty()) {
+                checkIfUsernameExists(username, usernameExists -> {
+                    if (usernameExists) {
+                        // If username exists, show a toast and do not proceed
+                        Toast.makeText(EditUser.this, "Username already exists. Please choose another one.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Proceed with editing the user and update Firestore
+                        updateUser(password, username, firstName, lastName, phoneNumber, country, region, city, age, gender, householdMembers, otherPets, preferences1, preferences2, bio, profileimg);
+                    }
+                });
+            } else {
+                // Skip username update and directly update other fields
+                updateUser(password, null, firstName, lastName, phoneNumber, country, region, city, age, gender, householdMembers, otherPets, preferences1, preferences2, bio, profileimg);
+            }
         }
     }
+
+    private void updateUser(String password, String username, String firstName, String lastName, String phoneNumber, String country, String region, String city, String age, String gender, String householdMembers, String otherPets, String preferences1, String preferences2, String bio, String profileimg) {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userRef = db.collection("Users").document(user.getUid());
+
+            // Map of fields to update
+            Map<String, Object> updates = new HashMap<>();
+            if (username != null) {
+                updates.put("username", username);
+            }
+            updates.put("firstName", firstName);
+            updates.put("lastName", lastName);
+            updates.put("phoneNumber", phoneNumber);
+            updates.put("country", country);
+            updates.put("region", region);
+            updates.put("city", city);
+            updates.put("age", Integer.parseInt(age));
+            updates.put("gender", gender);
+            updates.put("householdMembers", householdMembers);
+            updates.put("otherPets", otherPets);
+            updates.put("preferences1", preferences1);
+            updates.put("preferences2", preferences2);
+            updates.put("bio", bio);
+            updates.put("profileimg", profileimg);
+
+            if (password != null && !password.isEmpty()) {
+                user.updatePassword(password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Log.d("updatePassword", "Password updated successfully.");
+                            } else {
+                                Log.w("updatePassword", "Error updating password", task.getException());
+                            }
+                        });
+            }
+
+            // Update Firestore
+            userRef.update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("edit", "User data successfully updated in Firestore");
+
+                        // Move to the success screen
+                        Intent i = new Intent(EditUser.this, SuccessForm.class);
+                        i.putExtra("title", "User details");
+                        i.putExtra("title_big", "Updated");
+                        i.putExtra("subtitle_1", "Successfully edited user account");
+                        i.putExtra("button_text", "Okay");
+                        i.putExtra("user_type", "user");
+                        EditUser.this.startActivity(i);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w("edit", "Error updating document", e);
+                        Toast.makeText(EditUser.this, "Failed to save user data.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(EditUser.this, "No authenticated user found.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 //    // Upload the image to Firebase Storage
 //    private void uploadImageToFirebase(Uri photoUri, String UUID) {

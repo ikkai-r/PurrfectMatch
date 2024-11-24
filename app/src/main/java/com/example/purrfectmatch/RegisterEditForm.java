@@ -39,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +52,8 @@ public class RegisterEditForm extends Fragment implements LocationListener {
 
     LocationManager locationManager;
     private FirebaseAuth mAuth;
+    private Bundle bundle;
+    String usernameFromDb;
 
 
     private TextView email;
@@ -123,42 +126,13 @@ public class RegisterEditForm extends Fragment implements LocationListener {
                         if (task.isSuccessful()) {
 
                             // if all yes then pass as bundle
-
-                            Bundle bundle = new Bundle();
-                            bundle.putString("password", newPasswordText);
-                            bundle.putString("username", usernameText);
-
-                            Log.d("c", country + " " + city + " " + region);
-                            bundle.putString("country", country);
-                            bundle.putString("city", city);
-                            bundle.putString("region", region);
-
-                            PersonalEditForm personalForm = new PersonalEditForm();
-                            personalForm.setArguments(bundle);
-
-                            getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.form, personalForm).addToBackStack(null).commit();
-
+                            passData(usernameText, newPasswordText);
                         } else {
                             Toast.makeText(getActivity(), "Old password is incorrect!", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    // if all yes then pass as bundle
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("username", usernameText);
-
-                    Log.d("c", country + " " + city + " " + region);
-                    bundle.putString("country", country);
-                    bundle.putString("city", city);
-                    bundle.putString("region", region);
-
-                    PersonalEditForm personalForm = new PersonalEditForm();
-                    personalForm.setArguments(bundle);
-
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.formEdit, personalForm).addToBackStack(null).commit();
+                    passData(usernameText, "");
                 }
 
             }
@@ -166,6 +140,29 @@ public class RegisterEditForm extends Fragment implements LocationListener {
 
 
         return view;
+    }
+
+    private void passData(String usernameText, String passwordText) {
+
+        //check if username is the same or not, if not pass it
+        if(!usernameText.equals(usernameFromDb)) {
+            bundle.putString("username", usernameText);
+        } else {
+            bundle.putString("username", "");
+        }
+
+        bundle.putString("password", passwordText);
+
+        Log.d("c", country + " " + city + " " + region);
+        bundle.putString("country", country);
+        bundle.putString("city", city);
+        bundle.putString("region", region);
+
+        PersonalEditForm personalForm = new PersonalEditForm();
+        personalForm.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.formEdit, personalForm).addToBackStack(null).commit();
     }
 
     private void locationEnabled() {
@@ -221,19 +218,44 @@ public class RegisterEditForm extends Fragment implements LocationListener {
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             // Extract data from the document snapshot
-                            String emailTxt = documentSnapshot.getString("email");
-                            String usernameTxt = documentSnapshot.getString("username");
+                            Map<String, Object> userData = documentSnapshot.getData();
 
-                            // Display the data in the UI
-                            email.setText(emailTxt);
-                            username.setText(usernameTxt);
-                        } else {
-                            Log.d("fe", "user doesnt exist");
+                            bundle = new Bundle();
+
+                            if (userData != null) {
+                                for (Map.Entry<String, Object> entry : userData.entrySet()) {
+                                    String key = entry.getKey();
+                                    Object value = entry.getValue();
+
+                                    if (key.equals("username") || key.equals("password") ||
+                                            key.equals("country") || key.equals("city") || key.equals("region")) {
+                                        continue;
+                                    }
+
+                                    // Dynamically add to the bundle based on value type
+                                    if (value instanceof String) {
+                                        bundle.putString(key, (String) value);
+                                    } else if (value instanceof Long) {
+                                        bundle.putLong(key, (Long) value);
+                                        Log.d("age", "here age");
+                                    }
+                                    Log.d("FirestoreData", key + ": " + value);
+                                }
+
+                                // Dynamically set data to UI
+                                String emailTxt = (String) userData.get("email");
+                                usernameFromDb = (String) userData.get("username");
+
+                                // Display the data in the UI
+                                email.setText(emailTxt);
+                                username.setText(usernameFromDb);
+                            } else {
+                                Log.d("fe", "user doesnt exist");
+                            }
                         }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.d("fe", "failed to get info");
-                    });
+                    }).addOnFailureListener(e -> {
+                Log.d("fe", "failed to get info");
+            });
         } else {
             Log.d("fe", "user is not signed in");
         }

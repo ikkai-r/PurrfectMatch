@@ -28,7 +28,6 @@ public class PersonalEditForm extends Fragment {
     private Spinner genderSpinner;
     private EditText firstname, lastname, age;
     private Button buttonNext;
-    private FirebaseAuth mAuth;
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -54,8 +53,6 @@ public class PersonalEditForm extends Fragment {
         lastname = view.findViewById(R.id.lastname);
         age = view.findViewById(R.id.age);
         buttonNext = view.findViewById(R.id.buttonNext);
-
-        mAuth = FirebaseAuth.getInstance();
 
         //set known values
         setUserInfo();
@@ -113,38 +110,22 @@ public class PersonalEditForm extends Fragment {
     }
 
     private void setUserInfo() {
-        FirebaseUser user = mAuth.getCurrentUser();
 
-        if (user != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference userRef = db.collection("Users").document(user.getUid());
+        Bundle bundle = getArguments();
 
-            // Fetch data from Firestore using the reference
-            userRef.get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Extract data from the document snapshot
-                            String firstnameTxt = documentSnapshot.getString("firstName");
-                            String lastnameTxt = documentSnapshot.getString("lastName");
-                            Long ageTxt = documentSnapshot.getLong("age");
+            if (bundle != null) {
+                // Retrieve values from the bundle and set them to TextViews
+                String firstnameTxt = bundle.getString("firstName");
+                String lastnameTxt = bundle.getString("lastName");
+                String genderTxt = bundle.getString("gender");
+                String ageTxt = String.valueOf(bundle.getLong("age"));
 
-                            String genderTxt = documentSnapshot.getString("gender");
-                            setGenderSpinnerValue(genderTxt);
+                age.setText(ageTxt);
+                firstname.setText(firstnameTxt);
+                lastname.setText(lastnameTxt);
+                setGenderSpinnerValue(genderTxt);
+            }
 
-                            // Display the data in the UI
-                            firstname.setText(firstnameTxt);
-                            lastname.setText(lastnameTxt);
-                            age.setText(String.valueOf(ageTxt));
-                        } else {
-                            Log.d("fe", "user doesnt exist");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.d("fe", "failed to get info");
-                    });
-        } else {
-            Log.d("fe", "user is not signed in");
-        }
     }
 
     private void setGenderSpinnerValue(String genderTxt) {

@@ -37,15 +37,12 @@ public class AboutEditForm extends Fragment {
     private Button buttonNext, buttonUpload;
     private ImageView profileImageView;
     private Uri photoUri;
-    private FirebaseAuth mAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_form_edit, container, false);
-
-        mAuth = FirebaseAuth.getInstance();
 
         bio = view.findViewById(R.id.bio);
         buttonUpload = view.findViewById(R.id.buttonUpload);
@@ -89,9 +86,9 @@ public class AboutEditForm extends Fragment {
             Log.d("AboutForm", "Profile Image URI: " + (photoUri != null ? photoUri.toString() : "No Image"));
 
             // Pass the bundle to sign up
-            SignUp signUp = (SignUp) getActivity();
-            if (signUp != null) {
-                signUp.onDataPassed(previousBundle);
+            EditUser editUser = (EditUser) getActivity();
+            if (editUser != null) {
+                editUser.onDataPassed(previousBundle);
             }
         });
 
@@ -99,35 +96,19 @@ public class AboutEditForm extends Fragment {
     }
 
     private void setUserInfo() {
-        FirebaseUser user = mAuth.getCurrentUser();
 
         Bundle bundle = getArguments();
 
+        if (bundle != null) {
+            // Retrieve values from the bundle and set them to TextViews
+            String bioText = bundle.getString("bio");
+            String profileImgUri = bundle.getString("profileimg");
 
-        if (user != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference userRef = db.collection("Users").document(user.getUid());
-
-            // Fetch data from Firestore using the reference
-            userRef.get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Extract data from the document snapshot
-                            String bioTxt = documentSnapshot.getString("bio");
-
-                            // Display the data in the UI
-                            bio.setText(bioTxt);
-                        } else {
-                            Log.d("fe", "user doesnt exist");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.d("fe", "failed to get info");
-                    });
-        } else {
-            Log.d("fe", "user is not signed in");
+            bio.setText(bioText);
         }
+
     }
+
 
     // Launch intent to select an image
     private void choosePicture() {
