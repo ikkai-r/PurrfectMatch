@@ -1,6 +1,7 @@
 package com.example.purrfectmatch;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 interface UsernameCheckCallback {
     void onUsernameCheckComplete(boolean usernameExists);
@@ -31,6 +34,7 @@ public class SignUp extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Bundle finalBundle;
+    String profileImageUrl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +76,7 @@ public class SignUp extends AppCompatActivity {
         finish();
     }
 
-    public void onLifestyleDataPassed(Bundle bundle) {
+    public void onDataPassed(Bundle bundle) {
         // Retrieve data from the bundle
         finalBundle = bundle;
         registerUser();
@@ -98,12 +102,15 @@ public class SignUp extends AppCompatActivity {
         String age = finalBundle.getString("age");
         String gender = finalBundle.getString("gender");
 
+        String bio = finalBundle.getString("bio");
+        String profileimg = finalBundle.getString("profileimg");
+
         Log.d("process", "I'm now here before");
 
         // Check if all values are retrieved properly
         if (email != null && password != null && firstName != null && lastName != null &&
                 householdMembers != null && otherPets != null && preferences1 != null && preferences2 != null &&
-                phoneNumber != null && country != null && region != null && city != null && age != null && gender != null) {
+                profileimg != null && phoneNumber != null && country != null && region != null && city != null && age != null && gender != null) {
 
             // Check if username exists asynchronously
             checkIfUsernameExists(username, usernameExists -> {
@@ -125,9 +132,11 @@ public class SignUp extends AppCompatActivity {
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     DocumentReference userRef = db.collection("Users").document(user.getUid());
 
+                                    uploadImageToFirebase(Uri.parse(profileimg), user.getUid());
+
                                     // User data to be stored
                                     User userData = new User(username, firstName, lastName, email, phoneNumber, country, region, city, Integer.parseInt(age), gender,
-                                            householdMembers, otherPets, preferences1, preferences2, "user");
+                                            householdMembers,otherPets, preferences1, preferences2, "user", bio, profileImageUrl);
 
                                     // Store the user data in Firestore
                                     userRef.set(userData)
@@ -170,6 +179,33 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
+    // Upload the image to Firebase Storage
+    private void uploadImageToFirebase(Uri photoUri, String UUID) {
+        if (photoUri != null) {
+            // Create a reference to Firebase Storage in the "profile_images" folder
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference("profile_images/" + UUID);
+
+            // Upload the image file
+            storageReference.putFile(photoUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Get the download URL after the image has been uploaded
+                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                                    // Get the URL of the uploaded image
+                                    profileImageUrl = uri.toString();
+                                    Log.d("Firebase", "Image uploaded successfully. URL: " + profileImageUrl);
+                                    // Now you can save the image URL to your Firestore or perform further actions
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle errors
+                                    Log.e("Firebase", "Failed to get download URL", e);
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle upload errors
+                        Log.e("Firebase", "Failed to upload image", e);
+                    });
+        }
+    }
 
     private void checkIfUsernameExists(String username, UsernameCheckCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

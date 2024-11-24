@@ -15,12 +15,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-public class LifestyleForm extends Fragment {
+public class LifestyleEditForm extends Fragment {
 
     private Spinner spinnerHousehold, spinnerOtherPets, spinnerPreferences, spinnerPreferences2;
     private Button buttonNext;
 
-    public LifestyleForm() {
+    public LifestyleEditForm() {
         // Required empty public constructor
     }
 
@@ -96,13 +96,11 @@ public class LifestyleForm extends Fragment {
             previousBundle.putString("preferences1", preferences1);
             previousBundle.putString("preferences2", preferences2);
 
-            // Pass bundle to the next form
-            AboutForm aboutForm = new AboutForm();
-            aboutForm.setArguments(previousBundle);
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.form, aboutForm).addToBackStack(null).commit();
-
+            // Pass the bundle to sign up
+            SignUp signUp = (SignUp) getActivity();
+            if (signUp != null) {
+                signUp.onDataPassed(previousBundle);
+            }
         });
 
         return view;

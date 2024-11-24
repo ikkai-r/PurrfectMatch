@@ -116,6 +116,7 @@
             app:srcCompat="@drawable/user_1" />
 
         <TextView
+            android:id="@+id/editProfileBtn"
             android:layout_width="70dp"
             android:textColor="#4C0000"
             android:layout_height="wrap_content"
@@ -401,7 +402,7 @@
                             app:srcCompat="@drawable/dweety" />
 
                         <TextView
-                            android:id="@+id/textView25"
+                            android:id="@+id/textViewA"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"

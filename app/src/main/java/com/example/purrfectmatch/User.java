@@ -16,11 +16,14 @@ public class User {
     private String otherPets;
     private String preferences1;
     private String preferences2;
+    private String bio;
+    private String profileimg;
 
     // Constructor, getters, and setters
     public User(String username, String firstName, String lastName, String email, String phoneNumber, String country,
                 String region, String city, int age, String gender, String householdMembers,
-                String otherPets, String preferences1, String preferences2, String userType) {
+                String otherPets, String preferences1, String preferences2, String userType,
+                String bio, String profileimg) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,6 +39,8 @@ public class User {
         this.preferences1 = preferences1;
         this.preferences2 = preferences2;
         this.userType = userType;
+        this.bio = bio;
+        this.profileimg = profileimg;
     }
 
     public String getFirstName() {
@@ -148,5 +153,21 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfileimg() {
+        return profileimg;
+    }
+
+    public void setProfileimg(String profileimg) {
+        this.profileimg = profileimg;
     }
 }
