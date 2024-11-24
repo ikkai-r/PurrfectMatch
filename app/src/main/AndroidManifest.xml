@@ -27,9 +27,6 @@
             android:name=".ViewPagerCatEditAdapter"
             android:exported="false" />
         <activity
-            android:name=".ViewPagerAdapterCatEdit"
-            android:exported="false" />
-        <activity
             android:name=".EditCat"
             android:exported="false" />
         <activity
