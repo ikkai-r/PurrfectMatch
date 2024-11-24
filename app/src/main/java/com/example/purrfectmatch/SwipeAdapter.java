@@ -47,7 +47,7 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
         SwipeData swipeDataItem = catDataItemArrayList[position];
 
         holder.catImage.setImageResource(swipeDataItem.catImages[0]);
-        holder.ageText.setText(String.valueOf(swipeDataItem.age) + "months");
+        holder.ageText.setText(String.valueOf(swipeDataItem.age) + " months");
         holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
         holder.sexText.setText(String.valueOf(swipeDataItem.sex));
         holder.breedText.setText(swipeDataItem.breed);

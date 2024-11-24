@@ -65,8 +65,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
     private static final float MIN_ALPHA = 0.5f;
 
     // filter variables
-    private int maxAge = Integer.MAX_VALUE;
-    private int maxAdoptionFee = Integer.MAX_VALUE;
+    private int maxAge = -1;
+    private int maxAdoptionFee = -1;
     private String selectedSex = "All";
 
 
@@ -125,7 +125,27 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
             Button applyButton = popupView.findViewById(R.id.filterApplyButton);
             Button resetButton = popupView.findViewById(R.id.filterResetButton);
 
+            // Set previously saved values
+            if (maxAge != -1) {
+                ageEditText.setText(String.valueOf(maxAge));
+            }
+
+            if (maxAdoptionFee != -1) {
+                feeEditText.setText(String.valueOf(maxAdoptionFee));
+            }
+
+            if (selectedSex.equals("M")) {
+                sexRadioGroup.check(R.id.filterSexMale);
+            } else if (selectedSex.equals("F")) {
+                sexRadioGroup.check(R.id.filterSexFemale);
+            }
+
+
             resetButton.setOnClickListener(filterView -> {
+                maxAdoptionFee = -1;
+                maxAge = -1;
+                selectedSex = "All";
+
                 filter.setText("Filter");
                 swipeAdapter.updateData(swipeDataList.toArray(new SwipeData[0]));
 
@@ -145,9 +165,9 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
                 int selectedSexId = sexRadioGroup.getCheckedRadioButtonId();
                 if (selectedSexId == R.id.filterSexMale) {
-                    selectedSex = "Male";
+                    selectedSex = "M";
                 } else if (selectedSexId == R.id.filterSexFemale) {
-                    selectedSex = "Female";
+                    selectedSex = "F";
                 } else {
                     selectedSex = "All";
                 }
@@ -167,13 +187,15 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         for (SwipeData data : swipeDataList) {
             boolean isValid = true;
 
-            // Check max age
-            if (data.getAge() > maxAge) {
+            if (data.getAge() > maxAge && maxAge != -1) {
                 isValid = false;
             }
 
-            // Check max adoption fee
-            if (data.getAdoptionFee() > maxAdoptionFee) {
+            if (data.getAdoptionFee() > maxAdoptionFee && maxAdoptionFee != -1) {
+                isValid = false;
+            }
+
+            if (!selectedSex.equals("All") &&  data.getSexS() != selectedSex.charAt(0)) {
                 isValid = false;
             }
 

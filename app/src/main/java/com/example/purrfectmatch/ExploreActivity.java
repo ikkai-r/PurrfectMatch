@@ -123,7 +123,7 @@ public class ExploreActivity extends AppCompatActivity {
                 // Reset filters to default
                 maxAdoptionFee = -1;
                 maxAge = -1;
-                selectedSex = "";
+                selectedSex = "All";
 
                 filter.setText("Filter");
                 adapter.updateList(exploreList);
