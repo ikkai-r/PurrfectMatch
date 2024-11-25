@@ -28,11 +28,11 @@ public class ApplicationsActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        profile = findViewById(R.id.imageView16);
+        profile = findViewById(R.id.profile);
 
-        explore = findViewById(R.id.imageView19);
+        explore = findViewById(R.id.explore);
 
-        swipe = findViewById(R.id.imageView17);
+        swipe = findViewById(R.id.swipe);
 
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);

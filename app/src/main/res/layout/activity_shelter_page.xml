@@ -198,7 +198,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:scrollbars="horizontal"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:id="@+id/recyclerViewPending">

@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.TextView;
@@ -51,8 +52,8 @@ public class ShelterPage extends AppCompatActivity {
         catsWithPendingApps = new ArrayList<>();
 
         recyclerViewPending = findViewById(R.id.recyclerViewPending);
-
         adapterPending = new PendingAppHomeAdapter(catsWithPendingApps, ShelterPage.this);
+        recyclerViewPending.setLayoutManager(new LinearLayoutManager(ShelterPage.this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewPending.setAdapter(adapterPending);
 
         db = FirebaseFirestore.getInstance();
@@ -98,8 +99,6 @@ public class ShelterPage extends AppCompatActivity {
                                         + e.getMessage());
                             }
                         }
-
-                        recyclerViewPending.setLayoutManager(new GridLayoutManager(this, 1));
                         adapterPending.notifyDataSetChanged();
                     } else {
                         Toast.makeText(ShelterPage.this, "Error fetching cat data.",
