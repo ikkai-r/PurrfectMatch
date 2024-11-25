@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class ShelterPage extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         initializeNumbers();
+        Log.d("fetching", "fetching pending apps");
         fetchPendingApps();
 
 
@@ -70,6 +72,9 @@ public class ShelterPage extends AppCompatActivity {
         // Initialize the list to store cats
         catsWithPendingApps.clear();
 
+        Log.d("fetching", "fetching pending apps here");
+
+
         // Query to fetch the cats
         db.collection("Cats")  // Assuming you have a "Cats" collection
                 .get()
@@ -78,16 +83,23 @@ public class ShelterPage extends AppCompatActivity {
                         for (DocumentSnapshot catSnapshot : task.getResult()) {
                             try {
                                 Cat cat = catSnapshot.toObject(Cat.class);  // Convert the document into Cat object
+                                Log.d("catP", cat.getName());
                                 if (cat != null) {
+                                    Log.d("catP", cat.getName() + " exists");
                                     if (cat.getPendingApplications() != null) {
+                                        Log.d("catP", cat.getName() + " has pending application");
+
                                         catsWithPendingApps.add(cat);
+
                                     }
                                 }
                             } catch (Exception e) {
-                                Toast.makeText(ShelterPage.this, "Error parsing cat data: "
-                                        + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d("catP", "Error parsing cat data: "
+                                        + e.getMessage());
                             }
                         }
+
+                        recyclerViewPending.setLayoutManager(new GridLayoutManager(this, 1));
                         adapterPending.notifyDataSetChanged();
                     } else {
                         Toast.makeText(ShelterPage.this, "Error fetching cat data.",

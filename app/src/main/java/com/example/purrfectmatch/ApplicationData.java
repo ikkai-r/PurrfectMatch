@@ -1,8 +1,9 @@
 package com.example.purrfectmatch;
 
-import java.security.Timestamp;
+import java.io.Serializable;
+import com.google.firebase.Timestamp;
 
-public class ApplicationData {
+public class ApplicationData implements Serializable {
     private String applicationId;
     private String catId;
     private String userId;

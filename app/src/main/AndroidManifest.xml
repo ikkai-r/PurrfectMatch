@@ -52,6 +52,9 @@
             android:name=".PendingApplications"
             android:exported="false" />
         <activity
+            android:name=".PendingApplicationsSpecific"
+            android:exported="false" />
+        <activity
             android:name=".ShelterPage"
             android:exported="false" />
         <activity

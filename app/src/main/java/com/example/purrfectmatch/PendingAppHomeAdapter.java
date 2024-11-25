@@ -1,11 +1,14 @@
 package com.example.purrfectmatch;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.content.Intent;
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +36,7 @@ public class PendingAppHomeAdapter extends RecyclerView.Adapter<PendingAppHomeAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Cat currentCat = catsWithPendingApps.get(position);
+        Log.d("binding", currentCat.getName());
 
         // Populate the views with data from PendingAppData
         holder.catImage.setImageResource(R.drawable.dweety); // Replace with actual image
@@ -46,6 +50,11 @@ public class PendingAppHomeAdapter extends RecyclerView.Adapter<PendingAppHomeAd
             if (listener != null) {
                 listener.onItemClick(currentCat);
             }
+
+            // Create an Intent to navigate to the specific application's page for the current cat
+            Intent intent = new Intent(context, PendingApplicationsSpecific.class);
+            intent.putExtra("cat", currentCat);  // Pass the cat object via Intent
+            context.startActivity(intent);  // Start the new activity
         });
     }
 
