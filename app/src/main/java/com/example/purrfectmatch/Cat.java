@@ -2,6 +2,8 @@ package com.example.purrfectmatch;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.List;
+
 @IgnoreExtraProperties
 public class Cat {
 
@@ -21,13 +23,14 @@ public class Cat {
     private String birthday;
     private String contactNumber;
     private boolean isAvailable;
+    private List<ApplicationData> pendingApplications;
 
     // Default constructor required for calls to DataSnapshot.getValue(Cat.class)
     public Cat() {}
 
     public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, char sex, String foodPreference, String description,
                String temperament, String breed, String compatibleWith, String medicalHistory, String ownerName, String birthday,
-               String contactNumber, boolean isAvailable) {
+               String contactNumber, boolean isAvailable, List<ApplicationData> pendingApplications) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -43,7 +46,16 @@ public class Cat {
         this.ownerName = ownerName;
         this.birthday = birthday;
         this.contactNumber = contactNumber;
+        this.pendingApplications = pendingApplications;
         this.isAvailable = isAvailable;
+    }
+
+    public List<ApplicationData> getPendingApplications() {
+        return pendingApplications;
+    }
+
+    public void setPendingApplications(List<ApplicationData> pendingApplications) {
+        this.pendingApplications = pendingApplications;
     }
 
     // Getters and Setters

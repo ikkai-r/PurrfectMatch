@@ -3,24 +3,40 @@ package com.example.purrfectmatch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ShelterPage extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private TextView txtCats, txtScheduled, txtPending;
     private int numCats, numScheduledAppointments, numPendingApplications;
+    private RecyclerView recyclerViewPending, recyclerViewScheduled;
+    private PendingAppHomeAdapter adapterPending;
+    private List<Cat> catsWithPendingApps;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +47,17 @@ public class ShelterPage extends AppCompatActivity {
         txtCats = findViewById(R.id.totalCats);
         txtScheduled = findViewById(R.id.appointmentTxt);
         txtPending = findViewById(R.id.adoptionAppTxt);
+        catsWithPendingApps = new ArrayList<>();
+
+        recyclerViewPending = findViewById(R.id.recyclerViewPending);
+
+        adapterPending = new PendingAppHomeAdapter(catsWithPendingApps, ShelterPage.this);
+        recyclerViewPending.setAdapter(adapterPending);
 
         db = FirebaseFirestore.getInstance();
         initializeNumbers();
+        fetchPendingApps();
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -41,6 +65,39 @@ public class ShelterPage extends AppCompatActivity {
             return insets;
         });
     }
+
+    private void fetchPendingApps() {
+        // Initialize the list to store cats
+        catsWithPendingApps.clear();
+
+        // Query to fetch the cats
+        db.collection("Cats")  // Assuming you have a "Cats" collection
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot catSnapshot : task.getResult()) {
+                            try {
+                                Cat cat = catSnapshot.toObject(Cat.class);  // Convert the document into Cat object
+                                if (cat != null) {
+                                    if (cat.getPendingApplications() != null) {
+                                        catsWithPendingApps.add(cat);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(ShelterPage.this, "Error parsing cat data: "
+                                        + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        adapterPending.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(ShelterPage.this, "Error fetching cat data.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+
 
     public void goPendingApps(View v) {
         Intent i = new Intent(this, PendingApplications.class);
