@@ -148,7 +148,7 @@
                 android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
-                <TextView
+                    <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/backButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -165,8 +165,8 @@
                 <!-- Next Button -->
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/buttonNext"
-                    android:layout_width="240dp"
-                    android:layout_height="61dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="20dp"
                     android:background="@drawable/background_button"
@@ -177,7 +177,7 @@
                     android:text="Next"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
-                    android:textSize="22sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:iconTint="#0D0B0B" />
 
