@@ -502,8 +502,9 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                     String applicationCatId = documentSnapshot.getString("catId");
                     String status = documentSnapshot.getString("status");
 
-                    if (catId.equals(applicationCatId) && (!status.equals("expired") || !status.equals("approved")
-                        || !status.equals("rejected"))) {
+                    if (catId.equals(applicationCatId) && (!status.equals("expired") && !status.equals("approved")
+                            && !status.equals("rejected"))) {
+//                        Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
                         applicationStatusText.setVisibility(View.VISIBLE);
                         linearLayout.setVisibility(View.GONE);
                     }
