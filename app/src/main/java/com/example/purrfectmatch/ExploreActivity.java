@@ -44,7 +44,7 @@ public class ExploreActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private EditText searchBar;
-    private ImageView profile, explore, swipe;
+    private ImageView profile, swipe;
     private TextView filter;
 
     private int maxAge = -1, maxAdoptionFee = -1;
@@ -57,7 +57,6 @@ public class ExploreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_explore);
 
         profile = findViewById(R.id.profile);
-        explore = findViewById(R.id.explore);
         swipe = findViewById(R.id.swipe);
         filter = findViewById(R.id.filter);
 
