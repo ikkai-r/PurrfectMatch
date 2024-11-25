@@ -45,7 +45,7 @@ public class ExploreActivity extends AppCompatActivity {
 
     private EditText searchBar;
     private ImageView profile, swipe;
-    private TextView filter;
+    private TextView filter, noResultsTxt;
 
     private int maxAge = -1, maxAdoptionFee = -1;
     private String selectedSex = "All";
@@ -59,6 +59,7 @@ public class ExploreActivity extends AppCompatActivity {
         profile = findViewById(R.id.profile);
         swipe = findViewById(R.id.swipe);
         filter = findViewById(R.id.filter);
+        noResultsTxt = findViewById(R.id.noResultsTxt);
 
         exploreList = new ArrayList<>();
         filteredList = new ArrayList<>(exploreList);
@@ -154,8 +155,6 @@ public class ExploreActivity extends AppCompatActivity {
                 applyFilter();
                 popupWindow.dismiss();
             });
-
-
         });
 
         profile.setOnClickListener(view -> {
@@ -269,6 +268,13 @@ public class ExploreActivity extends AppCompatActivity {
         }
 
         this.filteredList = filteredList;
+
+        if (filteredList.isEmpty()) {
+            noResultsTxt.setVisibility(View.VISIBLE);
+        } else {
+            noResultsTxt.setVisibility(View.GONE);
+        }
+
         adapter.updateList(filteredList);
     }
 
@@ -303,7 +309,11 @@ public class ExploreActivity extends AppCompatActivity {
                 }
             }
         }
-
+        if (filteredList.isEmpty()) {
+            noResultsTxt.setVisibility(View.VISIBLE);
+        } else {
+            noResultsTxt.setVisibility(View.GONE);
+        }
         adapter.updateList(filteredList);
     }
 }
