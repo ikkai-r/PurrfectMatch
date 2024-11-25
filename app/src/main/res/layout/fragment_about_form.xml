@@ -135,7 +135,7 @@
                 android:fontFamily="@font/poppins_bold"
                 android:paddingStart="30dp"
                 android:paddingEnd="20dp"
-                android:text="Next"
+                android:text="Save Changes"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"

@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import android.graphics.PorterDuff;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -81,26 +84,51 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
             // need to make this about THE USER
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            String userId = "user67890";  
+
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = auth.getCurrentUser();
+
+
+            String userId = currentUser.getUid();
+            String catId = swipeDataItem.catId;
 
             if (swipeDataItem.isBookmarked) {
                 db.collection("Cats")
-                    .document(swipeDataItem.catId)
+                    .document(catId)
                     .update("bookmarkedBy", FieldValue.arrayUnion(userId))
                     .addOnSuccessListener(aVoid -> {
-                        notifyItemChanged(position);
+                        db.collection("Users")
+                            .document(userId)
+                            .update("bookmarkedCats", FieldValue.arrayUnion(catId))
+                            .addOnSuccessListener(innerVoid -> {
+                                notifyItemChanged(position); // Update UI
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Error", "Failed to update bookmarkedCats in Users", e);
+                            });
                     })
                     .addOnFailureListener(e -> {
+                        Log.e("Error", "Failed to update bookmarkedBy in Cats", e);
                     });
             } else {
                 db.collection("Cats")
-                    .document(swipeDataItem.catId)
+                    .document(catId)
                     .update("bookmarkedBy", FieldValue.arrayRemove(userId))
                     .addOnSuccessListener(aVoid -> {
-                        notifyItemChanged(position);
+                        db.collection("Users")
+                            .document(userId)
+                            .update("bookmarkedCats", FieldValue.arrayRemove(catId))
+                            .addOnSuccessListener(innerVoid -> {
+                                notifyItemChanged(position); // Update UI
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Error", "Failed to update bookmarkedCats in Users", e);
+                            });
                     })
                     .addOnFailureListener(e -> {
+                        Log.e("Error", "Failed to update bookmarkedBy in Cats", e);
                     });
+
             }
 
 

@@ -48,6 +48,10 @@ public class SwipeData {
     public char getSexS() {
         return sex;
     }
+
+    public void setBookmarked(Boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
+    }
     
 
 
