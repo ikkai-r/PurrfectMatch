@@ -95,7 +95,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                             String userOtherPets = document.getString("otherPets");
                             String userTempSocial = document.getString("preferences1");
                             String userTempEnergy = document.getString("preferences2");
-
+                            int userAge = document.getLong("age").intValue();
                             // Set applicant's name
                             holder.applicant.setText("Applicant: " + userName);
 
@@ -105,18 +105,17 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                         if (catTask.isSuccessful()) {
                                             DocumentSnapshot catDocument = catTask.getResult();
                                             if (catDocument.exists()) {
-                                                String catSize = catDocument.getString("size");
                                                 String catTemp1 = catDocument.getString("temperament1");
                                                 String catTemp2 = catDocument.getString("temperament2");
-                                                String catCompatibility = catDocument.getString("petsCompatibility");
+                                                String catCompatibility = catDocument.getString("compatibleWith");
 
                                                 // Calculate the matching traits and percentage
-                                                //int matchingTraits = getMatchingTraits(userHousehold, catSize, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
-                                                //double matchingPercentage = calculateMatchingPercentage(matchingTraits);
+                                                int matchingTraits = getMatchingTraits(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
+                                                double matchingPercentage = calculateMatchPercentage(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2, userAge);
 
                                                 // Display matching traits and percentage
-                                                //holder.matching.setText("Matching traits: " + matchingTraits);
-                                                //holder.percentage.setText("Matching percentage: " + matchingPercentage + "%");
+                                                holder.matching.setText("Matching traits: " + matchingTraits);
+                                                holder.percentage.setText("They are " + matchingPercentage + "% compatible based on traits and preferences");
                                             }
                                         } else {
                                             Log.d("PendingAppAdapter", "Error getting cat data: ", catTask.getException());
@@ -130,14 +129,18 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
     }
 
     // Method to calculate matching traits
-    public int getMatchingTraits(String userHousehold, String catSize,
+    public int getMatchingTraits(String userHousehold,
                                  String userOtherPets, String catPetsCompatibility,
                                  String userTempSocial, String catTemp1,
                                  String userTempEnergy, String catTemp2) {
         int matches = 0;
 
-        // Compare household dynamics with cat size
-        if (userHousehold.equals("2-4 members") && catSize.equals("medium")) {
+        // Compare household members to cat's social characteristic
+        if (userHousehold.equals("2-4 members") && catTemp2.equals("Active / Playful")) {
+            matches++;
+        } else if (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) {
+            matches++;
+        } else if (userHousehold.equals("4+ members") && catTemp2.equals("Active / Playful") ) {
             matches++;
         }
 
@@ -160,11 +163,70 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
         return matches;
     }
 
-    // Calculate the matching percentage based on the number of matching traits
-    public double calculateMatchingPercentage(int matchingTraits) {
-        // Assuming there are 4 traits to compare, we calculate the percentage
-        return (matchingTraits / 4.0) * 100;
+    public double calculateMatchPercentage(String userHousehold,
+                                           String userOtherPets,
+                                           String catPetsCompatibility,
+                                           String userTempSocial,
+                                           String catTemp1,
+                                           String userTempEnergy,
+                                           String catTemp2,
+                                           int userAge) {
+        // Define weights
+        final int HOUSEHOLD_WEIGHT = 25;
+        final int OTHER_PETS_WEIGHT = 25;
+        final int SOCIAL_TEMPERAMENT_WEIGHT = 20;
+        final int ENERGY_TEMPERAMENT_WEIGHT = 20;
+        final int AGE_WEIGHT = 10; // Weight for age factor
+
+        // Track total weights
+        int totalWeight = HOUSEHOLD_WEIGHT + OTHER_PETS_WEIGHT + SOCIAL_TEMPERAMENT_WEIGHT + ENERGY_TEMPERAMENT_WEIGHT + AGE_WEIGHT;
+        int totalMatchWeight = 0;
+
+        // Compare household members to cat's activity level
+        if ((userHousehold.equals("2-4 members") && catTemp2.equals("Active / Playful")) ||
+                (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) ||
+                (userHousehold.equals("4+ members") && catTemp2.equals("Active / Playful"))) {
+            totalMatchWeight += HOUSEHOLD_WEIGHT;
+        }
+
+        // Compare other pets with compatibility
+        if ((userOtherPets.equals("Yes") && catPetsCompatibility.contains("Yes")) ||
+                (userOtherPets.equals("No") && catPetsCompatibility.contains("No"))) {
+            totalMatchWeight += OTHER_PETS_WEIGHT;
+        }
+
+        // Compare social temperament
+        if (userTempSocial.equals(catTemp1)) {
+            totalMatchWeight += SOCIAL_TEMPERAMENT_WEIGHT;
+        }
+
+        // Compare energy temperament
+        if (userTempEnergy.equals(catTemp2)) {
+            totalMatchWeight += ENERGY_TEMPERAMENT_WEIGHT;
+        }
+
+        // Calculate age score
+        int ageScore = calculateAgeScore(userAge);
+        totalMatchWeight += ageScore * AGE_WEIGHT / 30; // Scale ageScore (max 30) to AGE_WEIGHT
+
+        // Calculate percentage match
+        return (double) totalMatchWeight / totalWeight * 100;
     }
+
+    private int calculateAgeScore(int age) {
+        // Age scoring based on ranges
+        if (age < 18) {
+            return 5; // Not suitable
+        } else if (age >= 18 && age <= 24) {
+            return 10;
+        } else if (age >= 25 && age <= 34) {
+            return 20;
+        } else {
+            return 30; // Highest suitability
+        }
+    }
+
+
 
     @Override
     public int getItemCount() {
