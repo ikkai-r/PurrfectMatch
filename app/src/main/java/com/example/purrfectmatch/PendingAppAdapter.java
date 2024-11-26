@@ -17,7 +17,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,6 +28,10 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
     private List<ApplicationData> pendingApps;
     private Context context;
     private OnItemClickListener listener;
+    HashMap<String, String> userFields = new HashMap<>();
+    HashMap<String, String> catFields = new HashMap<>();
+    HashMap<String, String> appFields = new HashMap<>();
+    Intent i;
 
     public PendingAppAdapter(List<ApplicationData> pendingApps, Context context) {
         this.pendingApps = pendingApps;
@@ -59,9 +65,17 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                     listener.onItemClick(app);
                 }
 
+                appFields.put("appDate", formatFirebaseTimestamp(app.getApplicationDate()));
+
                 // Create an Intent to navigate to the specific application's page for the current cat
                 Intent intent = new Intent(context, PendingAppView.class);
-                intent.putExtra("app", app);  // Pass the application object via Intent
+                intent.putExtra("app", appFields);  // Pass the application object via Intent
+                intent.putExtra("cat", catFields);
+                intent.putExtra("user", userFields);
+
+                Log.d("pabe", appFields.toString());
+                Log.d("pabe", catFields.toString());
+                Log.d("pabe", userFields.toString());
                 context.startActivity(intent);  // Start the new activity
             });
 
@@ -116,6 +130,21 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                                 // Display matching traits and percentage
                                                 holder.matching.setText("Matching traits: " + matchingTraits);
                                                 holder.percentage.setText("They are " + matchingPercentage + "% compatible based on traits and preferences");
+
+                                                userFields.put("name", userName);
+                                                userFields.put("age", String.valueOf(userAge));
+                                                userFields.put("householdMembers", userHousehold);
+                                                userFields.put("otherPets", userOtherPets);
+                                                userFields.put("gender", document.getString("gender"));
+                                                userFields.put("preferences1", userTempSocial);
+                                                userFields.put("preferences2", userTempEnergy);
+                                                userFields.put("address2", document.getString("city") + ", " + document.getString("region"));
+
+                                                catFields.put("catTemp1", catTemp1);
+                                                catFields.put("catTemp2", catTemp2);
+                                                catFields.put("catCompatibility", catCompatibility);
+                                                catFields.put("catName", catDocument.getString("name"));
+                                                catFields.put("percentage", String.valueOf(matchingPercentage));
                                             }
                                         } else {
                                             Log.d("PendingAppAdapter", "Error getting cat data: ", catTask.getException());
@@ -127,6 +156,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                     }
                 });
     }
+
 
     // Method to calculate matching traits
     public int getMatchingTraits(String userHousehold,
