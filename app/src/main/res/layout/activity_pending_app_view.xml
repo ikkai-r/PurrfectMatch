@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context=".ViewApplication"
+    tools:context=".PendingAppView"
     android:id="@+id/main">
 
     <LinearLayout
@@ -36,7 +36,6 @@
             android:scaleType="centerCrop"
             android:clipToOutline="true" />
 
-
         <LinearLayout
             android:layout_margin="10dp"
             android:layout_width="match_parent"
@@ -63,14 +62,14 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonAccept"
-                android:onClick="acceptApp"
+                android:id="@+id/buttonSchedule"
+                android:onClick="goScheduledApp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:background="@drawable/custom_bg2"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Accept"
+                android:text="Schedule"
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:layout_margin="5dp"
@@ -152,10 +151,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Just like I express in 'La La Lost You,' I believe in finding solace in the little things, and a cat brings that effortless joy. Plus, they embody that independence and playfulness that resonates with my brand."
                 android:fontFamily="@font/poppins_regular"
-                android:textSize="12sp"
-                android:textColor="@color/black" />
+                android:text="Just like I express in 'La La Lost You,' I believe in finding solace in the little things, and a cat brings that effortless joy. Plus, they embody that independence and playfulness that resonates with my brand."
+                android:textColor="@color/black"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Lifestyle Preferences with minimal spacing -->

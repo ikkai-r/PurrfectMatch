@@ -60,7 +60,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 }
 
                 // Create an Intent to navigate to the specific application's page for the current cat
-                Intent intent = new Intent(context, PendingApplicationsSpecific.class);
+                Intent intent = new Intent(context, PendingAppView.class);
                 intent.putExtra("app", app);  // Pass the application object via Intent
                 context.startActivity(intent);  // Start the new activity
             });
