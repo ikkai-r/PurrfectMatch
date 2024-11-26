@@ -31,113 +31,223 @@
                 android:text="My Applications"
                 android:textColor="@color/black"
                 android:textAlignment="center"
-                android:textSize="30sp"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                android:textSize="30sp" />
 
             <LinearLayout
-                android:layout_width="410dp"
-                android:layout_height="207dp"
-                android:orientation="vertical">
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="3">
 
                 <LinearLayout
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="25dp"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="90dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/dashboard_icon"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/numActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:gravity="center"
+                            android:text="12"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:gravity="center"
+                            android:text="active applications"
+                            android:textColor="@color/black"
+                            android:onClick="viewCats"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="90dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/dashboard_icon"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <!-- Large Bold Text -->
+                        <TextView
+                            android:id="@+id/numAccepted"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textAllCaps="true"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <!-- Regular Text Below -->
+                        <TextView
+                            android:id="@+id/txtView2"
+                            android:layout_width="95dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:gravity="center"
+                            android:text="accepted applications"
+                            android:textColor="@color/black"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="90dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/dashboard_icon"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/activeApplicationsTxt"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/fredoka_medium"
-                        android:text="Active Applications"
-                        android:textSize="20dp"/>
-
-                    <View
+                        android:id="@+id/numRejected"
                         android:layout_width="wrap_content"
-                        android:layout_height="0.5dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="#FDA626"
-                        android:scaleY="5" />
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:gravity="center"
+                        android:text="7"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/noActiveApplicationsTxt"
+                        android:id="@+id/secondText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:text="You have no active applications."
-                        android:textColor="#4C0000"
-                        android:textSize="9dp"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerActiveApplications"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="25dp"
-                        android:scrollbars="horizontal"
-                        android:orientation="horizontal"/>
+                        android:layout_marginTop="-5dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:gravity="center"
+                        android:text="rejected applications"
+                        android:textColor="@color/black"
+                        android:textSize="8sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Active Applications Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="15dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/activeApplicationsTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textColor = "#000000"
+                    android:text="Active Applications"
+                    android:textSize="15dp" />
 
-                    <TextView
-                        android:id="@+id/textView24"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/fredoka_medium"
-                        android:text="Closed Applications"
-                        android:textSize="20dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="#FDA626" />
 
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="0.5dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="#FDA626"
-                        android:scaleY="5" />
+                <TextView
+                    android:id="@+id/noActiveApplicationsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="You have no active applications."
+                    android:textColor="#4C0000"
+                    android:textSize="9dp"
+                    android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/noClosedApplicationsTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:text="You have no closed applications."
-                        android:textColor="#4C0000"
-                        android:textSize="9dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerActiveApplications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerClosedApplications"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="25dp"
-                        android:scrollbars="horizontal"
-                        android:orientation="horizontal"/>
+            <!-- Closed Applications Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp">
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/textView24"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textColor = "#000000"
+                    android:text="Closed Applications"
+                    android:textSize="15dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#FDA626" />
+
+                <TextView
+                    android:id="@+id/noClosedApplicationsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="You have no closed applications."
+                    android:textColor="#4C0000"
+                    android:textSize="9dp"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerClosedApplications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:scrollbars="vertical" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -150,10 +260,9 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="4dp"
-        android:paddingBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/profile"
