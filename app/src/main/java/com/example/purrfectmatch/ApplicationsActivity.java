@@ -63,6 +63,7 @@ public class ApplicationsActivity extends AppCompatActivity {
         swipe = findViewById(R.id.swipe);
         noActiveApplicationsTxt = findViewById(R.id.noActiveApplicationsTxt);
 
+
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
             startActivity(i);

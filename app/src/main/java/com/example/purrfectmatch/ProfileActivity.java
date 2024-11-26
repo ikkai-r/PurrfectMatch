@@ -22,6 +22,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         bookmarkedCats = new ArrayList<>();
 
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(ProfileActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
         adapter = new ExploreAdapter(bookmarkedCats, ProfileActivity.this);
         recyclerView.setAdapter(adapter);
