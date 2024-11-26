@@ -114,7 +114,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         if (feedback == null || feedback.trim().isEmpty()) {
             feedback = "N/A";
         }
-        
+
         holder.textBig.setText("Reason: " + feedback);
 
         if (application.getStatus().equals("accepted")) {

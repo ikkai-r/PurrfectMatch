@@ -363,7 +363,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Compatible With"
+                        android:text="Compatible With Other Pets?"
                         android:fontFamily="@font/poppins_bold"
                         android:textSize="16sp" />
                 </LinearLayout>
