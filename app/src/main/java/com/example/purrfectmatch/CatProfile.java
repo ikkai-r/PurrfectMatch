@@ -28,7 +28,7 @@ public class CatProfile extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private ImageView profile, explore, swipe, catImage, bookmarkIcon;
+    private ImageView catImage;
     private TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText,
             compatibleWithText, adoptionFeeText, contactInformationText, nameText;
     private String catId, catName;
@@ -90,9 +90,6 @@ public class CatProfile extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        profile = findViewById(R.id.profile);
-        explore = findViewById(R.id.explore);
-        swipe = findViewById(R.id.swipe);
         catImage = findViewById(R.id.catPic);
         ageText = findViewById(R.id.ageText);
         weightText = findViewById(R.id.weightText);
@@ -105,7 +102,6 @@ public class CatProfile extends AppCompatActivity {
         adoptionFeeText = findViewById(R.id.adoptionFeeText);
         contactInformationText = findViewById(R.id.contactInformationText);
         nameText = findViewById(R.id.nameText);
-        bookmarkIcon = findViewById(R.id.bookmarkIcon);
     }
 
     private void loadCatData() {
@@ -121,9 +117,9 @@ public class CatProfile extends AppCompatActivity {
                         SwipeData swipeDataItem = createCatDataFromDocument(document, catId);
 
                         //TODO: Change to actual cat images
-                        catImage.setImageResource(R.drawable.cat1);
+                        catImage.setImageResource(swipeDataItem.catImage);
 
-                        ageText.setText(String.valueOf(swipeDataItem.age) + "months");
+                        ageText.setText(String.valueOf(swipeDataItem.age) + " months");
                         weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
                         sexText.setText(String.valueOf(swipeDataItem.sex));
                         breedText.setText(swipeDataItem.breed);

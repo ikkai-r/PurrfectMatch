@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -106,9 +107,8 @@ public class ViewCatsAdoption extends AppCompatActivity {
                         exploreList.clear();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             try {
-                                ExploreData cat = snapshot.toObject(ExploreData.class);
+                                ExploreData cat = createExploreDataFromDocument(snapshot);
                                 if (cat != null) {
-                                    cat.setId(snapshot.getId());
                                     exploreList.add(cat);
                                 }
                             } catch (Exception e) {
@@ -120,6 +120,34 @@ public class ViewCatsAdoption extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    private ExploreData createExploreDataFromDocument(DocumentSnapshot document) {
+        try {
+            String catId = document.getId();
+            int age = document.contains("age") && document.get("age") != null
+                    ? document.getLong("age").intValue()
+                    : 0;
+
+            String catImageStr = document.getString("catImage");
+            int catImage = R.drawable.app_icon; // Default picture
+            if (catImageStr != null && !catImageStr.isEmpty()) {
+                catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+            }
+
+            String sex = document.getString("sex");
+            String breed = document.getString("breed");
+            String name = document.getString("name");
+            boolean isNeutered = document.contains("isNeutered") && Boolean.TRUE.equals(document.getBoolean("isNeutered"));
+            int adoptionFee = document.contains("adoptionFee") && document.get("adoptionFee") != null
+                    ? document.getLong("adoptionFee").intValue()
+                    : 0;
+
+            return new ExploreData(catId, catImage, name, age, sex, breed, isNeutered, adoptionFee);
+        } catch (Exception e) {
+            Log.e("CreateExploreData", "Error creating ExploreData from document", e);
+            return null;
+        }
     }
 
     private void searchCats(String query) {
