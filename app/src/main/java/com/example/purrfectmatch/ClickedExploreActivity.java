@@ -52,7 +52,8 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
 
     private ImageView profile, explore, swipe, catImage, bookmarkIcon;
     private TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText,
-            compatibleWithText, adoptionFeeText, contactInformationText, nameText;
+            compatibleWithText, adoptionFeeText, contactInformationText, nameText, applicationStatusText;
+    private LinearLayout linearLayout;
     private String documentId;
     private ScrollView scrollView;
 
@@ -60,6 +61,9 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
     private float x1, x2, y1, y2;
     private GestureDetector gestureDetector;
     private LinearLayout swipeableArea;
+
+    private boolean isBookmarked = false;
+    private boolean hasPendingApplication = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         documentId = i.getStringExtra("documentId");
 
         loadCatData();
+        initializeBookmarkLogic(documentId);
+        checkUserApplications(documentId);
 
         setupNavigationListeners();
     }
@@ -97,6 +103,8 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         nameText = findViewById(R.id.nameText);
         scrollView = findViewById(R.id.scrollView2);
         bookmarkIcon = findViewById(R.id.bookmarkIcon);
+        applicationStatusText = findViewById(R.id.applicationStatusText);
+        linearLayout = findViewById(R.id.linearLayout);
     }
 
     private void setupNavigationListeners() {
@@ -339,10 +347,8 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                         // Create the SwipeData using the document data
                         SwipeData swipeDataItem = createSwipeDataFromDocument(document, documentId);
 
-                        //TODO: Change to actual cat images
-                        catImage.setImageResource(R.drawable.cat1);
-
-                        ageText.setText(String.valueOf(swipeDataItem.age) + "months");
+                        catImage.setImageResource(swipeDataItem.catImage);
+                        ageText.setText(String.valueOf(swipeDataItem.age) + " months");
                         weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
                         sexText.setText(String.valueOf(swipeDataItem.sex));
                         breedText.setText(swipeDataItem.breed);
@@ -360,12 +366,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                         } else {
                             bookmarkIcon.setColorFilter(0xFF808080, PorterDuff.Mode.SRC_IN);
                         }
-//                        // Set the page transformer for the view pager
-//                        viewPager2.setPageTransformer((page, position) -> {
-//                            float absPos = Math.abs(position);
-//                            page.setAlpha(1.0f - absPos);
-//                            page.setScaleY(1.0f - absPos * 0.15f);
-//                        });
                     } else {
                         Toast.makeText(this, "Cat document not found.", Toast.LENGTH_SHORT).show();
                     }
@@ -379,19 +379,13 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
     }
 
     private SwipeData createSwipeDataFromDocument(DocumentSnapshot document, String catId) {
-        // Extract the fields from the Firestore document
         int age = document.getLong("age").intValue();
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
-        // Retrieve the list of image names and convert them to resource IDs
-        List<String> catImages = (List<String>) document.get("catImages");
-        int[] catPicSet = new int[catImages.size()];
-        for (int i = 0; i < catImages.size(); i++) {
-            catPicSet[i] = getResources().getIdentifier(catImages.get(i), "drawable", getPackageName());
-        }
+        String catImageStr = document.getString("catImage");
+        int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
 
-        // Retrieve other information
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
         String bio = document.getString("bio");
@@ -402,41 +396,132 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
-        // Now, pass the catId (document ID) directly into the SwipeData constructor
-        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
-                sex, foodPreference, bio, temperament, breed, name,
+        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check,
+                catImage, sex, foodPreference, bio, temperament, breed, name,
                 contact, catId, compatibleWith, isNeutered);
+    }
+
+    private void initializeBookmarkLogic(String documentId) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = currentUser.getUid();
+        DocumentReference userRef = db.collection("Users").document(userId);
+
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> bookmarkedCats = (List<String>) documentSnapshot.get("bookmarkedCats");
+                if (bookmarkedCats != null && bookmarkedCats.contains(documentId)) {
+                    isBookmarked = true;
+                    updateBookmarkIcon();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to load bookmark state.", Toast.LENGTH_SHORT).show();
+        });
+
+        bookmarkIcon.setOnClickListener(view -> toggleBookmarkState(userId, documentId));
+    }
+
+    private void toggleBookmarkState(String userId, String documentId) {
+        DocumentReference userRef = db.collection("Users").document(userId);
+
+        if (isBookmarked) {
+            // Remove bookmark
+            userRef.update("bookmarkedCats", FieldValue.arrayRemove(documentId))
+                    .addOnSuccessListener(aVoid -> {
+                        isBookmarked = false;
+                        updateBookmarkIcon();
+                        Toast.makeText(this, "Bookmark removed.", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to remove bookmark.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // Add bookmark
+            userRef.update("bookmarkedCats", FieldValue.arrayUnion(documentId))
+                    .addOnSuccessListener(aVoid -> {
+                        isBookmarked = true;
+                        updateBookmarkIcon();
+                        Toast.makeText(this, "Bookmarked successfully.", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to add bookmark.", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    private void updateBookmarkIcon() {
+        if (isBookmarked) {
+            bookmarkIcon.setColorFilter(0xFFFE327F, PorterDuff.Mode.SRC_IN); // Highlighted
+        } else {
+            bookmarkIcon.setColorFilter(0xFF808080, PorterDuff.Mode.SRC_IN); // Default
+        }
+    }
+
+    private void checkUserApplications(String documentId) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String userId = currentUser.getUid();
+        DocumentReference userRef = db.collection("Users").document(userId);
+
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> applicationIds = (List<String>) documentSnapshot.get("catApplications");
+                if (applicationIds != null && !applicationIds.isEmpty()) {
+                    fetchAndCheckApplications(applicationIds, documentId);
+                } else {
+                    applicationStatusText.setVisibility(View.INVISIBLE); // No applications
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to load user applications.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void fetchAndCheckApplications(List<String> applicationIds, String catId) {
+        CollectionReference applicationsRef = db.collection("Applications");
+
+        for (String appId : applicationIds) {
+            applicationsRef.document(appId).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String applicationCatId = documentSnapshot.getString("catId");
+                    String status = documentSnapshot.getString("status");
+
+                    if (catId.equals(applicationCatId) && (!status.equals("expired") && !status.equals("approved")
+                            && !status.equals("rejected"))) {
+//                        Toast.makeText(this, status, Toast.LENGTH_SHORT).show();
+                        applicationStatusText.setVisibility(View.VISIBLE);
+                        linearLayout.setVisibility(View.GONE);
+                    }
+                }
+            }).addOnFailureListener(e -> {
+                Log.e("Firestore", "Error fetching application: " + e.getMessage());
+            });
+        }
     }
 
     @Override
     public boolean onDown(@NonNull MotionEvent motionEvent) {
         return false;
     }
-
     @Override
-    public void onShowPress(@NonNull MotionEvent motionEvent) {
-
-    }
-
+    public void onShowPress(@NonNull MotionEvent motionEvent) {}
     @Override
     public boolean onSingleTapUp(@NonNull MotionEvent motionEvent) {
         return false;
     }
-
     @Override
-    public boolean onScroll(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
+    public boolean onScroll(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1,
+                            float v, float v1) { return false; }
     @Override
-    public void onLongPress(@NonNull MotionEvent motionEvent) {
-
-    }
-
+    public void onLongPress(@NonNull MotionEvent motionEvent) {}
     @Override
-    public boolean onFling(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
+    public boolean onFling(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1,
+                           float v, float v1) { return false; }
 
     @Override
     public void onBackPressed() {

@@ -11,7 +11,6 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FDA626"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -20,24 +19,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:fontFamily="@font/fredoka_medium"
+            android:fontFamily="@font/poppins_bold"
             android:text="Explore"
-            android:textColor = "@color/black"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="34sp" />
 
         <EditText
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_margin="15dp"
             android:background="@drawable/rounded_linear_layout_view"
-            android:backgroundTint="#FFFFFF"
+            android:backgroundTint="#F2F2F2"
+            android:hint="🔍   Search here . . ."
             android:inputType="text"
             android:paddingHorizontal="10dp"
-            android:hint="🔍   Search here . . ."
-            android:textColor="#000000" />
+            android:paddingVertical="10dp"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/noResultsTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="40dp"
+            android:paddingHorizontal="18dp"
+            android:text="No results found"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/filter"
@@ -45,6 +64,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_linear_layout_view"
         android:text="Filter"
+        android:backgroundTint="#F2F2F2"
         android:paddingHorizontal="18dp"
         android:textSize="13sp"
         android:textColor="#000000"

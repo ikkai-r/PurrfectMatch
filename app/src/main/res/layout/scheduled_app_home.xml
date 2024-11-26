@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:orientation="vertical">
+
+<ImageView
+    android:id="@+id/imageView6"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:src="@drawable/user_1"
+    android:scaleType="centerCrop"
+    android:clipToOutline="true"/>
+
+<TextView
+    android:layout_width="match_parent"
+    android:textAlignment="center"
+    android:id="@+id/userSched"
+    android:layout_height="wrap_content"
+    android:text="Mickey Mouse"
+    android:fontFamily="@font/poppins_light"
+    android:textSize="10sp"
+    android:textColor="@color/black"/>
+
+
+<TextView
+    android:layout_width="match_parent"
+    android:textAlignment="center"
+    android:id="@+id/dateSched"
+    android:layout_height="wrap_content"
+    android:text="October 25, 2024"
+    android:fontFamily="@font/poppins_light"
+    android:textSize="8sp"
+    android:textColor="#7C7C7C"/>
+
+</LinearLayout>

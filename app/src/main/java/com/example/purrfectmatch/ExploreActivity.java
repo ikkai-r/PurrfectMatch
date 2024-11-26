@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -44,8 +46,8 @@ public class ExploreActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private EditText searchBar;
-    private ImageView profile, explore, swipe;
-    private TextView filter;
+    private ImageView profile, swipe;
+    private TextView filter, noResultsTxt;
 
     private int maxAge = -1, maxAdoptionFee = -1;
     private String selectedSex = "All";
@@ -57,9 +59,9 @@ public class ExploreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_explore);
 
         profile = findViewById(R.id.profile);
-        explore = findViewById(R.id.explore);
         swipe = findViewById(R.id.swipe);
         filter = findViewById(R.id.filter);
+        noResultsTxt = findViewById(R.id.noResultsTxt);
 
         exploreList = new ArrayList<>();
         filteredList = new ArrayList<>(exploreList);
@@ -97,7 +99,6 @@ public class ExploreActivity extends AppCompatActivity {
 
             View popupView = (View) result.get(0);
             PopupWindow popupWindow = (PopupWindow) result.get(1);
-            ViewGroup rootLayout = (ViewGroup) result.get(2);
 
             EditText ageEditText = popupView.findViewById(R.id.filterAgeEditText);
             EditText feeEditText = popupView.findViewById(R.id.filterAdoptionFeeEditText);
@@ -155,8 +156,6 @@ public class ExploreActivity extends AppCompatActivity {
                 applyFilter();
                 popupWindow.dismiss();
             });
-
-
         });
 
         profile.setOnClickListener(view -> {
@@ -186,9 +185,8 @@ public class ExploreActivity extends AppCompatActivity {
                         exploreList.clear();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             try {
-                                ExploreData cat = snapshot.toObject(ExploreData.class);
+                                ExploreData cat = createExploreDataFromDocument(snapshot);
                                 if (cat != null) {
-                                    cat.setId(snapshot.getId());
                                     exploreList.add(cat);
                                 }
                             } catch (Exception e) {
@@ -201,6 +199,35 @@ public class ExploreActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private ExploreData createExploreDataFromDocument(DocumentSnapshot document) {
+        try {
+            String catId = document.getId();
+            int age = document.contains("age") && document.get("age") != null
+                    ? document.getLong("age").intValue()
+                    : 0;
+
+            String catImageStr = document.getString("catImage");
+            int catImage = R.drawable.app_icon; // Default picture
+            if (catImageStr != null && !catImageStr.isEmpty()) {
+                catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+            }
+
+            String sex = document.getString("sex");
+            String breed = document.getString("breed");
+            String name = document.getString("name");
+            boolean isNeutered = document.contains("isNeutered") && Boolean.TRUE.equals(document.getBoolean("isNeutered"));
+            int adoptionFee = document.contains("adoptionFee") && document.get("adoptionFee") != null
+                    ? document.getLong("adoptionFee").intValue()
+                    : 0;
+
+            return new ExploreData(catId, catImage, name, age, sex, breed, isNeutered, adoptionFee);
+        } catch (Exception e) {
+            Log.e("CreateExploreData", "Error creating ExploreData from document", e);
+            return null;
+        }
+    }
+
 
     private List<Object> createPopup(int layoutRes, View view) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -270,6 +297,13 @@ public class ExploreActivity extends AppCompatActivity {
         }
 
         this.filteredList = filteredList;
+
+        if (filteredList.isEmpty()) {
+            noResultsTxt.setVisibility(View.VISIBLE);
+        } else {
+            noResultsTxt.setVisibility(View.GONE);
+        }
+
         adapter.updateList(filteredList);
     }
 
@@ -304,7 +338,11 @@ public class ExploreActivity extends AppCompatActivity {
                 }
             }
         }
-
+        if (filteredList.isEmpty()) {
+            noResultsTxt.setVisibility(View.VISIBLE);
+        } else {
+            noResultsTxt.setVisibility(View.GONE);
+        }
         adapter.updateList(filteredList);
     }
 }

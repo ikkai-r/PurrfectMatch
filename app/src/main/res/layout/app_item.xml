@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="@drawable/rounded_linear_layout_view"
+android:backgroundTint="#F4F2F2"
+android:padding="10dp"
+android:orientation="horizontal"
+android:layout_marginBottom="10dp"
+android:onClick="goViewApplication">
+
+<ImageView
+    android:id="@+id/imageView1"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:layout_gravity="center"
+    android:src="@drawable/user_1" />
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/applicant"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Applicant name: Niki Zefanya"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/date"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Date: October 17, 2024"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/traits"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Matching traits:"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/percentage"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Matching percentage:"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
+</LinearLayout>
+</LinearLayout>

@@ -2,18 +2,22 @@ package com.example.purrfectmatch;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.io.Serializable;
+import java.util.List;
+
 @IgnoreExtraProperties
-public class Cat {
+public class Cat implements Serializable {
 
     private String name;
     private int age;
     private int weight;
     private int adoptionFee;
     private int[] catPics;  // List of cat picture resources, replace with URLs if using Firebase Storage
-    private char sex;
+    private String sex;
     private String foodPreference;
     private String description;
-    private String temperament;
+    private String temperament1;
+    private String temperament2;
     private String breed;
     private String compatibleWith;
 //    private String medicalHistory;
@@ -21,13 +25,14 @@ public class Cat {
     private String birthday;
     private String contactNumber;
     private boolean isAvailable;
+    private List<String> pendingApplicationsId;
 
     // Default constructor required for calls to DataSnapshot.getValue(Cat.class)
     public Cat() {}
 
-    public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, char sex, String foodPreference, String description,
-               String temperament, String breed, String compatibleWith, String medicalHistory, String ownerName, String birthday,
-               String contactNumber, boolean isAvailable) {
+    public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, String sex, String foodPreference, String description,
+               String temperament1, String temperament2, String breed, String compatibleWith, String ownerName, String birthday,
+               String contactNumber, boolean isAvailable, List<String> pendingApplicationsId) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -36,14 +41,39 @@ public class Cat {
         this.sex = sex;
         this.foodPreference = foodPreference;
         this.description = description;
-        this.temperament = temperament;
+        this.temperament1 = temperament1;
+        this.temperament2 = temperament2;
         this.breed = breed;
-//        this.medicalHistory = medicalHistory;
         this.compatibleWith = compatibleWith;
         this.ownerName = ownerName;
         this.birthday = birthday;
         this.contactNumber = contactNumber;
+        this.pendingApplicationsId = pendingApplicationsId;
         this.isAvailable = isAvailable;
+    }
+
+    public List<String> getPendingApplications() {
+        return pendingApplicationsId;
+    }
+
+    public void setPendingApplications(List<String> pendingApplicationsId) {
+        this.pendingApplicationsId = pendingApplicationsId;
+    }
+
+    public String getTemperament1() {
+        return temperament1;
+    }
+
+    public void setTemperament1(String temperament1) {
+        this.temperament1 = temperament1;
+    }
+
+    public String getTemperament2() {
+        return temperament2;
+    }
+
+    public void setTemperament2(String temperament2) {
+        this.temperament2 = temperament2;
     }
 
     // Getters and Setters
@@ -85,11 +115,11 @@ public class Cat {
         this.catPics = catPics;
     }
 
-    public char getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(char sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 
@@ -107,14 +137,6 @@ public class Cat {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getTemperament() {
-        return temperament;
-    }
-
-    public void setTemperament(String temperament) {
-        this.temperament = temperament;
     }
 
     public String getBreed() {

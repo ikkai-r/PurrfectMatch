@@ -98,7 +98,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
         this.gestureDetector = new GestureDetector(this, this);
 
-        loadCatData();
+        loadCatsForSwipe();
 
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
@@ -299,7 +299,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
 
 
 
-    private void loadCatData() {
+    private void loadCatsForSwipe() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser == null) {
@@ -314,13 +314,17 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         userRef.get().addOnSuccessListener(userSnapshot -> {
             if (userSnapshot.exists()) {
                 List<String> applicationIds = (List<String>) userSnapshot.get("catApplications");
+                List<String> bookmarkedCats = (List<String>) userSnapshot.get("bookmarkedCats");
 
                 if (applicationIds == null) {
                     applicationIds = new ArrayList<>();
                 }
 
-                // Fetch `catId`s from applications
-                fetchCatIdsFromApplications(applicationIds);
+                if (bookmarkedCats == null) {
+                    bookmarkedCats = new ArrayList<>();
+                }
+
+                fetchCatIdsFromApplications(applicationIds, bookmarkedCats);
             } else {
                 Toast.makeText(this, "User data not found.", Toast.LENGTH_SHORT).show();
             }
@@ -329,32 +333,38 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         });
     }
 
-    private void fetchCatIdsFromApplications(List<String> applicationIds) {
+    private void fetchCatIdsFromApplications(List<String> applicationIds, List<String> bookmarkedCats) {
         if (applicationIds.isEmpty()) {
             // If there are no applications, load all cats
-            fetchAndFilterCats(new ArrayList<>());
+            fetchAndFilterCats(new ArrayList<>(), bookmarkedCats);
             return;
         }
 
         CollectionReference applicationsRef = db.collection("Applications");
+
+
         applicationsRef.whereIn(FieldPath.documentId(), applicationIds)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     List<String> excludedCatIds = new ArrayList<>();
+
+                    // check cats that are already swiped right
                     for (QueryDocumentSnapshot document : querySnapshot) {
                         String catId = document.getString("catId");
                         if (catId != null) {
                             excludedCatIds.add(catId);
                         }
                     }
-                    fetchAndFilterCats(excludedCatIds);
+
+                    // exclude those cats and set bookmarks
+                    fetchAndFilterCats(excludedCatIds, bookmarkedCats);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to fetch application data.", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void fetchAndFilterCats(List<String> excludedCatIds) {
+    private void fetchAndFilterCats(List<String> excludedCatIds, List<String> bookmarkedCats) {
         CollectionReference catsRef = db.collection("Cats");
 
         catsRef.get().addOnCompleteListener(task -> {
@@ -365,6 +375,10 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
                     // Exclude cats already applied for
                     if (!excludedCatIds.contains(catId)) {
                         SwipeData swipeData = createSwipeDataFromDocument(document, catId);
+
+                        // set the bookmark
+                        boolean isBookmarked = bookmarkedCats.contains(catId);
+                        swipeData.setBookmarked(isBookmarked);
                         swipeDataList.add(swipeData);
                     }
                 }
@@ -387,11 +401,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
-        List<String> catImages = (List<String>) document.get("catImages");
-        int[] catPicSet = new int[catImages.size()];
-        for (int i = 0; i < catImages.size(); i++) {
-            catPicSet[i] = getResources().getIdentifier(catImages.get(i), "drawable", getPackageName());
-        }
+        String catImageStr = document.getString("catImage");
+        int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
 
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
@@ -405,7 +416,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
-        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
+        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
                 sex, foodPreference, bio, temperament, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }

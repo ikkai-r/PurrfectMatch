@@ -1,9 +1,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context=".ViewApplication"
+    tools:context=".PendingAppView"
     android:id="@+id/main">
 
     <LinearLayout
@@ -17,13 +18,48 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Application for Dweety"
+            android:text="Application for"
+            android:id="@+id/appTitle"
             android:fontFamily="@font/poppins_bold"
             android:textSize="22sp"
             android:textColor="@color/black"
             android:gravity="center"
             android:padding="8dp"
             android:textAlignment="center" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/applicationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:fontFamily="@font/poppins_regular"
+                android:text="December 20, 2024"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+
+                android:fontFamily="@font/poppins_bold"
+                android:text="50% match"
+                android:textColor="#FFA500"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Enlarged Image of the applicant with rounded corners and slight shadow -->
         <ImageView
@@ -35,7 +71,6 @@
             android:background="@drawable/rounded_image_border"
             android:scaleType="centerCrop"
             android:clipToOutline="true" />
-
 
         <LinearLayout
             android:layout_margin="10dp"
@@ -63,14 +98,14 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonAccept"
-                android:onClick="acceptApp"
+                android:id="@+id/buttonSchedule"
+                android:onClick="goScheduledApp"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:background="@drawable/custom_bg2"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Accept"
+                android:text="Schedule"
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:layout_margin="5dp"
@@ -90,10 +125,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/nameAge"
                 android:text="Niki Zefanya, 25"
                 android:fontFamily="@font/poppins_bold"
                 android:textSize="18sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:layout_marginRight="80dp"/>
+
         </LinearLayout>
 
         <!-- Basic Information with border and rounded corners, lighter touch -->
@@ -117,6 +155,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/gender"
                 android:text="Gender: Female"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
@@ -125,34 +164,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/address"
                 android:text="Address: Pasig, Metro Manila, Philippines"
-                android:fontFamily="@font/poppins_regular"
-                android:textSize="12sp"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
-        <!-- Reasons for Adopting section in #F7F7F7 background with subtle shadow -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_background"
-            android:padding="20dp"
-            android:layout_marginTop="14dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:fontFamily="@font/poppins_bold"
-                android:text="Reasons for Adopting"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Just like I express in 'La La Lost You,' I believe in finding solace in the little things, and a cat brings that effortless joy. Plus, they embody that independence and playfulness that resonates with my brand."
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
@@ -164,21 +177,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="14dp"
+            android:background="@drawable/rounded_background"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lifestyle Preferences"
+                android:text="Lifestyle"
                 android:fontFamily="@font/poppins_bold"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
+                android:id="@+id/householdMembers"
                 android:layout_height="wrap_content"
-                android:text="Hours at home per day: 8-10"
+                android:text="Number of household members:"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
@@ -186,7 +201,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pet Experience: Previous cat owner"
+                android:text="Has other pets:"
+                android:id="@+id/otherPets"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
@@ -194,7 +210,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Budget: ₱15,000 for pet care"
+                android:id="@+id/incomeBracket"
+                android:text="Likely a student/working"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
@@ -220,7 +237,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cat Size: Small"
+                android:text="Energy level:"
+                android:id="@+id/energy"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
@@ -228,7 +246,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Temperament: Calm, independent"
+                android:id="@+id/social"
+                android:text="Temperament:"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp"
                 android:textColor="@color/black" />

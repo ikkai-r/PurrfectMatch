@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import android.graphics.PorterDuff;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
-
 
     SwipeData[] catDataItemArrayList;
     Context context;
@@ -46,12 +48,11 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
         SwipeData swipeDataItem = catDataItemArrayList[position];
 
-        holder.catImage.setImageResource(swipeDataItem.catImages[0]);
+        holder.catImage.setImageResource(swipeDataItem.catImage);
         holder.ageText.setText(String.valueOf(swipeDataItem.age) + " months");
         holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
         holder.sexText.setText(String.valueOf(swipeDataItem.sex));
         holder.breedText.setText(swipeDataItem.breed);
-//        holder.birthdayText.setText(swipeDataItem.birthday);
         if(swipeDataItem.isNeutered == true) { holder.neuterText.setText("Neutered");}
         else {  holder.neuterText.setText("Not neutered"); }
         holder.temperamentText.setText(swipeDataItem.temperament);
@@ -67,7 +68,6 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             holder.scrollView.setRotationY(0);
         }
 
-
         if (swipeDataItem.isBookmarked) {
             holder.bookmarkIcon.setColorFilter(0xFFFE327F, PorterDuff.Mode.SRC_IN);
         } else {
@@ -78,32 +78,52 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             swipeDataItem.isBookmarked = !swipeDataItem.isBookmarked;
             notifyItemChanged(position);
 
-
             // need to make this about THE USER
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            String userId = "user67890";  
+
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = auth.getCurrentUser();
+
+            String userId = currentUser.getUid();
+            String catId = swipeDataItem.catId;
 
             if (swipeDataItem.isBookmarked) {
                 db.collection("Cats")
-                    .document(swipeDataItem.catId)
+                    .document(catId)
                     .update("bookmarkedBy", FieldValue.arrayUnion(userId))
                     .addOnSuccessListener(aVoid -> {
-                        notifyItemChanged(position);
+                        db.collection("Users")
+                            .document(userId)
+                            .update("bookmarkedCats", FieldValue.arrayUnion(catId))
+                            .addOnSuccessListener(innerVoid -> {
+                                notifyItemChanged(position); // Update UI
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Error", "Failed to update bookmarkedCats in Users", e);
+                            });
                     })
                     .addOnFailureListener(e -> {
+                        Log.e("Error", "Failed to update bookmarkedBy in Cats", e);
                     });
             } else {
                 db.collection("Cats")
-                    .document(swipeDataItem.catId)
+                    .document(catId)
                     .update("bookmarkedBy", FieldValue.arrayRemove(userId))
                     .addOnSuccessListener(aVoid -> {
-                        notifyItemChanged(position);
+                        db.collection("Users")
+                            .document(userId)
+                            .update("bookmarkedCats", FieldValue.arrayRemove(catId))
+                            .addOnSuccessListener(innerVoid -> {
+                                notifyItemChanged(position); // Update UI
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Error", "Failed to update bookmarkedCats in Users", e);
+                            });
                     })
                     .addOnFailureListener(e -> {
+                        Log.e("Error", "Failed to update bookmarkedBy in Cats", e);
                     });
             }
-
-
         });
     }
 
@@ -142,13 +162,10 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             scrollView = itemView.findViewById(R.id.scrollView2);
             bookmarkIcon = itemView.findViewById(R.id.bookmarkIcon); 
         }
-
     }
 
     public void updateData(SwipeData[] newData) {
         this.catDataItemArrayList = newData;
         notifyDataSetChanged();
     }
-
-
 }

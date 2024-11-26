@@ -2,14 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PurrfectMatch"
         tools:targetApi="31">
+        <activity
+            android:name=".PendingAppView"
+            android:exported="false" />
         <activity
             android:name=".ScheduleShelter"
             android:exported="false" />
@@ -52,6 +53,9 @@
             android:name=".PendingApplications"
             android:exported="false" />
         <activity
+            android:name=".PendingApplicationsSpecific"
+            android:exported="false" />
+        <activity
             android:name=".ShelterPage"
             android:exported="false" />
         <activity
@@ -70,11 +74,13 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ApplicationsActivity" />
         <activity android:name=".ScheduleActivity" />
-        <activity android:name=".BookmarkActivity" />
         <activity android:name=".ExploreActivity" />
         <activity android:name=".ClickedExploreActivity" />
         <activity
             android:name=".ViewPagerAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ApplicationAdapter"
             android:exported="false" />
         <activity
             android:name=".EditUser"
