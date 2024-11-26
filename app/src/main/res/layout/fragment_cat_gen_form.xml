@@ -82,6 +82,7 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
@@ -127,17 +128,18 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/age"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
                 android:inputType="number"
+                android:maxLines="1"
                 android:min="1"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:maxLines="1"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -240,16 +242,17 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/weight"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
                 android:inputType="numberDecimal"
+                android:maxLines="1"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:maxLines="1" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -289,16 +292,46 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/breed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
+                android:maxLines="1"
                 android:padding="12dp"
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:maxLines="1" />
+                android:textSize="12sp" />
+
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonNext4"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/background_button"
+            android:drawableEnd="@drawable/arrow_front"
+            android:fontFamily="@font/poppins_bold"
+            android:paddingStart="40dp"
+            android:paddingEnd="20dp"
+            android:text="Next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:iconTint="#0D0B0B" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:onClick="cancel"
+            android:text="Cancel"
+            android:textAlignment="center"
+            android:textColor="#737272" />
 
     </LinearLayout>
 
