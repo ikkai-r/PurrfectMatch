@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -114,6 +115,7 @@ public class ViewCatsAdoption extends AppCompatActivity {
                             } catch (Exception e) {
                                 Toast.makeText(ViewCatsAdoption.this, "Error parsing data: "
                                         + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d("error" ,"Here!" + e.getMessage());
                             }
                         }
                         filteredList = new ArrayList<>(exploreList);

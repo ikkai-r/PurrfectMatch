@@ -133,7 +133,7 @@ public class CatProfile extends AppCompatActivity {
                         bioText.setText(swipeDataItem.bio);
                         compatibleWithText.setText(swipeDataItem.compatibleWith);
                         adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee));
-                        contactInformationText.setText(swipeDataItem.contactInformation);
+                        //contactInformationText.setText(swipeDataItem.contactInformation);
                         nameText.setText(swipeDataItem.name);
                         catName = swipeDataItem.name;
                     } else {

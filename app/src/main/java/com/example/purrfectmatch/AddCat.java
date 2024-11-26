@@ -108,6 +108,8 @@ public class AddCat extends AppCompatActivity {
             catData.put("bookmarkedBy", bookmarked);
             catData.put("sex", sex);
             catData.put("isNeutered", isNeutered);
+            catData.put("active", false);
+
 
             // Reference to Firestore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
