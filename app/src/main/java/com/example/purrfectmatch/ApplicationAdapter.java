@@ -64,7 +64,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ApplicationData application = applicationList.get(position);
         holder.titleBig.setText(application.getStatus());
-        holder.titleSmall.setText("Test");
+        holder.titleSmall.setText(application.getCatId());
         holder.textBig.setText(application.getReason());
         holder.actionBtn.setText("Test");
 
