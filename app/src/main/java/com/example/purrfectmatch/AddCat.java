@@ -2,8 +2,11 @@ package com.example.purrfectmatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +15,23 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class AddCat extends AppCompatActivity {
 
-    private ViewPager2 viewPager;
+    private FrameLayout viewPager;
     private Button nextButton;
+    private FirebaseAuth mAuth;
+    private Bundle finalBundle;
     private static final int NUM_PAGES = 4; // Adjust this based on the number of fragments (sections)
 
     @Override
@@ -29,46 +45,102 @@ public class AddCat extends AppCompatActivity {
             return insets;
         });
 
-        viewPager = findViewById(R.id.cat_form);
-        nextButton = findViewById(R.id.buttonNext);
+        mAuth = FirebaseAuth.getInstance();
 
-        ViewPagerAdapterCat adapter = new ViewPagerAdapterCat(this);
-        viewPager.setAdapter(adapter);
 
-        viewPager.setUserInputEnabled(false);
+        if (savedInstanceState == null) {
+            CatGenForm catGenForm = new CatGenForm();
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.cat_form, catGenForm)  // Fragment will be added to the container
+                    .commit();
+        }
 
-                if (position == viewPager.getAdapter().getItemCount() - 1) {
-                    nextButton.setText("Finish");
-                } else {
-                    nextButton.setText("Next");
-                }
-            }
-        });
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewPager.getCurrentItem() < NUM_PAGES - 1) {
-                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-                } else if(viewPager.getCurrentItem() == NUM_PAGES-1) {
-                    Intent i = new Intent(AddCat.this, SuccessForm.class);
-                    i.putExtra("title", "Cat Details");
-                    i.putExtra("title_big", "Updated");
-                    i.putExtra("subtitle_1", "Welcome to our Purrfect family!");
-                    i.putExtra("subtitle_2", "We hope you find your forever home");
-                    i.putExtra("button_text", "Okay");
-                    i.putExtra("user_type", "shelter");
-                    AddCat.this.startActivity(i);
-                }
-            }
-        });
     }
 
+    public void onDataPassed(Bundle bundle) {
+        // Retrieve data from the bundle
+        finalBundle = bundle;
+        registerCat();
+    }
+
+    private void registerCat() {
+
+        // Retrieve data from the previous bundle
+        String name = finalBundle.getString("name");
+        String age = finalBundle.getString("age");
+        String weight = finalBundle.getString("weight");
+        String breed = finalBundle.getString("breed");
+        String temperament = finalBundle.getString("temperament");
+        String compatible = finalBundle.getString("compatible");
+        String food = finalBundle.getString("food");
+        String fee = finalBundle.getString("fee");
+        String picture = finalBundle.getString("catimg");
+        String about = finalBundle.getString("about");
+        List<String> bookmarked = new ArrayList<>();
+        String sex = finalBundle.getString("sex");
+        boolean isNeutered = finalBundle.getBoolean("isneutered");
+
+
+        Log.d("process", "I'm now here before");
+
+        // Check if all values are retrieved properly
+        if (name != null && age != null && weight != null && breed != null &&
+                temperament != null && compatible != null && food != null && fee != null &&
+                picture != null && about != null) {
+
+                    // If username does not exist, proceed with user registration
+                    Log.d("finish", "values are retrieved properly");
+
+
+            // Create a map or a model class to hold the cat data
+            Map<String, Object> catData = new HashMap<>();
+            catData.put("name", name);
+            catData.put("age", age);
+            catData.put("weight", weight);
+            catData.put("breed", breed);
+            catData.put("temperament", temperament);
+            catData.put("compatibleWith", compatible);
+            catData.put("foodPreference", food);
+            catData.put("adoptionFee", fee);
+            catData.put("catImage", picture);
+            catData.put("bio", about);
+            catData.put("bookmarkedBy", bookmarked);
+            catData.put("sex", sex);
+            catData.put("isNeutered", isNeutered);
+
+            // Reference to Firestore
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            // Add the new cat to the "Cats" collection
+            db.collection("Cats")
+                    .add(catData)
+                    .addOnSuccessListener(documentReference -> {
+                        Log.d("registerCat", "Cat successfully added with ID: " + documentReference.getId());
+                        Toast.makeText(this, "Cat registered successfully!", Toast.LENGTH_SHORT).show();
+
+                        // Navigate to a success screen
+                        Intent i = new Intent(this, SuccessForm.class);
+                        i.putExtra("title", "Cat Registration");
+                        i.putExtra("title_big", "Success");
+                        i.putExtra("subtitle_1", "You've added a new cat to our database!");
+                        i.putExtra("subtitle_2", "Let's help find a home for them.");
+                        i.putExtra("button_text", "Done");
+                        startActivity(i);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w("registerCat", "Error adding cat", e);
+                        Toast.makeText(this, "Failed to register the cat. Please try again.", Toast.LENGTH_SHORT).show();
+                    });
+
+        } else {
+            Log.d("finish", "values aren't retrieved properly");
+
+            // Handle the case where any required field is missing
+            Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void cancel(View v) {
         finish();

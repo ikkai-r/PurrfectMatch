@@ -624,11 +624,13 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         return false;
     }
 
-
+/*
     @Override
     public void onBackPressed() {
         // Do nothing, so back navigation is disabled
     }
+    */
+
 
 
     // Method to move to the next card in the dataset
