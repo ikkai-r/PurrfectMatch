@@ -49,16 +49,17 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
         SwipeData swipeDataItem = catDataItemArrayList[position];
 
         holder.catImage.setImageResource(swipeDataItem.catImage);
-        holder.ageText.setText(String.valueOf(swipeDataItem.age) + " months");
-        holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
-        holder.sexText.setText(String.valueOf(swipeDataItem.sex));
-        holder.breedText.setText(swipeDataItem.breed);
+        holder.ageText.setText("Age:  " + String.valueOf(swipeDataItem.age) + " months");
+        holder.weightText.setText("Weight:  " + String.valueOf(swipeDataItem.weight) + "lbs");
+        holder.breedText.setText("Breed:  " + swipeDataItem.breed);
+        if ("F".equals(String.valueOf(swipeDataItem.sex))) {holder.sexText.setText("Sex:  Female");}
+        else {holder.sexText.setText("Sex:  Male");  }
         if(swipeDataItem.isNeutered == true) { holder.neuterText.setText("Neutered");}
         else {  holder.neuterText.setText("Not neutered"); }
-        holder.temperamentText.setText(swipeDataItem.temperament);
+        holder.temperamentText.setText((swipeDataItem.temperament1) + ", " + (swipeDataItem.temperament2));
         holder.bioText.setText(swipeDataItem.bio);
         holder.compatibleWithText.setText(swipeDataItem.compatibleWith);
-        holder.adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee));
+        holder.adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
         holder.contactInformationText.setText(swipeDataItem.contactInformation);
         holder.nameText.setText(swipeDataItem.name);
 
