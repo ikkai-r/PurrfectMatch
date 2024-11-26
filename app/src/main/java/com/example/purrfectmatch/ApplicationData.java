@@ -10,21 +10,32 @@ public class ApplicationData implements Serializable {
     private String reason;
     private String status;
     private Timestamp applicationDate;
+    private String acknowledged;
 
     // Default constructor (required for Firestore deserialization)
     public ApplicationData() {}
 
     // Constructor with all fields
-    public ApplicationData(String applicationId, String catId, String userId, String reason, String status, Timestamp applicationDate) {
+    public ApplicationData(String applicationId, String catId, String userId, String reason, String acknowledged, String status, Timestamp applicationDate) {
         this.applicationId = applicationId;
         this.catId = catId;
         this.userId = userId;
         this.reason = reason;
         this.status = status;
         this.applicationDate = applicationDate;
+        this.acknowledged = acknowledged;
     }
 
     // Getters and Setters
+
+    public String getAcknowledged() {
+        return acknowledged;
+    }
+
+    public void setAcknowledged(String acknowledged) {
+        this.acknowledged = acknowledged;
+    }
+
     public String getApplicationId() {
         return applicationId;
     }

@@ -140,7 +140,8 @@ public class PendingAppView extends AppCompatActivity {
                 .document(appId)
                 .update(
                         "status", "rejected",
-                        "reason", reason
+                        "reason", reason,
+                        "acknowledged", "No"
                 )
                 .addOnSuccessListener(aVoid -> {
                     Log.d("RejectApp", "Application status updated to rejected.");
