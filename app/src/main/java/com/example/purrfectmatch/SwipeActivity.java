@@ -401,11 +401,8 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
-        List<String> catImages = (List<String>) document.get("catImages");
-        int[] catPicSet = new int[catImages.size()];
-        for (int i = 0; i < catImages.size(); i++) {
-            catPicSet[i] = getResources().getIdentifier(catImages.get(i), "drawable", getPackageName());
-        }
+        String catImageStr = document.getString("catImage");
+        int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
 
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
@@ -419,7 +416,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
-        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
+        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
                 sex, foodPreference, bio, temperament, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }

@@ -25,7 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
-
     SwipeData[] catDataItemArrayList;
     Context context;
     boolean flip;
@@ -49,12 +48,11 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
         SwipeData swipeDataItem = catDataItemArrayList[position];
 
-        holder.catImage.setImageResource(swipeDataItem.catImages[0]);
+        holder.catImage.setImageResource(swipeDataItem.catImage);
         holder.ageText.setText(String.valueOf(swipeDataItem.age) + " months");
         holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
         holder.sexText.setText(String.valueOf(swipeDataItem.sex));
         holder.breedText.setText(swipeDataItem.breed);
-//        holder.birthdayText.setText(swipeDataItem.birthday);
         if(swipeDataItem.isNeutered == true) { holder.neuterText.setText("Neutered");}
         else {  holder.neuterText.setText("Not neutered"); }
         holder.temperamentText.setText(swipeDataItem.temperament);
@@ -70,7 +68,6 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             holder.scrollView.setRotationY(0);
         }
 
-
         if (swipeDataItem.isBookmarked) {
             holder.bookmarkIcon.setColorFilter(0xFFFE327F, PorterDuff.Mode.SRC_IN);
         } else {
@@ -81,13 +78,11 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             swipeDataItem.isBookmarked = !swipeDataItem.isBookmarked;
             notifyItemChanged(position);
 
-
             // need to make this about THE USER
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             FirebaseAuth auth = FirebaseAuth.getInstance();
             FirebaseUser currentUser = auth.getCurrentUser();
-
 
             String userId = currentUser.getUid();
             String catId = swipeDataItem.catId;
@@ -128,10 +123,7 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
                     .addOnFailureListener(e -> {
                         Log.e("Error", "Failed to update bookmarkedBy in Cats", e);
                     });
-
             }
-
-
         });
     }
 
@@ -170,13 +162,10 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             scrollView = itemView.findViewById(R.id.scrollView2);
             bookmarkIcon = itemView.findViewById(R.id.bookmarkIcon); 
         }
-
     }
 
     public void updateData(SwipeData[] newData) {
         this.catDataItemArrayList = newData;
         notifyDataSetChanged();
     }
-
-
 }
