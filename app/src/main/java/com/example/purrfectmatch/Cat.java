@@ -16,7 +16,8 @@ public class Cat implements Serializable {
     private String sex;
     private String foodPreference;
     private String description;
-    private String temperament;
+    private String temperament1;
+    private String temperament2;
     private String breed;
     private String compatibleWith;
 //    private String medicalHistory;
@@ -30,7 +31,7 @@ public class Cat implements Serializable {
     public Cat() {}
 
     public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, String sex, String foodPreference, String description,
-               String temperament, String breed, String compatibleWith, String medicalHistory, String ownerName, String birthday,
+               String temperament1, String temperament2, String breed, String compatibleWith, String ownerName, String birthday,
                String contactNumber, boolean isAvailable, List<String> pendingApplicationsId) {
         this.name = name;
         this.age = age;
@@ -40,9 +41,9 @@ public class Cat implements Serializable {
         this.sex = sex;
         this.foodPreference = foodPreference;
         this.description = description;
-        this.temperament = temperament;
+        this.temperament1 = temperament1;
+        this.temperament2 = temperament2;
         this.breed = breed;
-//        this.medicalHistory = medicalHistory;
         this.compatibleWith = compatibleWith;
         this.ownerName = ownerName;
         this.birthday = birthday;
@@ -57,6 +58,22 @@ public class Cat implements Serializable {
 
     public void setPendingApplications(List<String> pendingApplicationsId) {
         this.pendingApplicationsId = pendingApplicationsId;
+    }
+
+    public String getTemperament1() {
+        return temperament1;
+    }
+
+    public void setTemperament1(String temperament1) {
+        this.temperament1 = temperament1;
+    }
+
+    public String getTemperament2() {
+        return temperament2;
+    }
+
+    public void setTemperament2(String temperament2) {
+        this.temperament2 = temperament2;
     }
 
     // Getters and Setters
@@ -120,14 +137,6 @@ public class Cat implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getTemperament() {
-        return temperament;
-    }
-
-    public void setTemperament(String temperament) {
-        this.temperament = temperament;
     }
 
     public String getBreed() {

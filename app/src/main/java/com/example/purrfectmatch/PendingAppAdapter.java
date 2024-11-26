@@ -12,10 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.ViewHolder> {
 
@@ -41,23 +45,40 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
         ApplicationData app = pendingApps.get(position);
         Log.d("binding", app.getApplicationId());
 
-        // Get name from db using user id in app
-        holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
-        holder.date.setText("Date: " + app.getApplicationDate());
+        if (app != null) {
 
-        // Fetch both applicant and cat data and display matching traits
-        fetchApplicantandCatData(app.getUserId(), app.getCatId(), holder);
+            // Get name from db using user id in app
+            holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
+            holder.date.setText("Date: " + formatFirebaseTimestamp(app.getApplicationDate()));
 
-        holder.itemView.setOnClickListener(view -> {
-            if (listener != null) {
-                listener.onItemClick(app);
-            }
+            // Fetch both applicant and cat data and display matching traits
+            fetchApplicantandCatData(app.getUserId(), app.getCatId(), holder);
 
-            // Create an Intent to navigate to the specific application's page for the current cat
-            Intent intent = new Intent(context, PendingApplicationsSpecific.class);
-            intent.putExtra("app", app);  // Pass the application object via Intent
-            context.startActivity(intent);  // Start the new activity
-        });
+            holder.itemView.setOnClickListener(view -> {
+                if (listener != null) {
+                    listener.onItemClick(app);
+                }
+
+                // Create an Intent to navigate to the specific application's page for the current cat
+                Intent intent = new Intent(context, PendingApplicationsSpecific.class);
+                intent.putExtra("app", app);  // Pass the application object via Intent
+                context.startActivity(intent);  // Start the new activity
+            });
+
+        }
+    }
+
+    private String formatFirebaseTimestamp(Timestamp timestamp) {
+        if (timestamp == null) {
+            return "Invalid Timestamp"; // Handle null values gracefully
+        }
+
+        // Convert Timestamp to Date
+        Date date = timestamp.toDate();
+
+        // Format the Date to "January 26, 2014"
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        return sdf.format(date);
     }
 
     private void fetchApplicantandCatData(String userId, String catId, final ViewHolder holder) {
@@ -69,11 +90,11 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            String userName = document.getString("name");
-                            String userHousehold = document.getString("householdDynamics");
+                            String userName = document.getString("firstName") + " " + document.getString("lastName");
+                            String userHousehold = document.getString("householdMembers");
                             String userOtherPets = document.getString("otherPets");
-                            String userTempSocial = document.getString("preferredTempSocial");
-                            String userTempEnergy = document.getString("preferredTempEnergy");
+                            String userTempSocial = document.getString("preferences1");
+                            String userTempEnergy = document.getString("preferences2");
 
                             // Set applicant's name
                             holder.applicant.setText("Applicant: " + userName);
@@ -84,19 +105,18 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                         if (catTask.isSuccessful()) {
                                             DocumentSnapshot catDocument = catTask.getResult();
                                             if (catDocument.exists()) {
-                                                String catName = catDocument.getString("name");
                                                 String catSize = catDocument.getString("size");
                                                 String catTemp1 = catDocument.getString("temperament1");
                                                 String catTemp2 = catDocument.getString("temperament2");
                                                 String catCompatibility = catDocument.getString("petsCompatibility");
 
                                                 // Calculate the matching traits and percentage
-                                                int matchingTraits = getMatchingTraits(userHousehold, catSize, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
-                                                double matchingPercentage = calculateMatchingPercentage(matchingTraits);
+                                                //int matchingTraits = getMatchingTraits(userHousehold, catSize, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
+                                                //double matchingPercentage = calculateMatchingPercentage(matchingTraits);
 
                                                 // Display matching traits and percentage
-                                                holder.matching.setText("Matching traits: " + matchingTraits);
-                                                holder.percentage.setText("Matching percentage: " + matchingPercentage + "%");
+                                                //holder.matching.setText("Matching traits: " + matchingTraits);
+                                                //holder.percentage.setText("Matching percentage: " + matchingPercentage + "%");
                                             }
                                         } else {
                                             Log.d("PendingAppAdapter", "Error getting cat data: ", catTask.getException());

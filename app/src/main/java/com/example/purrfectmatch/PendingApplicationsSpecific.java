@@ -52,6 +52,7 @@ public class PendingApplicationsSpecific extends AppCompatActivity {
 
         catPendingText.setText("Pending Applications for " + currentCat.getName());
         pendingAppListStr = currentCat.getPendingApplications();
+        Log.d("catP", "pending apps of cat is" + currentCat.getName() + " " + currentCat.getPendingApplications());
 
         adapterPending = new PendingAppAdapter(pendingAppList, PendingApplicationsSpecific.this);
         recyclerViewPending.setAdapter(adapterPending);
@@ -64,7 +65,6 @@ public class PendingApplicationsSpecific extends AppCompatActivity {
 
         // Initialize the list to store cats
         pendingAppList.clear();
-        pendingAppListStr.clear();
 
         Log.d("fetching", "fetching pending apps here");
 
@@ -83,7 +83,7 @@ public class PendingApplicationsSpecific extends AppCompatActivity {
                                 if (app != null) {
                                     Log.d("catP", app.getApplicationId() + " exists");
                                     if (pendingAppListStr.contains((app.getApplicationId()))) {
-                                        Log.d("catP", "has pending application");
+                                        Log.d("catP", app.getApplicationId() + " has pending application");
                                         pendingAppList.add(app);
                                     }
                                 }
