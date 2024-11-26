@@ -77,7 +77,7 @@ public class ShelterPage extends AppCompatActivity {
 
 
         // Query to fetch the cats
-        db.collection("Cats")  // Assuming you have a "Cats" collection
+        db.collection("Cats")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

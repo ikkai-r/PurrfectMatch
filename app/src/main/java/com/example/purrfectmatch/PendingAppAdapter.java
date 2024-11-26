@@ -66,7 +66,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 }
 
                 appFields.put("appDate", formatFirebaseTimestamp(app.getApplicationDate()));
-
+                appFields.put("appId", app.getApplicationId());
                 // Create an Intent to navigate to the specific application's page for the current cat
                 Intent intent = new Intent(context, PendingAppView.class);
                 intent.putExtra("app", appFields);  // Pass the application object via Intent
@@ -140,6 +140,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                                 userFields.put("preferences2", userTempEnergy);
                                                 userFields.put("address2", document.getString("city") + ", " + document.getString("region"));
 
+                                                catFields.put("catId", catDocument.getId());
                                                 catFields.put("catTemp1", catTemp1);
                                                 catFields.put("catTemp2", catTemp2);
                                                 catFields.put("catCompatibility", catCompatibility);
