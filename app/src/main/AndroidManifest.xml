@@ -73,11 +73,13 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ApplicationsActivity" />
         <activity android:name=".ScheduleActivity" />
-        <activity android:name=".BookmarkActivity" />
         <activity android:name=".ExploreActivity" />
         <activity android:name=".ClickedExploreActivity" />
         <activity
             android:name=".ViewPagerAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ApplicationAdapter"
             android:exported="false" />
         <activity
             android:name=".EditUser"
@@ -89,5 +91,4 @@
             android:name=".Login"
             android:exported="false" />
     </application>
-
 </manifest>
