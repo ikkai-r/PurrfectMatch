@@ -28,7 +28,7 @@ public class CatProfile extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private ImageView profile, explore, swipe, catImage, bookmarkIcon;
+    private ImageView catImage;
     private TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText,
             compatibleWithText, adoptionFeeText, contactInformationText, nameText;
     private String catId, catName;
@@ -90,9 +90,6 @@ public class CatProfile extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        profile = findViewById(R.id.profile);
-        explore = findViewById(R.id.explore);
-        swipe = findViewById(R.id.swipe);
         catImage = findViewById(R.id.catPic);
         ageText = findViewById(R.id.ageText);
         weightText = findViewById(R.id.weightText);
@@ -105,7 +102,6 @@ public class CatProfile extends AppCompatActivity {
         adoptionFeeText = findViewById(R.id.adoptionFeeText);
         contactInformationText = findViewById(R.id.contactInformationText);
         nameText = findViewById(R.id.nameText);
-        bookmarkIcon = findViewById(R.id.bookmarkIcon);
     }
 
     private void loadCatData() {
@@ -121,18 +117,20 @@ public class CatProfile extends AppCompatActivity {
                         SwipeData swipeDataItem = createCatDataFromDocument(document, catId);
 
                         //TODO: Change to actual cat images
-                        catImage.setImageResource(R.drawable.cat1);
+                        catImage.setImageResource(swipeDataItem.catImage);
 
-                        ageText.setText(String.valueOf(swipeDataItem.age) + "months");
-                        weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
-                        sexText.setText(String.valueOf(swipeDataItem.sex));
-                        breedText.setText(swipeDataItem.breed);
+                        ageText.setText("Age:  " + String.valueOf(swipeDataItem.age) + " months");
+                        weightText.setText("Weight:  " + String.valueOf(swipeDataItem.weight) + "lbs");
+                        breedText.setText("Breed:  " + swipeDataItem.breed);
+                        if ("F".equals(String.valueOf(swipeDataItem.sex))) {sexText.setText("Sex:  Female");}
+                        else {sexText.setText("Sex:  Male");  }
                         if(swipeDataItem.isNeutered == true) { neuterText.setText("Neutered");}
                         else {  neuterText.setText("Not neutered"); }
-                        temperamentText.setText(swipeDataItem.temperament);
+
+                        temperamentText.setText((swipeDataItem.temperament1) + ", " + (swipeDataItem.temperament2));
                         bioText.setText(swipeDataItem.bio);
                         compatibleWithText.setText(swipeDataItem.compatibleWith);
-                        adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee));
+                        adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
                         contactInformationText.setText(swipeDataItem.contactInformation);
                         nameText.setText(swipeDataItem.name);
                         catName = swipeDataItem.name;
@@ -162,7 +160,8 @@ public class CatProfile extends AppCompatActivity {
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
         String bio = document.getString("bio");
-        String temperament = document.getString("temperament");
+        String temperament1 = document.getString("temperament1");
+        String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
         String name = document.getString("name");
         String contact = document.getString("contact");
@@ -171,7 +170,7 @@ public class CatProfile extends AppCompatActivity {
 
         // Now, pass the catId (document ID) directly into the SwipeData constructor
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
-                sex, foodPreference, bio, temperament, breed, name,
+                sex, foodPreference, bio, temperament1, temperament2, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }
 

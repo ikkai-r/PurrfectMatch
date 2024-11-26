@@ -348,16 +348,17 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                         SwipeData swipeDataItem = createSwipeDataFromDocument(document, documentId);
 
                         catImage.setImageResource(swipeDataItem.catImage);
-                        ageText.setText(String.valueOf(swipeDataItem.age) + " months");
-                        weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
-                        sexText.setText(String.valueOf(swipeDataItem.sex));
-                        breedText.setText(swipeDataItem.breed);
+                        ageText.setText("Age:  " + String.valueOf(swipeDataItem.age) + " months");
+                        weightText.setText("Weight:  " + String.valueOf(swipeDataItem.weight) + "lbs");
+                        breedText.setText("Breed:  " + swipeDataItem.breed);
+                        if ("F".equals(String.valueOf(swipeDataItem.sex))) {sexText.setText("Sex:  Female");}
+                        else {sexText.setText("Sex:  Male");  }
                         if(swipeDataItem.isNeutered == true) { neuterText.setText("Neutered");}
                         else {  neuterText.setText("Not neutered"); }
-                        temperamentText.setText(swipeDataItem.temperament);
+                        temperamentText.setText((swipeDataItem.temperament1) + ", " + (swipeDataItem.temperament2));
                         bioText.setText(swipeDataItem.bio);
                         compatibleWithText.setText(swipeDataItem.compatibleWith);
-                        adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee));
+                        adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
                         contactInformationText.setText(swipeDataItem.contactInformation);
                         nameText.setText(swipeDataItem.name);
 
@@ -389,7 +390,8 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
         String bio = document.getString("bio");
-        String temperament = document.getString("temperament");
+        String temperament1 = document.getString("temperament1");
+        String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
         String name = document.getString("name");
         String contact = document.getString("contact");
@@ -397,7 +399,7 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         boolean isNeutered = document.getBoolean("isNeutered");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check,
-                catImage, sex, foodPreference, bio, temperament, breed, name,
+                catImage, sex, foodPreference, bio, temperament1, temperament2, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }
 

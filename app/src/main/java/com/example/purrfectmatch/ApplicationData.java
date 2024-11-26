@@ -9,24 +9,23 @@ public class ApplicationData implements Serializable {
     private String userId;
     private String reason;
     private String status;
+    private String feedback;
     private Timestamp applicationDate;
     private String acknowledged;
 
-    // Default constructor (required for Firestore deserialization)
     public ApplicationData() {}
 
-    // Constructor with all fields
-    public ApplicationData(String applicationId, String catId, String userId, String reason, String acknowledged, String status, Timestamp applicationDate) {
+    public ApplicationData(String applicationId, String catId, String userId, String reason,
+                           String acknowledged, String status, String feedback, Timestamp applicationDate) {
         this.applicationId = applicationId;
         this.catId = catId;
         this.userId = userId;
         this.reason = reason;
         this.status = status;
         this.applicationDate = applicationDate;
+        this.feedback = feedback;
         this.acknowledged = acknowledged;
     }
-
-    // Getters and Setters
 
     public String getAcknowledged() {
         return acknowledged;
@@ -75,6 +74,10 @@ public class ApplicationData implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getFeedback() { return feedback; }
+
+    public void setFeedback(String feedback) { this.feedback = feedback; }
 
     public Timestamp getApplicationDate() {
         return applicationDate;
