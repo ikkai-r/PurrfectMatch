@@ -347,9 +347,7 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                         // Create the SwipeData using the document data
                         SwipeData swipeDataItem = createSwipeDataFromDocument(document, documentId);
 
-                        //TODO: Change to actual cat images
-                        catImage.setImageResource(R.drawable.cat1);
-
+                        catImage.setImageResource(swipeDataItem.catImage);
                         ageText.setText(String.valueOf(swipeDataItem.age) + " months");
                         weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
                         sexText.setText(String.valueOf(swipeDataItem.sex));
@@ -381,19 +379,13 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
     }
 
     private SwipeData createSwipeDataFromDocument(DocumentSnapshot document, String catId) {
-        // Extract the fields from the Firestore document
         int age = document.getLong("age").intValue();
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
-        // Retrieve the list of image names and convert them to resource IDs
-        List<String> catImages = (List<String>) document.get("catImages");
-        int[] catPicSet = new int[catImages.size()];
-        for (int i = 0; i < catImages.size(); i++) {
-            catPicSet[i] = getResources().getIdentifier(catImages.get(i), "drawable", getPackageName());
-        }
+        String catImageStr = document.getString("catImage");
+        int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
 
-        // Retrieve other information
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
         String bio = document.getString("bio");
@@ -404,9 +396,8 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
-        // Now, pass the catId (document ID) directly into the SwipeData constructor
-        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catPicSet,
-                sex, foodPreference, bio, temperament, breed, name,
+        return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check,
+                catImage, sex, foodPreference, bio, temperament, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }
 
@@ -420,7 +411,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         String userId = currentUser.getUid();
         DocumentReference userRef = db.collection("Users").document(userId);
 
-        // Fetch current bookmark state
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 List<String> bookmarkedCats = (List<String>) documentSnapshot.get("bookmarkedCats");
@@ -433,7 +423,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
             Toast.makeText(this, "Failed to load bookmark state.", Toast.LENGTH_SHORT).show();
         });
 
-        // Set up the click listener
         bookmarkIcon.setOnClickListener(view -> toggleBookmarkState(userId, documentId));
     }
 
@@ -514,8 +503,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
             });
         }
     }
-
-
 
     @Override
     public boolean onDown(@NonNull MotionEvent motionEvent) {

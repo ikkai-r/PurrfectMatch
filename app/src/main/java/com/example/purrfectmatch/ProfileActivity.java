@@ -183,9 +183,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                                     for (DocumentSnapshot snapshot : value.getDocuments()) {
                                         try {
-                                            ExploreData cat = snapshot.toObject(ExploreData.class);
+                                            ExploreData cat = createExploreDataFromDocument(snapshot);
                                             if (cat != null) {
-                                                cat.setId(snapshot.getId());
                                                 bookmarkedCats.add(cat);
                                             }
                                         } catch (Exception e) {
@@ -214,10 +213,36 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private ExploreData createExploreDataFromDocument(DocumentSnapshot document) {
+        try {
+            String catId = document.getId();
+            int age = document.contains("age") && document.get("age") != null
+                    ? document.getLong("age").intValue()
+                    : 0;
+
+            String catImageStr = document.getString("catImage");
+            int catImage = R.drawable.app_icon; // Default picture
+            if (catImageStr != null && !catImageStr.isEmpty()) {
+                catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+            }
+
+            String sex = document.getString("sex");
+            String breed = document.getString("breed");
+            String name = document.getString("name");
+            boolean isNeutered = document.contains("isNeutered") && Boolean.TRUE.equals(document.getBoolean("isNeutered"));
+            int adoptionFee = document.contains("adoptionFee") && document.get("adoptionFee") != null
+                    ? document.getLong("adoptionFee").intValue()
+                    : 0;
+
+            return new ExploreData(catId, catImage, name, age, sex, breed, isNeutered, adoptionFee);
+        } catch (Exception e) {
+            Log.e("CreateExploreData", "Error creating ExploreData from document", e);
+            return null;
+        }
+    }
 
     @Override
     public void onBackPressed() {
-        // Do nothing, so back navigation is disabled
         super.onBackPressed();
     }
 }

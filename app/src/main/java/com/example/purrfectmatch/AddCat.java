@@ -47,7 +47,6 @@ public class AddCat extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-
         if (savedInstanceState == null) {
             CatGenForm catGenForm = new CatGenForm();
 
@@ -68,30 +67,35 @@ public class AddCat extends AppCompatActivity {
 
         // Retrieve data from the previous bundle
         String name = finalBundle.getString("name");
-        String age = finalBundle.getString("age");
-        String weight = finalBundle.getString("weight");
+        String ageStr = finalBundle.getString("age"); // Get age as a string
+        String weightStr = finalBundle.getString("weight");
         String breed = finalBundle.getString("breed");
         String temperament = finalBundle.getString("temperament");
         String compatible = finalBundle.getString("compatible");
         String food = finalBundle.getString("food");
-        String fee = finalBundle.getString("fee");
+        String feeStr = finalBundle.getString("fee");
         String picture = finalBundle.getString("catimg");
         String about = finalBundle.getString("about");
         List<String> bookmarked = new ArrayList<>();
         String sex = finalBundle.getString("sex");
         boolean isNeutered = finalBundle.getBoolean("isneutered");
 
-
         Log.d("process", "I'm now here before");
 
-        // Check if all values are retrieved properly
-        if (name != null && age != null && weight != null && breed != null &&
-                temperament != null && compatible != null && food != null && fee != null &&
+        // Convert age and weight to numbers
+        int age = 0;
+        age = Integer.parseInt(ageStr);
+        int weight = 0;
+        weight = Integer.parseInt(weightStr);
+        int fee = 0;
+        fee = Integer.parseInt(feeStr);
+
+
+        if (name != null && breed != null &&
+                temperament != null && compatible != null && food != null &&
                 picture != null && about != null) {
 
-                    // If username does not exist, proceed with user registration
-                    Log.d("finish", "values are retrieved properly");
-
+            Log.d("finish", "values are retrieved properly");
 
             // Create a map or a model class to hold the cat data
             Map<String, Object> catData = new HashMap<>();
@@ -109,10 +113,8 @@ public class AddCat extends AppCompatActivity {
             catData.put("sex", sex);
             catData.put("isNeutered", isNeutered);
 
-            // Reference to Firestore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            // Add the new cat to the "Cats" collection
             db.collection("Cats")
                     .add(catData)
                     .addOnSuccessListener(documentReference -> {
@@ -141,6 +143,7 @@ public class AddCat extends AppCompatActivity {
             Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public void cancel(View v) {
         finish();

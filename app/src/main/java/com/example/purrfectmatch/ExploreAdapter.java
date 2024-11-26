@@ -35,9 +35,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExploreData currentCat = exploreList.get(position);
 
-        // TODO: Change setImageResource to actual link of image in db
-        holder.catImage.setImageResource(R.drawable.cat0);
-
+        holder.catImage.setImageResource(currentCat.getCatImage());
         holder.catName.setText(currentCat.getName());
         holder.catAge.setText(currentCat.getAge() + " months old");
         holder.catBreed.setText(currentCat.getBreed());

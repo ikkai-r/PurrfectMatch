@@ -34,7 +34,7 @@ public class ApplicationsActivity extends AppCompatActivity {
 
     private ImageView profile, explore, swipe;
     private RecyclerView recyclerActiveApplications, recyclerClosedApplications;
-    private TextView noActiveApplicationsTxt;
+    private TextView noActiveApplicationsTxt, noClosedApplicationsTxt;
     private ApplicationAdapter activeAdapter, closedAdapter;
 
     private List<ApplicationData> activeApplicationsList, closedApplicationsList;
@@ -62,7 +62,7 @@ public class ApplicationsActivity extends AppCompatActivity {
         explore = findViewById(R.id.explore);
         swipe = findViewById(R.id.swipe);
         noActiveApplicationsTxt = findViewById(R.id.noActiveApplicationsTxt);
-
+        noClosedApplicationsTxt = findViewById(R.id.noActiveApplicationsTxt);
 
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
