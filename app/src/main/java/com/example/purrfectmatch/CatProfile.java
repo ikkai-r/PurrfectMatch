@@ -34,7 +34,7 @@ public class CatProfile extends AppCompatActivity {
 
     private ImageView catImage;
     private TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText,
-            compatibleWithText, adoptionFeeText, contactInformationText, nameText;
+            compatibleWithText, adoptionFeeText, nameText;
     private String catId, catName;
 
     @Override
@@ -188,7 +188,6 @@ public class CatProfile extends AppCompatActivity {
         bioText = findViewById(R.id.bioText);
         compatibleWithText = findViewById(R.id.compatibleWithText);
         adoptionFeeText = findViewById(R.id.adoptionFeeText);
-        contactInformationText = findViewById(R.id.contactInformationText);
         nameText = findViewById(R.id.nameText);
     }
 
@@ -224,7 +223,6 @@ public class CatProfile extends AppCompatActivity {
                         compatibleWithText.setText(swipeDataItem.compatibleWith);
 
                         adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
-                        contactInformationText.setText(swipeDataItem.contactInformation);
 
                         nameText.setText(swipeDataItem.name);
                         catName = swipeDataItem.name;
@@ -259,14 +257,13 @@ public class CatProfile extends AppCompatActivity {
         String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
         String name = document.getString("name");
-        String contact = document.getString("contact");
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
         // Now, pass the catId (document ID) directly into the SwipeData constructor
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
                 sex, foodPreference, bio, temperament, breed, name,
-                contact, catId, compatibleWith, isNeutered);
+                catId, compatibleWith, isNeutered);
     }
 
     public void editCat(View v) {

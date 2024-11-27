@@ -67,7 +67,6 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
         holder.bioText.setText(swipeDataItem.bio);
         holder.compatibleWithText.setText(swipeDataItem.compatibleWith);
         holder.adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
-        holder.contactInformationText.setText(swipeDataItem.contactInformation);
         holder.nameText.setText(swipeDataItem.name);
 
         if (flip) {
@@ -147,7 +146,7 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView catImage, bookmarkIcon;
-        TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText, compatibleWithText, adoptionFeeText, contactInformationText, nameText;
+        TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText, compatibleWithText, adoptionFeeText, nameText;
         ScrollView scrollView;
 
 
@@ -164,7 +163,6 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
             bioText = itemView.findViewById(R.id.bioText);
             compatibleWithText = itemView.findViewById(R.id.compatibleWithText);
             adoptionFeeText = itemView.findViewById(R.id.adoptionFeeText);
-            contactInformationText = itemView.findViewById(R.id.contactInformationText);
             nameText = itemView.findViewById(R.id.nameText);
 
             scrollView = itemView.findViewById(R.id.scrollView2);

@@ -5,17 +5,15 @@ public class SwipeData {
     int age, weight, adoptionFee;
     char sex;
 
-    String foodPreference, bio, temperament, breed, name, contactInformation, compatibleWith, catId, catImage;
+    String foodPreference, bio, temperament, breed, name, compatibleWith, catId, catImage;
     boolean isBookmarked, isNeutered;
 
     public SwipeData(int age, int weight, int adoptionFee,  int neuteredImage, int vaccinationImage, int litterTrainedImage,
                      String catImage, char sex, String foodPreference, String bio, String temperament, String breed,
-
-                     String name, String contactInformation, String catId, String compatibleWith, boolean isNeutered) {
+                     String name, String catId, String compatibleWith, boolean isNeutered) {
         this.age = age;
         this.weight = weight;
         this.adoptionFee = adoptionFee;
-        this.contactInformation = contactInformation;
         this.catImage = catImage;
         this.sex = sex;
         this.foodPreference = foodPreference;
