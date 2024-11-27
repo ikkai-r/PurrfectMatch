@@ -32,6 +32,7 @@ public class ScheduledApplications extends AppCompatActivity {
     private String catCompatibility, catTemp2, catTemp1, appId, catId;
     private FirebaseFirestore db;
     private int userAge;
+    private Button acceptButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,8 @@ public class ScheduledApplications extends AppCompatActivity {
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
         schedule = findViewById(R.id.schedule);
+        acceptButton = findViewById(R.id.acceptButton);
+        
         Log.d("app inside", app.toString());
         if (app != null) {
 
@@ -144,6 +147,16 @@ public class ScheduledApplications extends AppCompatActivity {
 
                 if(appId != null) {
                     rejectApplication(appId, catId);
+                }
+            }
+        });
+
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(appId != null) {
+                    acceptApp(v);
                 }
             }
         });
@@ -282,7 +295,63 @@ public class ScheduledApplications extends AppCompatActivity {
     }
 
     public void acceptApp(View v) {
-        Intent i = new Intent(this, ScheduleShelter.class);
-        this.startActivity(i);
+        HashMap<String, String> app = (HashMap<String, String>) getIntent().getSerializableExtra("app");
+        String appId = app.get("appId");
+        String catId = app.get("catId");
+        String userId = app.get("userId");
+
+
+        // Start by updating the application status to "accepted"
+        db.collection("Applications")
+                .document(appId)
+                .update("status", "accepted") 
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AcceptApp", "Application status updated to accepted.");
+
+                    // Now update the cat's status to adopted
+                    db.collection("Cats")
+                            .document(catId) 
+                            .update("isAdopted", true)
+                            .addOnSuccessListener(catUpdate -> {
+                                Log.d("AcceptApp", "Cat's adoption status updated to true.");
+
+                                // Update cat adoption details for the user
+                                db.collection("Users")
+                                        .document(userId) 
+                                        .update(
+                                                "adoptedCatIds", FieldValue.arrayUnion(catId),
+                                                "adoptedCatCount", FieldValue.increment(1) 
+                                        )
+                                        .addOnSuccessListener(userUpdate -> {
+                                            Log.d("AcceptApp", "User's adoption record updated.");
+
+                                            // Also update the adoptedBy field for the cat
+                                            db.collection("Cats")
+                                                    .document(catId)
+                                                    .update("adoptedBy", userId) // Record who adopted the cat
+                                                    .addOnSuccessListener(adoptedCatUpdate -> {
+                                                        Log.d("AcceptApp", "Adopted cat details updated.");
+
+                                                        Intent i = new Intent(ScheduledApplications.this, ShelterPage.class);
+                                                        ScheduledApplications.this.startActivity(i);
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.e("AcceptApp", "Error updating adopted cat details: " + e.getMessage());
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("AcceptApp", "Error updating user's adoption record: " + e.getMessage());
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("AcceptApp", "Failed to update cat's adoption status: " + e.getMessage());
+                                Toast.makeText(ScheduledApplications.this, "Failed to update cat adoption. Try again later.", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AcceptApp", "Error updating application status: " + e.getMessage());
+                    Toast.makeText(ScheduledApplications.this, "Failed to accept the application. Try again later.", Toast.LENGTH_SHORT).show();
+                });
     }
+
 }
