@@ -1,13 +1,13 @@
 package com.example.purrfectmatch;
 
 public class ExploreData {
-    private int catImage, age, adoptionFee;
-    private String name, sex, breed, id;
+    private int age, adoptionFee;
+    private String catImage, name, sex, breed, id;
     private boolean isNeutered;
 
     public ExploreData(){}
 
-    public ExploreData(String id, int catImage, String name, int age, String sex, String breed,
+    public ExploreData(String id, String catImage, String name, int age, String sex, String breed,
                        boolean isNeutered, int adoptionFee) {
         this.id = id;
         this.catImage = catImage;
@@ -23,11 +23,11 @@ public class ExploreData {
 
     public void setId(String id) { this.id = id; }
 
-    public int getCatImage() {
+    public String getCatImage() {
         return catImage;
     }
 
-    public void setCatImage(int imageResId) {
+    public void setCatImage(String imageResId) {
         this.catImage = imageResId;
     }
 

@@ -1,7 +1,10 @@
 package com.example.purrfectmatch;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,7 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
-import android.text.TextUtils;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +21,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
  * A simple {@link Fragment} subclass.
- * */
+ */
 public class CatPicForm extends Fragment {
 
     public CatPicForm() {
@@ -30,6 +40,7 @@ public class CatPicForm extends Fragment {
     private ImageView image;
     private Uri photoUri;
     private Button buttonNext;
+    private String savedImagePath;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,8 +53,15 @@ public class CatPicForm extends Fragment {
 
         image.setOnClickListener(v -> choosePicture());
 
+
+
         buttonNext.setOnClickListener(v -> {
             // Handle the next button click event
+
+            // Save the image to internal storage
+            if (image.getDrawable() != null) {
+                savedImagePath = saveImageToInternalStorage();
+            }
 
             // Bundle data to pass to the next step (e.g., SignUp activity or another fragment)
             Bundle previousBundle = getArguments();
@@ -51,12 +69,12 @@ public class CatPicForm extends Fragment {
                 previousBundle = new Bundle();
             }
 
-            if (photoUri != null) {
-                previousBundle.putString("catimg", photoUri.toString());
+            if (savedImagePath != null) {
+                previousBundle.putString("catimg", savedImagePath);
             }
 
             // Log the values for debugging (you can remove this in production)
-            Log.d("AboutForm", "Profile Image URI: " + (photoUri != null ? photoUri.toString() : "No Image"));
+            Log.d("AboutForm", "Saved Image Path: " + savedImagePath);
 
             // Pass bundle to the next form
             CatAboutForm catAboutForm = new CatAboutForm();
@@ -67,7 +85,6 @@ public class CatPicForm extends Fragment {
         });
 
         return view;
-
     }
 
     private void choosePicture() {
@@ -86,8 +103,27 @@ public class CatPicForm extends Fragment {
                     photoUri = result.getData().getData();
                     // Show the selected image in ImageView
                     image.setImageURI(photoUri);
-
                 }
             }
     );
+
+    private String saveImageToInternalStorage() {
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+
+        // Define the file name and path
+        File directory = getActivity().getDir("images", Context.MODE_PRIVATE);
+        File imageFile = new File(directory, "cat_image_" + System.currentTimeMillis() + ".png");
+
+        try (FileOutputStream fos = new FileOutputStream(imageFile)) {
+            // Compress and save the bitmap to the file
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            Toast.makeText(getContext(), "Image Saved", Toast.LENGTH_SHORT).show();
+            return imageFile.getAbsolutePath(); // Return the saved image path
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Failed to Save Image", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
 }

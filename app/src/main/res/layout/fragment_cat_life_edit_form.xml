@@ -144,16 +144,17 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/temperament"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
-                android:text="Patient"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
+                android:maxLines="1"
                 android:padding="12dp"
+                android:text="Patient"
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:maxLines="1" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -193,16 +194,17 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/compatible"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Children"
+                android:maxLines="1"
                 android:padding="12dp"
+                android:text="Children"
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:maxLines="1" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -241,16 +243,17 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/food"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@drawable/edittext_bg"
-                android:text="Yarn"
                 android:backgroundTint="#DDDDDD"
                 android:fontFamily="@font/poppins_regular"
+                android:maxLines="1"
                 android:padding="12dp"
+                android:text="Yarn"
                 android:textColor="#000000"
-                android:textSize="12sp"
-                android:maxLines="1" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -303,6 +306,49 @@
                 android:maxLines="1" />
 
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonNext8"
+            android:layout_width="299dp"
+            android:layout_height="61dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_button"
+            android:drawableEnd="@drawable/arrow_front"
+            android:fontFamily="@font/poppins_bold"
+            android:paddingStart="40dp"
+            android:paddingEnd="20dp"
+            android:text="Next"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:iconTint="#0D0B0B"
+            app:layout_constraintBottom_toTopOf="@+id/textView18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/largeImageView" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="191dp"
+            android:fontFamily="@font/poppins_regular"
+            android:onClick="cancel"
+            android:text="Cancel"
+            android:textAlignment="center"
+            android:textColor="#737272"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonNext7" />
 
     </LinearLayout>
 

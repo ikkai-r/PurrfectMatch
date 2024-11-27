@@ -71,6 +71,34 @@
                 android:textColorHint="#A6A6A6"
                 android:text="Hello, I’m Dweety! DLSU’s resident Henry cat. I am a calm, loving cat who is very comfortable around strangers and other cats. I am looking for a PURRever home that will feed me yummy food every day! I like being outdoors, so a house with a backyard would be ideal :)"/>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonNext9"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/background_button"
+                android:drawableEnd="@drawable/arrow_front"
+                android:fontFamily="@font/poppins_bold"
+                android:paddingStart="40dp"
+                android:paddingEnd="20dp"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:iconTint="#0D0B0B" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:onClick="cancel"
+                android:text="Cancel"
+                android:textAlignment="center"
+                android:textColor="#737272" />
+
         </LinearLayout>
     </LinearLayout>
 

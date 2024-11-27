@@ -422,7 +422,12 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
         String catImageStr = document.getString("catImage");
-        int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+        //int catImage = R.drawable.app_icon; // Default picture
+        String catImage = "content://com.android.providers.media.documents/document/image%3A1000035034"; // Default picture
+            /*
+            if (catImageStr != null && !catImageStr.isEmpty()) {
+                catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+            }*/
 
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
