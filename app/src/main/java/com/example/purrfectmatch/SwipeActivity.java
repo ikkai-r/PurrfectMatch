@@ -313,7 +313,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         // Fetch user's application IDs first
         userRef.get().addOnSuccessListener(userSnapshot -> {
             if (userSnapshot.exists()) {
-                List<String> applicationIds = (List<String>) userSnapshot.get("catApplications");
+                List<String> applicationIds = (List<String>) userSnapshot.get("pendingApplications");
                 List<String> bookmarkedCats = (List<String>) userSnapshot.get("bookmarkedCats");
 
                 if (applicationIds == null) {
@@ -368,31 +368,51 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         CollectionReference catsRef = db.collection("Cats");
 
         catsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful() && task.getResult() != null) {
+                // Clear the list to avoid duplicates when reloading
+                swipeDataList.clear();
+
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String catId = document.getId();
 
-                    // Exclude cats already applied for
-                    if (!excludedCatIds.contains(catId)) {
-                        SwipeData swipeData = createSwipeDataFromDocument(document, catId);
-
-                        // set the bookmark
-                        boolean isBookmarked = bookmarkedCats.contains(catId);
-                        swipeData.setBookmarked(isBookmarked);
-                        swipeDataList.add(swipeData);
+                    // Skip cats already applied for or adopted
+                    boolean isAdopted = document.getBoolean("isAdopted") != null && document.getBoolean("isAdopted");
+                    if (excludedCatIds.contains(catId) || isAdopted) {
+                        continue;
                     }
+
+                    // Create a SwipeData object
+                    SwipeData swipeData = createSwipeDataFromDocument(document, catId);
+
+                    // Mark the cat as bookmarked if applicable
+                    boolean isBookmarked = bookmarkedCats.contains(catId);
+                    swipeData.setBookmarked(isBookmarked);
+
+                    // Add to the list
+                    swipeDataList.add(swipeData);
                 }
 
-                swipeAdapter = new SwipeAdapter(swipeDataList.toArray(new SwipeData[0]), SwipeActivity.this);
-                viewPager2.setAdapter(swipeAdapter);
-                viewPager2.setPageTransformer((page, position) -> {
-                    float absPos = Math.abs(position);
-                    page.setAlpha(1.0f - absPos);
-                    page.setScaleY(1.0f - absPos * 0.15f);
-                });
+                // Check if there are any cats to display
+                if (!swipeDataList.isEmpty()) {
+                    setupSwipeAdapter();
+                } else {
+                    Toast.makeText(this, "No cats available for adoption at the moment.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Failed to load cat data.", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void setupSwipeAdapter() {
+        swipeAdapter = new SwipeAdapter(swipeDataList.toArray(new SwipeData[0]), SwipeActivity.this);
+        viewPager2.setAdapter(swipeAdapter);
+
+        // Set up page transformer for animations
+        viewPager2.setPageTransformer((page, position) -> {
+            float absPos = Math.abs(position);
+            page.setAlpha(1.0f - absPos);
+            page.setScaleY(1.0f - absPos * 0.15f);
         });
     }
 

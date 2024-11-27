@@ -111,8 +111,7 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonSchedule"
-                android:onClick="goAccept"
+                android:id="@+id/acceptButton"
                 android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
