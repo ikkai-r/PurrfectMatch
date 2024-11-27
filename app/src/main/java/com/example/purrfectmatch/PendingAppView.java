@@ -70,7 +70,7 @@ public class PendingAppView extends AppCompatActivity {
         incomeBracket = findViewById(R.id.incomeBracket);
         buttonSchedule = findViewById(R.id.buttonSchedule);
 
-        // Set text values based on ApplicationData fields
+        // // Set text values based on ApplicationData fields
         if (app != null) {
             applicationDate.setText(app.get("appDate")); // Convert Timestamp to Date
             appId = app.get("appId");
@@ -92,11 +92,11 @@ public class PendingAppView extends AppCompatActivity {
         Log.d("papa", String.valueOf(catFields));
 
         if (userFields != null) {
-            nameAge.setText(userFields.get("name") + ", " + userFields.get("age")); // name + age
+            nameAge.setText(userFields.get("firstName") + " " + userFields.get("lastName") + ", " + userFields.get("age")); // name + age
             householdMembers.setText("Household Members: " + userFields.get("householdMembers"));
             otherPets.setText("Other Pets: " + userFields.get("otherPets"));
             gender.setText("Gender: " + userFields.get("gender")); // Static or dynamic based on your field
-            address.setText("Address: " + userFields.get("address2")); // Replace with user-provided address if available
+            address.setText("Address: " + userFields.get("region")); // Replace with user-provided address if available
             energy.setText("Energy level: " + userFields.get("preferences2"));
             social.setText("Temperament: " + userFields.get("preferences1"));
 
@@ -113,8 +113,8 @@ public class PendingAppView extends AppCompatActivity {
         // Set text values based on catFields
         if (catFields != null) {
             catId = catFields.get("catId");
-            appTitle.setText("Application for " + catFields.get("catName"));
-            percentage.setText(catFields.get("percentage") + "% match");
+            appTitle.setText("Application for " + catFields.get("name"));
+            percentage.setText("21" + "% match");
         }
 
 

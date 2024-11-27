@@ -55,11 +55,63 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
         if (app != null) {
 
-            // Get name from db using user id in app
-            holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
+            // Set placeholder user image
+            holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image logic
+
+            // Display the application date
             holder.date.setText("Date: " + formatFirebaseTimestamp(app.getApplicationDate()));
 
-            // Fetch both applicant and cat data and display matching traits
+            // Create HashMaps to store the applicant and cat data (only strings)
+            HashMap<String, String> userFields = new HashMap<>();
+            HashMap<String, String> catFields = new HashMap<>();
+
+            // Fetch applicant data directly from Firestore
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("Users").document(app.getUserId()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+
+                for (String key : documentSnapshot.getData().keySet()) {
+                    Object value = documentSnapshot.get(key);
+                    if (value instanceof String) {
+                        userFields.put(key, (String) value);
+                    } else if (value instanceof Number) {
+                        userFields.put(key, String.valueOf(value));  // Convert number to String
+                    }
+                }
+
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("fetchApplicantData", "Error fetching applicant data", e));
+
+            // Fetch cat data directly from Firestore
+            db.collection("Cats").document(app.getCatId()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+
+                        for (String key : documentSnapshot.getData().keySet()) {
+                            Object value = documentSnapshot.get(key);
+                            if (value instanceof String) {
+                                catFields.put(key, (String) value);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("fetchCatData", "Error fetching cat data", e));
+
+                // Extract relevant user and cat data from the userFields and catFields HashMaps
+            String userHousehold = userFields.get("householdMembers");
+            String userOtherPets = userFields.get("otherPets");
+            String catCompatibility = catFields.get("compatibleWith");
+            String userTempSocial = userFields.get("preferences1");
+            String catTemp1 = catFields.get("temperament1");
+            String userTempEnergy = userFields.get("preferences2");
+            String catTemp2 = catFields.get("temperament2");
+            // int userAge = Integer.parseInt(userFields.get("age"));  // Assuming age is stored as a String, convert to int
+
+            // // Call the methods using the extracted values
+            // String matchingTraits = getMatchingTraits(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
+            // double matchingPercentage = calculateMatchPercentage(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2, userAge);
             fetchApplicantandCatData(app.getUserId(), app.getCatId(), holder);
 
             holder.itemView.setOnClickListener(view -> {
@@ -67,14 +119,17 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                     listener.onItemClick(app);
                 }
 
+                // Store application details for intent
+                HashMap<String, String> appFields = new HashMap<>();
                 appFields.put("appDate", formatFirebaseTimestamp(app.getApplicationDate()));
                 appFields.put("appId", app.getApplicationId());
                 appFields.put("appStatus", app.getStatus());
                 appFields.put("appReason", app.getReason());
+
                 // Create an Intent to navigate to the specific application's page for the current cat
                 Intent intent = new Intent(context, PendingAppView.class);
                 intent.putExtra("app", appFields);  // Pass the application object via Intent
-                intent.putExtra("cat", catFields);
+                intent.putExtra("cat", catFields);  // Pass the cat data via Intent
                 intent.putExtra("user", userFields);
 
                 Log.d("pabe", appFields.toString());
@@ -82,9 +137,9 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 Log.d("pabe", userFields.toString());
                 context.startActivity(intent);  // Start the new activity
             });
-
         }
     }
+
 
     private String formatFirebaseTimestamp(Timestamp timestamp) {
         if (timestamp == null) {
