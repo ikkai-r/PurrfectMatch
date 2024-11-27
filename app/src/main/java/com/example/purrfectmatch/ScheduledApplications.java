@@ -115,7 +115,7 @@ public class ScheduledApplications extends AppCompatActivity {
             //compute matching percentage
             // Calculate the matching traits and percentage
             double matchingPercentage = calculateMatchPercentage(householdMembers.getText().toString(), otherPets.getText().toString(), catCompatibility, social.getText().toString(), catTemp1, energy.getText().toString(), catTemp2, userAge);
-            percentage.setText(String.valueOf(matchingPercentage) + "% match");
+            percentage.setText(String.format("%.2f", matchingPercentage) + "% match");
         }
 
         dialog = new Dialog(this);

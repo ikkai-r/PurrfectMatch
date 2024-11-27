@@ -27,14 +27,16 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
     private List<ApplicationData> pendingApps;
     private Context context;
+    private boolean selectedCat;
     private OnItemClickListener listener;
     HashMap<String, String> userFields = new HashMap<>();
     HashMap<String, String> catFields = new HashMap<>();
     HashMap<String, String> appFields = new HashMap<>();
     Intent i;
 
-    public PendingAppAdapter(List<ApplicationData> pendingApps, Context context) {
+    public PendingAppAdapter(List<ApplicationData> pendingApps, boolean selectedCat, Context context) {
         this.pendingApps = pendingApps;
+        this.selectedCat = selectedCat;
         this.context = context;
     }
 
@@ -131,7 +133,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
                                                 // Display matching traits and percentage
                                                 holder.matching.setText(matchingTraits);
-                                                holder.percentage.setText("They are " + matchingPercentage + "% compatible based on traits and preferences");
+                                                holder.percentage.setText("They are " + String.format("%.2f", matchingPercentage) + "% compatible based on traits and preferences");
 
                                                 userFields.put("name", userName);
                                                 userFields.put("age", String.valueOf(userAge));
@@ -147,7 +149,14 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                                 catFields.put("catTemp2", catTemp2);
                                                 catFields.put("catCompatibility", catCompatibility);
                                                 catFields.put("catName", catDocument.getString("name"));
-                                                catFields.put("percentage", String.valueOf(matchingPercentage));
+                                                catFields.put("percentage", String.format("%.2f", matchingPercentage));
+
+                                                if (selectedCat) {
+                                                    holder.catSelect.setVisibility(View.VISIBLE); // Make the TextView visible
+                                                    holder.catSelect.setText("Selected Cat: " + catDocument.getString("name"));
+                                                } else {
+                                                    holder.catSelect.setVisibility(View.GONE); // Hide the TextView
+                                                }
                                             }
                                         } else {
                                             Log.d("PendingAppAdapter", "Error getting cat data: ", catTask.getException());
@@ -279,7 +288,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView userImage;
-        TextView applicant, date, matching, percentage;
+        TextView applicant, date, matching, percentage, catSelect;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -288,6 +297,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
             date = itemView.findViewById(R.id.date);
             matching = itemView.findViewById(R.id.traits);
             percentage = itemView.findViewById(R.id.percentage);
+            catSelect = itemView.findViewById(R.id.selectedCat);
         }
     }
 

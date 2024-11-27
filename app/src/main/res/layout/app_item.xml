@@ -17,50 +17,59 @@ android:onClick="goViewApplication">
     android:layout_gravity="center"
     android:src="@drawable/user_1" />
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:gravity="center_vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="323dp"
         android:layout_height="wrap_content"
-        android:id="@+id/applicant"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Applicant name: Niki Zefanya"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/date"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Date: October 17, 2024"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
+        <TextView
+            android:id="@+id/applicant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Applicant name:"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/traits"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Matching traits:"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
+        <TextView
+            android:id="@+id/selectedCat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Selected Cat:"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Date:"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/traits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Matching traits:"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/percentage"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Matching percentage:"
-        android:textColor="@color/black"
-        android:textSize="10sp" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Matching percentage:"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
 </LinearLayout>
