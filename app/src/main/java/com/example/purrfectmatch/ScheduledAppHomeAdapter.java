@@ -1,6 +1,7 @@
 package com.example.purrfectmatch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HashMap<String, String> currentApp = scheduledAppList.get(position);
-        Log.d("binding", currentApp.get("appId"));
+        Log.d("bindingApp", currentApp.get("appId"));
 
         // Populate the views with data from ScheduledAppData
         holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
@@ -48,10 +49,12 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
                 listener.onItemClick(currentApp);
             }
 
-            // Create an Intent to navigate to the specific application's page for the current cat
-            //Intent intent = new Intent(context, ScheduledApplications.class);
-            //intent.putExtra("cat", currentCat);  // Pass the cat object via Intent
-            //context.startActivity(intent);  // Start the new activity
+
+            Log.d("currentApp", currentApp.toString());
+
+            //Create an Intent to navigate to the specific application's page for the current cat
+            Intent intent = new Intent(context, ScheduledApplications.class);
+            intent.putExtra("app", currentApp);  // Pass the cat object via Intent
         });
     }
 
@@ -78,6 +81,6 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
     }
 
     public interface OnItemClickListener {
-        void onItemClick(HashMap<String, String> currentCat);
+        void onItemClick(HashMap<String, String> currentApp);
     }
 }

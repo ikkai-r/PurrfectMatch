@@ -67,6 +67,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
                 appFields.put("appDate", formatFirebaseTimestamp(app.getApplicationDate()));
                 appFields.put("appId", app.getApplicationId());
+                appFields.put("appStatus", app.getStatus());
                 // Create an Intent to navigate to the specific application's page for the current cat
                 Intent intent = new Intent(context, PendingAppView.class);
                 intent.putExtra("app", appFields);  // Pass the application object via Intent
@@ -167,11 +168,11 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
         int matches = 0;
 
         // Compare household members to cat's social characteristic
-        if (userHousehold.equals("2-4 members") && catTemp2.equals("Active / Playful")) {
+        if (userHousehold.equals("3-4 members") && catTemp2.equals("Active / Playful")) {
             matches++;
         } else if (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) {
             matches++;
-        } else if (userHousehold.equals("4+ members") && catTemp2.equals("Active / Playful") ) {
+        } else if (userHousehold.equals("5+ members") && catTemp2.equals("Active / Playful") ) {
             matches++;
         }
 
@@ -214,9 +215,9 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
         int totalMatchWeight = 0;
 
         // Compare household members to cat's activity level
-        if ((userHousehold.equals("2-4 members") && catTemp2.equals("Active / Playful")) ||
+        if ((userHousehold.equals("3-4 members") && catTemp2.equals("Active / Playful")) ||
                 (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) ||
-                (userHousehold.equals("4+ members") && catTemp2.equals("Active / Playful"))) {
+                (userHousehold.equals("5+ members") && catTemp2.equals("Active / Playful"))) {
             totalMatchWeight += HOUSEHOLD_WEIGHT;
         }
 

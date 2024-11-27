@@ -34,6 +34,7 @@ public class PendingAppView extends AppCompatActivity {
     Dialog dialog;
     String appId, catId;
     FirebaseFirestore db;
+    Button buttonSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +67,21 @@ public class PendingAppView extends AppCompatActivity {
          applicationDate = findViewById(R.id.applicationDate);
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
+        buttonSchedule = findViewById(R.id.buttonSchedule);
 
         // Set text values based on ApplicationData fields
         if (app != null) {
             applicationDate.setText(app.get("appDate")); // Convert Timestamp to Date
             appId = app.get("appId");
+
+            if(app.get("appStatus").equals("reviewed")) {
+                buttonSchedule.setText("Accept");
+                buttonSchedule.setOnClickListener(v -> goAcceptApp(v));
+
+            } else if(app.get("appStatus").equals("pending")) {
+                buttonSchedule.setText("Schedule");
+                buttonSchedule.setOnClickListener(v -> goScheduledApp(v));
+            }
         }
 
         // Set text values based on userFields
@@ -133,15 +144,14 @@ public class PendingAppView extends AppCompatActivity {
     }
     private void rejectApplication(String appId, String catId) {
         EditText reasonEditText = dialog.findViewById(R.id.reasonEditText);
-        String reason = reasonEditText.getText().toString();
+        String feedback = reasonEditText.getText().toString();
 
-        // Update application status to "rejected" with reason
+        // Update application status to "rejected" with feedback
         db.collection("Applications") // Replace with your collection name
                 .document(appId)
                 .update(
                         "status", "rejected",
-                        "reason", reason,
-                        "acknowledged", "No"
+                        "feedback", feedback
                 )
                 .addOnSuccessListener(aVoid -> {
                     Log.d("RejectApp", "Application status updated to rejected.");
@@ -170,8 +180,17 @@ public class PendingAppView extends AppCompatActivity {
         dialog.show();
     }
 
-    public void acceptApp(View v) {
+    public void goScheduledApp(View v) {
         Intent i = new Intent(this, ScheduleShelter.class);
+        i.putExtra("appId", appId);
+        this.startActivity(i);
+    }
+
+
+    //TODO: Change to accept logic
+    public void goAcceptApp(View v) {
+        Intent i = new Intent(this, ScheduleShelter.class);
+        i.putExtra("appId", appId);
         this.startActivity(i);
     }
 }

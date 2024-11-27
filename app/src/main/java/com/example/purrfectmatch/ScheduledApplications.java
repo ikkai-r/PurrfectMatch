@@ -1,8 +1,14 @@
 package com.example.purrfectmatch;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,23 +16,240 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.List;
+
 public class ScheduledApplications extends AppCompatActivity {
+
+    private TextView appTitle, nameAge, householdMembers, otherPets, gender, address, social,
+            applicationDate, schedule, percentage, energy,incomeBracket;
+    private Dialog dialog;
+    private String catCompatibility, catTemp2, catTemp1, appId, catId;
+    private FirebaseFirestore db;
+    private int userAge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_scheduled_applications);
+        setContentView(R.layout.activity_scheduled_app_view);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        HashMap<String, String> app = (HashMap<String, String>) getIntent().getSerializableExtra("app");
+
+        appTitle = findViewById(R.id.appTitle);
+        nameAge = findViewById(R.id.nameAge);
+        householdMembers = findViewById(R.id.householdMembers);
+        otherPets = findViewById(R.id.otherPets);
+        gender = findViewById(R.id.gender);
+        address = findViewById(R.id.address);
+        social = findViewById(R.id.social);
+        energy = findViewById(R.id.energy);
+        applicationDate = findViewById(R.id.applicationDate);
+        percentage = findViewById(R.id.percentage);
+        incomeBracket = findViewById(R.id.incomeBracket);
+        schedule = findViewById(R.id.schedule);
+
+        if (app != null) {
+            appId = app.get("appId");
+            applicationDate.setText(app.get("appDate"));
+            schedule.setText("Schedule is on ");
+            //format like this             android:text="Schedule is on December 20, 10:30 AM"
+
+            String userId = app.get("userId");
+
+            // Inner query to fetch user details
+            db.collection("Users")
+                    .document(userId) // Access the specific user's document
+                    .get()
+                    .addOnSuccessListener(userDoc -> {
+                        if (userDoc.exists()) {
+                            userAge = (int) userDoc.get("age");
+                            nameAge.setText(userDoc.get("firstName") + " " + userDoc.get("lastName") + ", " + userAge); // name + age
+                            householdMembers.setText("Household Members: " + userDoc.get("householdMembers"));
+                            otherPets.setText("Other Pets: " + userDoc.get("otherPets"));
+                            gender.setText("Gender: " + userDoc.get("gender")); // Static or dynamic based on your field
+                            address.setText("Address: " + userDoc.get("city") + ", " + userDoc.get("region")); // Replace with user-provided address if available
+                            energy.setText("Energy level: " + userDoc.get("preferences2"));
+                            social.setText("Temperament: " + userDoc.get("preferences1"));
+
+                            if(Integer.parseInt((String) userDoc.get("age")) < 18) {
+                                incomeBracket.setText("Likely a student and dependent.");
+                            } else if(Integer.parseInt((String) userDoc.get("age")) > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
+                                incomeBracket.setText("Likely a student and may be working.");
+                            } else if(Integer.parseInt((String) userDoc.get("age")) > 23)  {
+                                incomeBracket.setText("Likely working already.");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("fetching", "Failed to fetch user details: " + e.getMessage());
+                    });
+
+            catId = app.get("catId");
+
+
+            db.collection("Cats")
+                    .document(catId) // Access the specific user's document
+                    .get()
+                    .addOnSuccessListener(catDoc -> {
+                        if (catDoc.exists()) {
+                            // Add user details to app data
+                            appTitle.setText("Application for " + catDoc.get("name"));
+                            catCompatibility = (String) catDoc.get("compatibleWith");
+                            catTemp1 = catDoc.getString("temperament1");
+                            catTemp2 = catDoc.getString("temperament2");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("cats", "Failed to fetch cat details: " + e.getMessage());
+                    });
+
+            //compute matching percentage
+            // Calculate the matching traits and percentage
+            double matchingPercentage = calculateMatchPercentage(householdMembers.getText().toString(), otherPets.getText().toString(), catCompatibility, social.getText().toString(), catTemp1, energy.getText().toString(), catTemp2, userAge);
+            percentage.setText(String.valueOf(matchingPercentage) + "% match");
+        }
+
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_reject_app);
+
+        Button rejectButton = dialog.findViewById(R.id.dialog_reject_button);
+        Button cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
+
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // change status of application to rejected
+
+                if(appId != null) {
+                    rejectApplication(appId, catId);
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Just dismiss the dialog
+                dialog.dismiss();
+            }
+        });
+
     }
 
+    private void rejectApplication(String appId, String catId) {
+        EditText reasonEditText = dialog.findViewById(R.id.reasonEditText);
+        String reason = reasonEditText.getText().toString();
 
-    public void goViewApplication(View v) {
-        Intent i = new Intent(this, ViewApplication.class);
+        // Update application status to "rejected" with reason
+        db.collection("Applications") // Replace with your collection name
+                .document(appId)
+                .update(
+                        "status", "rejected",
+                        "reason", reason,
+                        "acknowledged", "No"
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("RejectApp", "Application status updated to rejected.");
+                    // Remove the appId from the cat's pendingApps list
+                    db.collection("Cats") // Replace "Cats" with your cat collection name
+                            .document(catId)
+                            .update("pendingApplications", FieldValue.arrayRemove(appId))
+                            .addOnSuccessListener(catUpdate -> {
+                                Log.d("RejectApp", "Application ID removed from cat's pendingApps list.");
+
+                                // Navigate back to ShelterPage
+                                Intent i = new Intent(ScheduledApplications.this, ShelterPage.class);
+                                ScheduledApplications.this.startActivity(i);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("RejectApp", "Failed to update cat's pendingApps list: " + e.getMessage());
+                                Toast.makeText(ScheduledApplications.this, "Failed to update cat's information. Try again later.", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("RejectApp", "Error updating application status: " + e.getMessage());
+                    Toast.makeText(ScheduledApplications.this, "Failed to reject application. Try again later.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    public double calculateMatchPercentage(String userHousehold,
+                                           String userOtherPets,
+                                           String catPetsCompatibility,
+                                           String userTempSocial,
+                                           String catTemp1,
+                                           String userTempEnergy,
+                                           String catTemp2,
+                                           int userAge) {
+        // Define weights
+        final int HOUSEHOLD_WEIGHT = 25;
+        final int OTHER_PETS_WEIGHT = 25;
+        final int SOCIAL_TEMPERAMENT_WEIGHT = 20;
+        final int ENERGY_TEMPERAMENT_WEIGHT = 20;
+        final int AGE_WEIGHT = 10; // Weight for age factor
+
+        // Track total weights
+        int totalWeight = HOUSEHOLD_WEIGHT + OTHER_PETS_WEIGHT + SOCIAL_TEMPERAMENT_WEIGHT + ENERGY_TEMPERAMENT_WEIGHT + AGE_WEIGHT;
+        int totalMatchWeight = 0;
+
+        // Compare household members to cat's activity level
+        if ((userHousehold.equals("3-4 members") && catTemp2.equals("Active / Playful")) ||
+                (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) ||
+                (userHousehold.equals("5+ members") && catTemp2.equals("Active / Playful"))) {
+            totalMatchWeight += HOUSEHOLD_WEIGHT;
+        }
+
+        // Compare other pets with compatibility
+        if ((userOtherPets.equals("Yes") && catPetsCompatibility.contains("Yes")) ||
+                (userOtherPets.equals("No") && catPetsCompatibility.contains("No"))) {
+            totalMatchWeight += OTHER_PETS_WEIGHT;
+        }
+
+        // Compare social temperament
+        if (userTempSocial.equals(catTemp1)) {
+            totalMatchWeight += SOCIAL_TEMPERAMENT_WEIGHT;
+        }
+
+        // Compare energy temperament
+        if (userTempEnergy.equals(catTemp2)) {
+            totalMatchWeight += ENERGY_TEMPERAMENT_WEIGHT;
+        }
+
+        // Calculate age score
+        int ageScore = calculateAgeScore(userAge);
+        totalMatchWeight += ageScore * AGE_WEIGHT / 30; // Scale ageScore (max 30) to AGE_WEIGHT
+
+        // Calculate percentage match
+        return (double) totalMatchWeight / totalWeight * 100;
+    }
+
+    private int calculateAgeScore(int age) {
+        // Age scoring based on ranges
+        if (age < 18) {
+            return 5; // Not suitable
+        } else if (age >= 18 && age <= 24) {
+            return 10;
+        } else if (age >= 25 && age <= 34) {
+            return 20;
+        } else {
+            return 30; // Highest suitability
+        }
+    }
+
+    public void rejectApp(View v) {
+        dialog.show();
+    }
+
+    public void acceptApp(View v) {
+        Intent i = new Intent(this, ScheduleShelter.class);
         this.startActivity(i);
     }
 }

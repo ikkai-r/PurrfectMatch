@@ -501,6 +501,11 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         applicationData.put("reason", applicationText);
         applicationData.put("status", "pending");
         applicationData.put("userId", userId);
+        applicationData.put("venue", "");
+        applicationData.put("startTime", "");
+        applicationData.put("endTime", "");
+        applicationData.put("startDate", "");
+        applicationData.put("endDate", "");
         return applicationData;
     }
 
