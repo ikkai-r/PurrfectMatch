@@ -114,7 +114,7 @@ public class PendingAppView extends AppCompatActivity {
         if (catFields != null) {
             catId = catFields.get("catId");
             appTitle.setText("Application for " + catFields.get("name"));
-            percentage.setText("21" + "% match");
+            percentage.setText(catFields.get("percentage") + "% match");
         }
 
 

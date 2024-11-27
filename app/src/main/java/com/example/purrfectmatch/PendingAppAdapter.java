@@ -100,19 +100,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 .addOnFailureListener(e -> Log.e("fetchCatData", "Error fetching cat data", e));
 
                 // Extract relevant user and cat data from the userFields and catFields HashMaps
-            String userHousehold = userFields.get("householdMembers");
-            String userOtherPets = userFields.get("otherPets");
-            String catCompatibility = catFields.get("compatibleWith");
-            String userTempSocial = userFields.get("preferences1");
-            String catTemp1 = catFields.get("temperament1");
-            String userTempEnergy = userFields.get("preferences2");
-            String catTemp2 = catFields.get("temperament2");
-            // int userAge = Integer.parseInt(userFields.get("age"));  // Assuming age is stored as a String, convert to int
-
-            // // Call the methods using the extracted values
-            // String matchingTraits = getMatchingTraits(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
-            // double matchingPercentage = calculateMatchPercentage(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2, userAge);
-            fetchApplicantandCatData(app.getUserId(), app.getCatId(), holder);
+           fetchApplicantandCatData(app.getUserId(), app.getCatId(), holder);
 
             holder.itemView.setOnClickListener(view -> {
                 if (listener != null) {
@@ -126,7 +114,22 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 appFields.put("appStatus", app.getStatus());
                 appFields.put("appReason", app.getReason());
 
-                // Create an Intent to navigate to the specific application's page for the current cat
+                String userHousehold = userFields.get("householdMembers");
+                String userOtherPets = userFields.get("otherPets");
+                String catCompatibility = catFields.get("compatibleWith");
+                String userTempSocial = userFields.get("preferences1");
+                String catTemp1 = catFields.get("temperament1");
+                String userTempEnergy = userFields.get("preferences2");
+                String catTemp2 = catFields.get("temperament2");
+                String ageString = userFields.get("age");
+                int age = (ageString != null) ? Integer.parseInt(ageString) : 0;
+
+                // // Call the methods using the extracted values
+                 String matchingTraits = getMatchingTraits(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
+                 double matchingPercentage = calculateMatchPercentage(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2, age);
+
+                catFields.put("percentage", String.format("%.2f", matchingPercentage));
+
                 Intent intent = new Intent(context, PendingAppView.class);
                 intent.putExtra("app", appFields);  // Pass the application object via Intent
                 intent.putExtra("cat", catFields);  // Pass the cat data via Intent
@@ -135,6 +138,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 Log.d("pabe", appFields.toString());
                 Log.d("pabe", catFields.toString());
                 Log.d("pabe", userFields.toString());
+                Log.d("pabe", String.valueOf(age));
                 context.startActivity(intent);  // Start the new activity
             });
         }
