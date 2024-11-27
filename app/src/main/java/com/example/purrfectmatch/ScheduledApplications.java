@@ -56,92 +56,92 @@ public class ScheduledApplications extends AppCompatActivity {
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
         schedule = findViewById(R.id.schedule);
-
+        Log.d("app inside", app.toString());
         if (app != null) {
-            appId = app.get("appId");
-            applicationDate.setText(app.get("appDate"));
-            schedule.setText("Schedule is on ");
-            //format like this             android:text="Schedule is on December 20, 10:30 AM"
+             appId = app.get("appId");
+             applicationDate.setText(app.get("appDate"));
+             schedule.setText("Schedule is on ");
 
-            String userId = app.get("userId");
+             String userId = app.get("userId");
 
-            // Inner query to fetch user details
-            db.collection("Users")
-                    .document(userId) // Access the specific user's document
-                    .get()
-                    .addOnSuccessListener(userDoc -> {
-                        if (userDoc.exists()) {
-                            userAge = (int) userDoc.get("age");
-                            nameAge.setText(userDoc.get("firstName") + " " + userDoc.get("lastName") + ", " + userAge); // name + age
-                            householdMembers.setText("Household Members: " + userDoc.get("householdMembers"));
-                            otherPets.setText("Other Pets: " + userDoc.get("otherPets"));
-                            gender.setText("Gender: " + userDoc.get("gender")); // Static or dynamic based on your field
-                            address.setText("Address: " + userDoc.get("city") + ", " + userDoc.get("region")); // Replace with user-provided address if available
-                            energy.setText("Energy level: " + userDoc.get("preferences2"));
-                            social.setText("Temperament: " + userDoc.get("preferences1"));
+             // Inner query to fetch user details   
+//             db.collection("Users")
+//                     .document(userId) // Access the specific user's document
+//                     .get()
+//                     .addOnSuccessListener(userDoc -> {
+//                        Log.d("fetchin inside scheduled", "Can get up to here");
+//                         if (userDoc.exists()) {
+//                             userAge = (int) userDoc.get("age");
+//                             nameAge.setText(userDoc.get("firstName") + " " + userDoc.get("lastName") + ", " + userAge); // name + age
+//                             householdMembers.setText("Household Members: " + userDoc.get("householdMembers"));
+//                             otherPets.setText("Other Pets: " + userDoc.get("otherPets"));a
+//                             gender.setText("Gender: " + userDoc.get("gender")); // Static or dynamic based on your field
+//                             address.setText("Address: " + userDoc.get("city") + ", " + userDoc.get("region")); // Replace with user-provided address if available
+//                             energy.setText("Energy level: " + userDoc.get("preferences2"));
+//                             social.setText("Temperament: " + userDoc.get("preferences1"));
+//
+//                             if(Integer.parseInt((String) userDoc.get("age")) < 18) {
+//                                 incomeBracket.setText("Likely a student and dependent.");
+//                             } else if(Integer.parseInt((String) userDoc.get("age")) > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
+//                                 incomeBracket.setText("Likely a student and may be working.");
+//                             } else if(Integer.parseInt((String) userDoc.get("age")) > 23)  {
+//                                 incomeBracket.setText("Likely working already.");
+//                             }
+//                         }
+//                     })
+//                     .addOnFailureListener(e -> {
+//                         Log.e("fetching inside scheduled", "Failed to fetch user details: " + e.getMessage());
+//                     });
 
-                            if(Integer.parseInt((String) userDoc.get("age")) < 18) {
-                                incomeBracket.setText("Likely a student and dependent.");
-                            } else if(Integer.parseInt((String) userDoc.get("age")) > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
-                                incomeBracket.setText("Likely a student and may be working.");
-                            } else if(Integer.parseInt((String) userDoc.get("age")) > 23)  {
-                                incomeBracket.setText("Likely working already.");
-                            }
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("fetching", "Failed to fetch user details: " + e.getMessage());
-                    });
-
-            catId = app.get("catId");
+            //  catId = app.get("catId");
 
 
-            db.collection("Cats")
-                    .document(catId) // Access the specific user's document
-                    .get()
-                    .addOnSuccessListener(catDoc -> {
-                        if (catDoc.exists()) {
-                            // Add user details to app data
-                            appTitle.setText("Application for " + catDoc.get("name"));
-                            catCompatibility = (String) catDoc.get("compatibleWith");
-                            catTemp1 = catDoc.getString("temperament1");
-                            catTemp2 = catDoc.getString("temperament2");
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("cats", "Failed to fetch cat details: " + e.getMessage());
-                    });
+            //  db.collection("Cats")
+            //          .document(catId) // Access the specific user's document
+            //          .get()
+            //          .addOnSuccessListener(catDoc -> {
+            //              if (catDoc.exists()) {
+            //                  // Add user details to app data
+            //                  appTitle.setText("Application for " + catDoc.get("name"));
+            //                  catCompatibility = (String) catDoc.get("compatibleWith");
+            //                  catTemp1 = catDoc.getString("temperament1");
+            //                  catTemp2 = catDoc.getString("temperament2");
+            //              }
+            //          })
+            //          .addOnFailureListener(e -> {
+            //              Log.e("cats", "Failed to fetch cat details: " + e.getMessage());
+            //          });
 
-            //compute matching percentage
-            // Calculate the matching traits and percentage
-            double matchingPercentage = calculateMatchPercentage(householdMembers.getText().toString(), otherPets.getText().toString(), catCompatibility, social.getText().toString(), catTemp1, energy.getText().toString(), catTemp2, userAge);
-            percentage.setText(String.format("%.2f", matchingPercentage) + "% match");
+            //  //compute matching percentage
+            //  // Calculate the matching traits and percentage
+            //  double matchingPercentage = calculateMatchPercentage(householdMembers.getText().toString(), otherPets.getText().toString(), catCompatibility, social.getText().toString(), catTemp1, energy.getText().toString(), catTemp2, userAge);
+            //  percentage.setText(String.format("%.2f", matchingPercentage) + "% match");
         }
 
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_reject_app);
+        // dialog = new Dialog(this);
+        // dialog.setContentView(R.layout.dialog_reject_app);
 
-        Button rejectButton = dialog.findViewById(R.id.dialog_reject_button);
-        Button cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
+        // Button rejectButton = dialog.findViewById(R.id.dialog_reject_button);
+        // Button cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
 
-        rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // change status of application to rejected
+        // rejectButton.setOnClickListener(new View.OnClickListener() {
+        //     @Override
+        //     public void onClick(View v) {
+        //         // change status of application to rejected
 
-                if(appId != null) {
-                    rejectApplication(appId, catId);
-                }
-            }
-        });
+        //         if(appId != null) {
+        //             rejectApplication(appId, catId);
+        //         }
+        //     }
+        // });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Just dismiss the dialog
-                dialog.dismiss();
-            }
-        });
+        // cancelButton.setOnClickListener(new View.OnClickListener() {
+        //     @Override
+        //     public void onClick(View v) {
+        //         // Just dismiss the dialog
+        //         dialog.dismiss();
+        //     }
+        // });
 
     }
 

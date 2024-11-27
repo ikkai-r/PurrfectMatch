@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.io.Serializable;
 
 public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHomeAdapter.ViewHolder> {
 
@@ -44,6 +45,7 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
         holder.userSched.setText(currentApp.get("userSched"));
         holder.dateSched.setText(currentApp.get("dateSched"));
 
+
         holder.itemView.setOnClickListener(view -> {
             if (listener != null) {
                 listener.onItemClick(currentApp);
@@ -54,7 +56,9 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
 
             //Create an Intent to navigate to the specific application's page for the current cat
             Intent intent = new Intent(context, ScheduledApplications.class);
-            intent.putExtra("app", currentApp);  // Pass the cat object via Intent
+            intent.putExtra("app", currentApp);  // Make sure the HashMap is serializable
+            context.startActivity(intent);
+
         });
     }
 

@@ -229,11 +229,6 @@ public class ShelterPage extends AppCompatActivity {
         this.startActivity(i);
     }
 
-    public void goScheduledApp(View v) {
-        Intent i = new Intent(this, ScheduledApplications.class);
-        this.startActivity(i);
-    }
-
     public void viewCats(View v) {
         Intent i = new Intent(this, ViewCatsAdoption.class);
         this.startActivity(i);
