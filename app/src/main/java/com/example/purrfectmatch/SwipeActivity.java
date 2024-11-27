@@ -436,13 +436,12 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         //String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
         String name = document.getString("name");
-        String contact = document.getString("contact");
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
                 sex, foodPreference, bio, temperament, breed, name,
-                contact, catId, compatibleWith, isNeutered);
+                catId, compatibleWith, isNeutered);
     }
 
     private void showPopupRight(View anchorView) {

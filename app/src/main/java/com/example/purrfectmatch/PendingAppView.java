@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,6 +37,7 @@ public class PendingAppView extends AppCompatActivity {
     String appId, catId;
     FirebaseFirestore db;
     Button buttonSchedule;
+    ImageView userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +67,13 @@ public class PendingAppView extends AppCompatActivity {
          address = findViewById(R.id.address);
          social = findViewById(R.id.social);
          energy = findViewById(R.id.energy);
+         userImage = findViewById(R.id.userImage);
          applicationDate = findViewById(R.id.applicationDate);
         reasonAdopt = findViewById(R.id.reasonAdopt);
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
         buttonSchedule = findViewById(R.id.buttonSchedule);
+
 
         // // Set text values based on ApplicationData fields
         if (app != null) {
@@ -112,6 +117,9 @@ public class PendingAppView extends AppCompatActivity {
             address.setText("Address: " + userFields.get("region")); // Replace with user-provided address if available
             energy.setText("Energy level: " + userFields.get("preferences2"));
             social.setText("Temperament: " + userFields.get("preferences1"));
+            Glide.with(getApplicationContext())
+                    .load(userFields.get("profileimg")) // Load the URI/URL
+                    .into(userImage);
 
             if(Integer.parseInt(userFields.get("age")) < 18) {
                 incomeBracket.setText("Likely a student and dependent.");

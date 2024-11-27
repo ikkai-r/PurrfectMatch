@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -119,9 +121,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
 
                 // Set the cat image
                 if (catImageStr != null && !catImageStr.isEmpty()) {
-                    int catImageResId = holder.itemView.getContext().getResources()
-                            .getIdentifier(catImageStr, "drawable", holder.itemView.getContext().getPackageName());
-                    holder.catImage.setImageResource(catImageResId);
+                    Glide.with(holder.itemView.getContext()).load(catImageStr).into(holder.catImage);
                 } else {
                     holder.catImage.setImageResource(R.drawable.app_icon); // default image
                 }

@@ -53,7 +53,7 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
 
     private ImageView profile, explore, swipe, catImage, bookmarkIcon;
     private TextView ageText, weightText, sexText, breedText, neuterText, temperamentText, bioText,
-            compatibleWithText, adoptionFeeText, contactInformationText, nameText, applicationStatusText;
+            compatibleWithText, adoptionFeeText, nameText, applicationStatusText;
     private LinearLayout linearLayout;
     private String documentId;
     private ScrollView scrollView;
@@ -100,7 +100,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         bioText = findViewById(R.id.bioText);
         compatibleWithText = findViewById(R.id.compatibleWithText);
         adoptionFeeText = findViewById(R.id.adoptionFeeText);
-        contactInformationText = findViewById(R.id.contactInformationText);
         nameText = findViewById(R.id.nameText);
         scrollView = findViewById(R.id.scrollView2);
         bookmarkIcon = findViewById(R.id.bookmarkIcon);
@@ -366,7 +365,6 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                         bioText.setText(swipeDataItem.bio);
                         compatibleWithText.setText(swipeDataItem.compatibleWith);
                         adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
-                        contactInformationText.setText(swipeDataItem.contactInformation);
                         nameText.setText(swipeDataItem.name);
 
                         if (swipeDataItem.isBookmarked) {
@@ -402,13 +400,12 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         //String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
         String name = document.getString("name");
-        String contact = document.getString("contact");
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check,
                 catImage, sex, foodPreference, bio, temperament, breed, name,
-                contact, catId, compatibleWith, isNeutered);
+                catId, compatibleWith, isNeutered);
     }
 
     private void initializeBookmarkLogic(String documentId) {

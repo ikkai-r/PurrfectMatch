@@ -247,7 +247,7 @@
                         android:id="@+id/tempermentLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Temperament"
+                        android:text="Traits"
                         android:fontFamily="@font/poppins_bold"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -334,7 +334,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Compatible With"
+                        android:text="Compatible With Other Pets?"
                         android:fontFamily="@font/poppins_bold"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -392,17 +392,6 @@
                     android:textSize="14sp"
                     android:textColor="@color/black"
                     android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:id="@+id/contactInformationText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Contact: 09123456789"
-                    android:fontFamily="@font/poppins_regular"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="8dp" />
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

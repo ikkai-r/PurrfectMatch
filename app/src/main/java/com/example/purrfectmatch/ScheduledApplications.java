@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -41,6 +43,7 @@ public class ScheduledApplications extends AppCompatActivity {
     private FirebaseFirestore db;
     private int userAge;
     private Button acceptButton, rejectButton;
+    private ImageView userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class ScheduledApplications extends AppCompatActivity {
         address = findViewById(R.id.address);
         social = findViewById(R.id.social);
         energy = findViewById(R.id.energy);
+        userImage = findViewById(R.id.userImage);
         applicationDate = findViewById(R.id.applicationDate);
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
@@ -102,6 +106,7 @@ public class ScheduledApplications extends AppCompatActivity {
                             address.setText("Address: " + userDoc.get("city") + ", " + userDoc.get("region")); // Replace with user-provided address if available
                             energy.setText("Energy level: " + userDoc.get("preferences2"));
                             social.setText("Temperament: " + userDoc.get("preferences1"));
+                            Glide.with(getApplicationContext()).load(userDoc.get("profileimg")).into(userImage);
 
                             int ageInt = ((Long) userDoc.get("age")).intValue();
                             if(ageInt < 18) {

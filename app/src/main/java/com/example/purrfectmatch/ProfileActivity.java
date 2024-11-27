@@ -125,7 +125,6 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
-    //TODO: Set profile picture
     private void setUserInfo() {
         FirebaseUser user = mAuth.getCurrentUser();
 

@@ -13,6 +13,8 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 public class PendingAppHomeAdapter extends RecyclerView.Adapter<PendingAppHomeAdapter.ViewHolder> {
 
@@ -39,7 +41,9 @@ public class PendingAppHomeAdapter extends RecyclerView.Adapter<PendingAppHomeAd
         Log.d("binding", currentCat.getName());
 
         // Populate the views with data from PendingAppData
-        holder.catImage.setImageResource(R.drawable.dweety); // Replace with actual image
+        Glide.with(context)
+                .load(currentCat.getCatImage()) // Load the URI/URL
+                .into(holder.catImage); // Replace with actual image
         holder.catName.setText(currentCat.getName());
 
         // handle the notification badge

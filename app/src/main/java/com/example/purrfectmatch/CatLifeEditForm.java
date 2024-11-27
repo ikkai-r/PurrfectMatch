@@ -8,9 +8,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,10 +31,11 @@ public class CatLifeEditForm extends Fragment {
 
     private FirebaseFirestore db;
 
-    private EditText temperament, compatible, food, fee;
+    private EditText compatible, food, fee;
     private Button buttonNext;
     private RadioGroup radioGroup;
     private boolean isNeutered, chosen = false;
+    private Spinner temperament, temperament2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,9 +48,11 @@ public class CatLifeEditForm extends Fragment {
         buttonNext = view.findViewById(R.id.buttonNext8);
         temperament = view.findViewById(R.id.temperament);
         compatible = view.findViewById(R.id.compatible);
-        food = view.findViewById(R.id.food);
+        //food = view.findViewById(R.id.food);
         fee = view.findViewById(R.id.editTextCash);
         radioGroup = view.findViewById(R.id.radioGroup);
+        temperament = view.findViewById(R.id.temperament);
+        temperament2 = view.findViewById(R.id.food);
 
         radioGroup.setOnCheckedChangeListener(((radioGroup1, i) -> {
             if(i == R.id.radioNo){
@@ -63,14 +68,24 @@ public class CatLifeEditForm extends Fragment {
 
         fetchCatData(previousBundle.getString("name"));
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.spinner_items, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.spinner_items2, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        temperament.setAdapter(adapter2);
+        temperament2.setAdapter(adapter);
+
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // Check if all fields are not empty
-                String temperamentInput = temperament.getText().toString().trim();
+                String temperamentInput = temperament.getSelectedItem().toString().trim();
                 String compatibleInput = compatible.getText().toString().trim();
-                String foodInput = food.getText().toString().trim();
+                String foodInput = temperament2.getSelectedItem().toString().trim();
                 String feeInput = fee.getText().toString().trim();
 
                 if (TextUtils.isEmpty(temperamentInput) || TextUtils.isEmpty(compatibleInput)
@@ -110,9 +125,9 @@ public class CatLifeEditForm extends Fragment {
                         DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
                         // Populate fields with fetched data
-                        temperament.setText(document.getString("temperament"));
+                        //temperament.setText(document.getString("temperament"));
                         compatible.setText(document.getString("compatibleWith"));
-                        food.setText(document.getString("foodPreference"));
+                        //ood.setText(document.getString("foodPreference"));
                         fee.setText(String.valueOf(document.getLong("adoptionFee").intValue()));
 
                         //breed.setText(document.getString("breed"));

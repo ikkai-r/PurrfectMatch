@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,9 +55,6 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
         Log.d("binding", app.getApplicationId());
 
         if (app != null) {
-
-            // Set placeholder user image
-            holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image logic
 
             // Display the application date
             holder.date.setText("Date: " + formatFirebaseTimestamp(app.getApplicationDate()));
@@ -175,6 +173,9 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                             int userAge = document.getLong("age").intValue();
                             // Set applicant's name
                             holder.applicant.setText("Applicant: " + userName);
+                            Glide.with(context)
+                                    .load(document.getString("profileimg")) // Load the URI/URL
+                                    .into(holder.userImage);
 
                             // Fetch cat data
                             db.collection("Cats").document(catId).get()
@@ -196,6 +197,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
                                                 userFields.put("name", userName);
                                                 userFields.put("age", String.valueOf(userAge));
+                                                userFields.put("profileimg", document.getString("profileimg"));
                                                 userFields.put("householdMembers", userHousehold);
                                                 userFields.put("otherPets", userOtherPets);
                                                 userFields.put("gender", document.getString("gender"));
