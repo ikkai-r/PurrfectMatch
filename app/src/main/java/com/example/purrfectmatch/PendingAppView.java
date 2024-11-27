@@ -164,9 +164,14 @@ public class PendingAppView extends AppCompatActivity {
                             .addOnSuccessListener(catUpdate -> {
                                 Log.d("RejectApp", "Application ID removed from cat's pendingApps list.");
 
-                                // Navigate back to ShelterPage
-                                Intent i = new Intent(PendingAppView.this, ShelterPage.class);
-                                PendingAppView.this.startActivity(i);
+                                // After saving, start the ShelterPage activity
+                                Intent i = new Intent(PendingAppView.this, SuccessForm.class);
+                                i.putExtra("title", "Adopter Application");
+                                i.putExtra("title_big", "Rejected");
+                                i.putExtra("subtitle_1", "Successfully rejected adoption request");
+                                i.putExtra("button_text", "Okay");
+                                i.putExtra("user_type", "shelter");
+                                startActivity(i);
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("RejectApp", "Failed to update cat's pendingApps list: " + e.getMessage());
@@ -189,10 +194,43 @@ public class PendingAppView extends AppCompatActivity {
     }
 
 
-    //TODO: Change to accept logic
     public void goAcceptApp(View v) {
-        Intent i = new Intent(this, ScheduleShelter.class);
-        i.putExtra("appId", appId);
-        this.startActivity(i);
+        //accept adopter
+        // application
+
+        // Update application status to "rejected" with feedback
+        db.collection("Applications") // Replace with your collection name
+                .document(appId)
+                .update(
+                        "status", "accepted"
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AcceptApp", "Application status updated to accepted.");
+                    // Remove the appId from the cat's pendingApps list
+                    db.collection("Cats") // Replace "Cats" with your cat collection name
+                            .document(catId)
+                            .update("pendingApplications", FieldValue.arrayRemove(appId),
+                                    "isAdopted", true)
+                            .addOnSuccessListener(catUpdate -> {
+                                Log.d("AcceptApp", "Application ID removed from cat's pendingApps list and isAdopted true.");
+
+                                // After saving, start the ShelterPage activity
+                                Intent i = new Intent(PendingAppView.this, SuccessForm.class);
+                                i.putExtra("title", "Adopter Application");
+                                i.putExtra("title_big", "Accepted");
+                                i.putExtra("subtitle_1", "Successfully accepted adoption request");
+                                i.putExtra("button_text", "Okay");
+                                i.putExtra("user_type", "shelter");
+                                startActivity(i);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("AcceptApp", "Failed to update cat's pendingApps list: " + e.getMessage());
+                                Toast.makeText(PendingAppView.this, "Failed to update cat's information. Try again later.", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AcceptApp", "Error updating application status: " + e.getMessage());
+                    Toast.makeText(PendingAppView.this, "Failed to accept application. Try again later.", Toast.LENGTH_SHORT).show();
+                });
     }
 }

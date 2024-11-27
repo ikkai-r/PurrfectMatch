@@ -96,6 +96,7 @@ public class AddCat extends AppCompatActivity {
                 picture != null && about != null) {
 
             Log.d("finish", "values are retrieved properly");
+            boolean isAdopted = false;
 
             // Create a map or a model class to hold the cat data
             Map<String, Object> catData = new HashMap<>();
@@ -112,6 +113,8 @@ public class AddCat extends AppCompatActivity {
             catData.put("bookmarkedBy", bookmarked);
             catData.put("sex", sex);
             catData.put("isNeutered", isNeutered);
+            catData.put("isAdopted", isAdopted);
+
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
