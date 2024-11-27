@@ -109,15 +109,56 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/user_1" />
 
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <!-- View FAQ Button -->
+                <TextView
+                    android:id="@+id/faq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/rounded_linear_layout_view"
+                    android:backgroundTint="#F1EAE0"
+                    android:fontFamily="@font/poppins_medium"
+                    android:padding="3dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="  View Frequently Asked Questions  "
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <!-- Applications Button -->
+                <TextView
+                    android:id="@+id/applications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/faq"
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/rounded_linear_layout_view"
+                    android:backgroundTint="#FBA526"
+                    android:fontFamily="@font/poppins_medium"
+                    android:padding="3dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="  View Submitted Applications  "
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <!-- Edit Profile Button -->
                 <TextView
                     android:id="@+id/editProfileBtn"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="20dp"
+                    android:layout_alignParentTop="true"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="18dp"
                     android:background="@drawable/rounded_linear_layout_view"
                     android:backgroundTint="#F1EAE0"
                     android:fontFamily="@font/poppins_regular"
@@ -128,45 +169,25 @@
                     android:textColor="#4C0000"
                     android:textSize="10dp" />
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/linearLayout5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <!-- Applications Button -->
-                <TextView
-                    android:id="@+id/applications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:background="@drawable/rounded_linear_layout_view"
-                    android:backgroundTint="#FBA526"
-                    android:fontFamily="@font/poppins_medium"
-                    android:padding="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="  View Submitted Applications  "
-                    android:textAlignment="center"
-                    android:textColor="#000000"
-                    android:textSize="10sp" />
-
                 <!-- Logout Button -->
                 <TextView
                     android:id="@+id/logoutBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/editProfileBtn"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/bg_button_red"
                     android:fontFamily="@font/poppins_bold"
                     android:padding="3dp"
                     android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
                     android:text="     Logout     "
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="10sp" />
             </RelativeLayout>
+
+
 
 
             <LinearLayout

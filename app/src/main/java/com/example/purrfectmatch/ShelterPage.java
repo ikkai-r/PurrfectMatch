@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -70,6 +74,7 @@ public class ShelterPage extends AppCompatActivity {
         initializeNumbers();
         Log.d("fetching", "fetching pending apps");
         fetchPendingApps();
+        Log.d("scheduled", "fetching scheduled apps");
         fetchScheduledApps();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -110,7 +115,7 @@ public class ShelterPage extends AppCompatActivity {
                                 Log.d("catP", cat.getName());
                                 if (cat != null) {
                                     Log.d("catP", cat.getName() + " exists");
-                                    if (cat.getPendingApplications() != null) {
+                                    if (cat.getPendingApplications() != null && !cat.getPendingApplications().isEmpty()) {
                                         Log.d("catP", cat.getName() + " has pending application");
 
                                         catsWithPendingApps.add(cat);
@@ -148,19 +153,24 @@ public class ShelterPage extends AppCompatActivity {
                 .whereEqualTo("status", "scheduled") // Filter for scheduled applications
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         // Get application data
                         String appId = document.getId();
                         String userId = document.getString("userId");
                         String catId = document.getString("catId");
-                        String dateSchedule = document.getString("dateSchedule");
+                        String dateSchedule = document.getString("finalDate");
+                        String finalTime = document.getString("finalTime");
 
                         // Create an object or HashMap to store application data
                         HashMap<String, String> appData = new HashMap<>();
                         appData.put("appId", appId);
                         appData.put("catId", catId);
-                        appData.put("dateSchedule", dateSchedule);
+                        appData.put("finalDate", dateSchedule);
+                        appData.put("finalTime", finalTime);
+                        appData.put("reason", document.getString("reason"));
 
+                        appData.put("appDate", formatFirebaseTimestamp(document.getTimestamp("applicationDate")));
                         // Inner query to fetch user details
                         db.collection("Users")
                                 .document(userId) // Access the specific user's document
@@ -169,43 +179,48 @@ public class ShelterPage extends AppCompatActivity {
                                     if (userDoc.exists()) {
                                         // Add user details to app data
                                         appData.put("userSched", userDoc.getString("firstName") + " " + userDoc.get("lastName"));
-                                        appData.put("profileImg", userDoc.getString("profileImg"));
+                                        appData.put("profileImg", userDoc.getString("profileimg"));
+                                        appData.put("userId", userDoc.getId());
                                     }
 
                                     // Add the complete app data to the list
                                     scheduledAppsList.add(appData);
 
-
-                                    adapterScheduled.notifyDataSetChanged();
-
                                     // Notify your adapter or UI about the new data
-                                    // Example: recyclerAdapter.notifyDataSetChanged();
-                                    Log.d("fetching", "App data added: " + appData.toString());
+                                    adapterScheduled.notifyDataSetChanged();
+                                    Log.d("scheduled", "App data added: " + appData.toString());
+
+
+                                        if (scheduledAppsList.isEmpty()) {
+                                            noScheduledApplications.setVisibility(View.VISIBLE);
+                                        } else {
+                                            noScheduledApplications.setVisibility(View.GONE);
+                                        }
+
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e("fetching", "Failed to fetch user details: " + e.getMessage());
+                                    Log.e("scheduled", "Failed to fetch user details: " + e.getMessage());
                                 });
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("fetching", "Failed to fetch scheduled applications: " + e.getMessage());
+                    Log.e("scheduled", "Failed to fetch scheduled applications: " + e.getMessage());
                 });
-
-        if (scheduledAppsList.isEmpty()) {
-            noScheduledApplications.setVisibility(View.VISIBLE);
-        } else {
-            noScheduledApplications.setVisibility(View.GONE);
-        }
-
-        Log.d("fetching", "App data: " + scheduledAppsList.toString());
-
-
-
     }
 
 
+    private String formatFirebaseTimestamp(Timestamp timestamp) {
+        if (timestamp == null) {
+            return "Invalid Timestamp"; // Handle null values gracefully
+        }
 
+        // Convert Timestamp to Date
+        Date date = timestamp.toDate();
 
+        // Format the Date to "January 26, 2014"
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+        return sdf.format(date);
+    }
 
     public void goPendingApps(View v) {
         Intent i = new Intent(this, PendingApplications.class);
@@ -213,7 +228,7 @@ public class ShelterPage extends AppCompatActivity {
     }
 
     public void goScheduledApp(View v) {
-        Intent i = new Intent(this, ScheduledApplications.class);
+        Intent i = new Intent(this, ScheduledAppsList.class);
         this.startActivity(i);
     }
 
@@ -231,11 +246,17 @@ public class ShelterPage extends AppCompatActivity {
     private void initializeNumbers() {
         // Fetch number of cats
         db.collection("Cats")
+                .whereEqualTo("isAdopted", false)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     numCats = querySnapshot.size();
                     txtCats.setText(String.valueOf(numCats));
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Error fetching cat count", e);
+                    txtCats.setText("0");
                 });
+
 
         // Fetch number of scheduled appointments
         db.collection("Applications")
@@ -248,7 +269,7 @@ public class ShelterPage extends AppCompatActivity {
 
         // Fetch number of pending applications
         db.collection("Applications")
-                .whereEqualTo("status", "pending")
+                .whereIn("status", Arrays.asList("pending", "reviewed"))
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     numPendingApplications = querySnapshot.size();

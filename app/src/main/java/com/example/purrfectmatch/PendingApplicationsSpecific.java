@@ -54,7 +54,7 @@ public class PendingApplicationsSpecific extends AppCompatActivity {
         pendingAppListStr = currentCat.getPendingApplications();
         Log.d("catP", "pending apps of cat is" + currentCat.getName() + " " + currentCat.getPendingApplications());
 
-        adapterPending = new PendingAppAdapter(pendingAppList, PendingApplicationsSpecific.this);
+        adapterPending = new PendingAppAdapter(pendingAppList, false, PendingApplicationsSpecific.this);
         recyclerViewPending.setAdapter(adapterPending);
 
         fetchPendingApps();

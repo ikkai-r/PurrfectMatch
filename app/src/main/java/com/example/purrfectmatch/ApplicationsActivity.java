@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,10 +35,11 @@ public class ApplicationsActivity extends AppCompatActivity {
 
     private ImageView profile, explore, swipe;
     private RecyclerView recyclerActiveApplications, recyclerClosedApplications;
-    private TextView noActiveApplicationsTxt, noClosedApplicationsTxt;
+    private TextView noActiveApplicationsTxt, noClosedApplicationsTxt, numActiveTxt, numAcceptedTxt, numRejectedTxt;
     private ApplicationAdapter activeAdapter, closedAdapter;
 
     private List<ApplicationData> activeApplicationsList, closedApplicationsList;
+    private int numActive = 0, numAccepted = 0, numRejected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,11 @@ public class ApplicationsActivity extends AppCompatActivity {
 
         initializeViews();
         setupRecyclerViews();
+        fetchApplications();
 
-        fetchActiveApplications();
+        numActiveTxt.setText(String.valueOf(numActive));
+        numAcceptedTxt.setText(String.valueOf(numAccepted));
+        numRejectedTxt.setText(String.valueOf(numRejected));
     }
 
     private void initializeViews() {
@@ -62,7 +67,10 @@ public class ApplicationsActivity extends AppCompatActivity {
         explore = findViewById(R.id.explore);
         swipe = findViewById(R.id.swipe);
         noActiveApplicationsTxt = findViewById(R.id.noActiveApplicationsTxt);
-        noClosedApplicationsTxt = findViewById(R.id.noActiveApplicationsTxt);
+        noClosedApplicationsTxt = findViewById(R.id.noClosedApplicationsTxt);
+        numActiveTxt = findViewById(R.id.numActive);
+        numAcceptedTxt = findViewById(R.id.numAccepted);
+        numRejectedTxt = findViewById(R.id.numRejected);
 
         profile.setOnClickListener(view -> {
             Intent i = new Intent(this, ProfileActivity.class);
@@ -84,32 +92,28 @@ public class ApplicationsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerViews() {
-        recyclerActiveApplications = findViewById(R.id.recyclerActiveApplications);
-        recyclerActiveApplications.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        recyclerClosedApplications = findViewById(R.id.recyclerClosedApplications);
-        recyclerClosedApplications.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
         activeAdapter = new ApplicationAdapter(true, activeApplicationsList, this);
-        closedAdapter = new ApplicationAdapter(false, closedApplicationsList, this);
-
+        recyclerActiveApplications = findViewById(R.id.recyclerActiveApplications);
+        recyclerActiveApplications.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerActiveApplications.setAdapter(activeAdapter);
-        recyclerClosedApplications.setAdapter(closedAdapter);
 
-        // If schedule meeting pressed
         activeAdapter.setOnItemClickListener(applicationData -> {
-            // TODO: Implement schedule meeting here
-            Toast.makeText(this, "Schedule meeting pressed ", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, ScheduleUser.class);
+            i.putExtra("applicationId", applicationData.getApplicationId());
+            startActivity(i);
         });
+
+        // Set up Closed Applications RecyclerView
+        closedAdapter = new ApplicationAdapter(false, closedApplicationsList, this);
+        recyclerClosedApplications = findViewById(R.id.recyclerClosedApplications);
+        recyclerClosedApplications.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerClosedApplications.setAdapter(closedAdapter);
     }
 
-    private void fetchActiveApplications() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
-            Toast.makeText(ApplicationsActivity.this, "User not logged in.", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
+
+    private void fetchApplications() {
+        FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
         DocumentReference userRef = db.collection("Users").document(userId);
 
@@ -131,15 +135,29 @@ public class ApplicationsActivity extends AppCompatActivity {
                                     }
 
                                     activeApplicationsList.clear();
+                                    closedApplicationsList.clear();
+
+                                    // Reset counters
+                                    numActive = 0;
+                                    numAccepted = 0;
+                                    numRejected = 0;
 
                                     for (DocumentSnapshot snapshot : value.getDocuments()) {
                                         try {
                                             ApplicationData applicationData = snapshot.toObject(ApplicationData.class);
                                             if (applicationData != null) {
                                                 String status = applicationData.getStatus();
-                                                // Add only applications that are not rejected or approved
-                                                if (!"rejected".equalsIgnoreCase(status) &&
-                                                        !"approved".equalsIgnoreCase(status)) {
+
+                                                if ("rejected".equalsIgnoreCase(status)) {
+                                                    numRejected++;
+                                                    applicationData.setApplicationId(snapshot.getId());
+                                                    closedApplicationsList.add(applicationData);
+                                                } else if ("accepted".equalsIgnoreCase(status)) {
+                                                    numAccepted++;
+                                                    applicationData.setApplicationId(snapshot.getId());
+                                                    closedApplicationsList.add(applicationData);
+                                                } else {
+                                                    numActive++;
                                                     applicationData.setApplicationId(snapshot.getId());
                                                     activeApplicationsList.add(applicationData);
                                                 }
@@ -150,18 +168,31 @@ public class ApplicationsActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    if (activeApplicationsList.isEmpty()) {
-                                        noActiveApplicationsTxt.setVisibility(View.VISIBLE);
-                                    } else {
-                                        noActiveApplicationsTxt.setVisibility(View.GONE);
-                                    }
+                                    // Update visibility of text views
+                                    noActiveApplicationsTxt.setVisibility(
+                                            activeApplicationsList.isEmpty() ? View.VISIBLE : View.GONE);
+                                    noClosedApplicationsTxt.setVisibility(
+                                            closedApplicationsList.isEmpty() ? View.VISIBLE : View.GONE);
 
+                                    // Update adapters
                                     activeAdapter.notifyDataSetChanged();
+                                    closedAdapter.notifyDataSetChanged();
+
+                                    // Update counters in UI
+                                    numActiveTxt.setText(String.valueOf(numActive));
+                                    numAcceptedTxt.setText(String.valueOf(numAccepted));
+                                    numRejectedTxt.setText(String.valueOf(numRejected));
+
+                                    // Log the counters
+                                    Log.d("Counters", "Active: " + numActive +
+                                            ", Accepted: " + numAccepted +
+                                            ", Rejected: " + numRejected);
                                 }
                             });
                 } else {
                     noActiveApplicationsTxt.setVisibility(View.VISIBLE);
-                    Toast.makeText(ApplicationsActivity.this, "No active applications found.", Toast.LENGTH_SHORT).show();
+                    noClosedApplicationsTxt.setVisibility(View.VISIBLE);
+                    Toast.makeText(ApplicationsActivity.this, "No applications found.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(ApplicationsActivity.this, "User document not found.", Toast.LENGTH_SHORT).show();

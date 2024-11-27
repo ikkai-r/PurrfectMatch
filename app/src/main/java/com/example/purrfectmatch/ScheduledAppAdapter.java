@@ -17,26 +17,21 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.ViewHolder> {
+public class ScheduledAppAdapter extends RecyclerView.Adapter<ScheduledAppAdapter.ViewHolder> {
 
-    private List<ApplicationData> pendingApps;
+    private List<HashMap<String, String>> scheduledApps;
     private Context context;
-    private boolean selectedCat;
+    private HashMap<String, String> app;
     private OnItemClickListener listener;
-    HashMap<String, String> userFields = new HashMap<>();
-    HashMap<String, String> catFields = new HashMap<>();
-    HashMap<String, String> appFields = new HashMap<>();
     Intent i;
 
-    public PendingAppAdapter(List<ApplicationData> pendingApps, boolean selectedCat, Context context) {
-        this.pendingApps = pendingApps;
-        this.selectedCat = selectedCat;
+    public ScheduledAppAdapter(List<HashMap<String, String>> scheduledApps, Context context) {
+        this.scheduledApps = scheduledApps;
         this.context = context;
     }
 
@@ -50,36 +45,27 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ApplicationData app = pendingApps.get(position);
-        Log.d("binding", app.getApplicationId());
+        app = scheduledApps.get(position);
+        Log.d("scheduled", "clicked view" + app.toString());
 
         if (app != null) {
 
             // Get name from db using user id in app
             holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
-            holder.date.setText("Date: " + formatFirebaseTimestamp(app.getApplicationDate()));
+            holder.date.setText("Date: " + app.get("appDate"));
 
             // Fetch both applicant and cat data and display matching traits
-            fetchApplicantandCatData(app.getUserId(), app.getCatId(), holder);
+            fetchApplicantandCatData(app.get("userId"), app.get("catId"), holder);
 
             holder.itemView.setOnClickListener(view -> {
                 if (listener != null) {
                     listener.onItemClick(app);
                 }
 
-                appFields.put("appDate", formatFirebaseTimestamp(app.getApplicationDate()));
-                appFields.put("appId", app.getApplicationId());
-                appFields.put("appStatus", app.getStatus());
-                appFields.put("appReason", app.getReason());
-                // Create an Intent to navigate to the specific application's page for the current cat
-                Intent intent = new Intent(context, PendingAppView.class);
-                intent.putExtra("app", appFields);  // Pass the application object via Intent
-                intent.putExtra("cat", catFields);
-                intent.putExtra("user", userFields);
 
-                Log.d("pabe", appFields.toString());
-                Log.d("pabe", catFields.toString());
-                Log.d("pabe", userFields.toString());
+                // Create an Intent to navigate to the specific application's page for the current cat
+                Intent intent = new Intent(context, ScheduledApplications.class);
+                intent.putExtra("app", app);  // Pass the application object via Intent
                 context.startActivity(intent);  // Start the new activity
             });
 
@@ -134,29 +120,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                                 // Display matching traits and percentage
                                                 holder.matching.setText(matchingTraits);
                                                 holder.percentage.setText("They are " + String.format("%.2f", matchingPercentage) + "% compatible based on traits and preferences");
-
-                                                userFields.put("name", userName);
-                                                userFields.put("age", String.valueOf(userAge));
-                                                userFields.put("householdMembers", userHousehold);
-                                                userFields.put("otherPets", userOtherPets);
-                                                userFields.put("gender", document.getString("gender"));
-                                                userFields.put("preferences1", userTempSocial);
-                                                userFields.put("preferences2", userTempEnergy);
-                                                userFields.put("address2", document.getString("city") + ", " + document.getString("region"));
-
-                                                catFields.put("catId", catDocument.getId());
-                                                catFields.put("catTemp1", catTemp1);
-                                                catFields.put("catTemp2", catTemp2);
-                                                catFields.put("catCompatibility", catCompatibility);
-                                                catFields.put("catName", catDocument.getString("name"));
-                                                catFields.put("percentage", String.format("%.2f", matchingPercentage));
-
-                                                if (selectedCat) {
-                                                    holder.catSelect.setVisibility(View.VISIBLE); // Make the TextView visible
-                                                    holder.catSelect.setText("Selected Cat: " + catDocument.getString("name"));
-                                                } else {
-                                                    holder.catSelect.setVisibility(View.GONE); // Hide the TextView
-                                                }
+                                                holder.catSelect.setText(catDocument.getString("name"));
                                             }
                                         } else {
                                             Log.d("PendingAppAdapter", "Error getting cat data: ", catTask.getException());
@@ -279,7 +243,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return pendingApps.size();
+        return scheduledApps.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -302,6 +266,6 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
     }
 
     public interface OnItemClickListener {
-        void onItemClick(ApplicationData currentCat);
+        void onItemClick(HashMap<String, String> currentApp);
     }
 }

@@ -313,7 +313,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         // Fetch user's application IDs first
         userRef.get().addOnSuccessListener(userSnapshot -> {
             if (userSnapshot.exists()) {
-                List<String> applicationIds = (List<String>) userSnapshot.get("catApplications");
+                List<String> applicationIds = (List<String>) userSnapshot.get("pendingApplications");
                 List<String> bookmarkedCats = (List<String>) userSnapshot.get("bookmarkedCats");
 
                 if (applicationIds == null) {
@@ -368,31 +368,51 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         CollectionReference catsRef = db.collection("Cats");
 
         catsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful() && task.getResult() != null) {
+                // Clear the list to avoid duplicates when reloading
+                swipeDataList.clear();
+
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String catId = document.getId();
 
-                    // Exclude cats already applied for
-                    if (!excludedCatIds.contains(catId)) {
-                        SwipeData swipeData = createSwipeDataFromDocument(document, catId);
-
-                        // set the bookmark
-                        boolean isBookmarked = bookmarkedCats.contains(catId);
-                        swipeData.setBookmarked(isBookmarked);
-                        swipeDataList.add(swipeData);
+                    // Skip cats already applied for or adopted
+                    boolean isAdopted = document.getBoolean("isAdopted") != null && document.getBoolean("isAdopted");
+                    if (excludedCatIds.contains(catId) || isAdopted) {
+                        continue;
                     }
+
+                    // Create a SwipeData object
+                    SwipeData swipeData = createSwipeDataFromDocument(document, catId);
+
+                    // Mark the cat as bookmarked if applicable
+                    boolean isBookmarked = bookmarkedCats.contains(catId);
+                    swipeData.setBookmarked(isBookmarked);
+
+                    // Add to the list
+                    swipeDataList.add(swipeData);
                 }
 
-                swipeAdapter = new SwipeAdapter(swipeDataList.toArray(new SwipeData[0]), SwipeActivity.this);
-                viewPager2.setAdapter(swipeAdapter);
-                viewPager2.setPageTransformer((page, position) -> {
-                    float absPos = Math.abs(position);
-                    page.setAlpha(1.0f - absPos);
-                    page.setScaleY(1.0f - absPos * 0.15f);
-                });
+                // Check if there are any cats to display
+                if (!swipeDataList.isEmpty()) {
+                    setupSwipeAdapter();
+                } else {
+                    Toast.makeText(this, "No cats available for adoption at the moment.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Failed to load cat data.", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void setupSwipeAdapter() {
+        swipeAdapter = new SwipeAdapter(swipeDataList.toArray(new SwipeData[0]), SwipeActivity.this);
+        viewPager2.setAdapter(swipeAdapter);
+
+        // Set up page transformer for animations
+        viewPager2.setPageTransformer((page, position) -> {
+            float absPos = Math.abs(position);
+            page.setAlpha(1.0f - absPos);
+            page.setScaleY(1.0f - absPos * 0.15f);
         });
     }
 
@@ -412,17 +432,16 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
         String bio = document.getString("bio");
-        String temperament = document.getString("temperament");
+        String temperament1 = document.getString("temperament1");
+        String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
-//        String medicalHistory = document.getString("medicalHistory");
         String name = document.getString("name");
-//        String birthday = document.getString("birthday");
         String contact = document.getString("contact");
         String compatibleWith = document.getString("compatibleWith");
         boolean isNeutered = document.getBoolean("isNeutered");
 
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
-                sex, foodPreference, bio, temperament, breed, name,
+                sex, foodPreference, bio, temperament1, temperament2, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }
 
@@ -507,6 +526,11 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         applicationData.put("reason", applicationText);
         applicationData.put("status", "pending");
         applicationData.put("userId", userId);
+        applicationData.put("venue", "");
+        applicationData.put("startTime", "");
+        applicationData.put("endTime", "");
+        applicationData.put("startDate", "");
+        applicationData.put("endDate", "");
         return applicationData;
     }
 
@@ -681,9 +705,14 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         // Find the Reload button and set its click listener
         AppCompatButton reloadButton = popupView.findViewById(R.id.reload_rejected_button);
         reloadButton.setOnClickListener(v -> {
-            viewPager2.setCurrentItem(0);
             popupWindow.dismiss();
+
+            // Restart the activity
+            Intent intent = getIntent(); // Get the intent that started this activity
+            finish(); // Finish the current activity
+            startActivity(intent); // Start the activity again
         });
+
     }
 
 

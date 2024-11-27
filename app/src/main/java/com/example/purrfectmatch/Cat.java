@@ -24,7 +24,7 @@ public class Cat implements Serializable {
     private String ownerName;
     private String birthday;
     private String contactNumber;
-    private boolean isAvailable;
+    private boolean isAdopted;
     private List<String> pendingApplicationsId;
 
     // Default constructor required for calls to DataSnapshot.getValue(Cat.class)
@@ -32,7 +32,7 @@ public class Cat implements Serializable {
 
     public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, String sex, String foodPreference, String description,
                String temperament1, String temperament2, String breed, String compatibleWith, String ownerName, String birthday,
-               String contactNumber, boolean isAvailable, List<String> pendingApplicationsId) {
+               String contactNumber, boolean isAdopted, List<String> pendingApplicationsId) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -49,7 +49,7 @@ public class Cat implements Serializable {
         this.birthday = birthday;
         this.contactNumber = contactNumber;
         this.pendingApplicationsId = pendingApplicationsId;
-        this.isAvailable = isAvailable;
+        this.isAdopted = isAdopted;
     }
 
     public List<String> getPendingApplications() {
@@ -187,11 +187,11 @@ public class Cat implements Serializable {
         this.contactNumber = contactNumber;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isAdopted() {
+        return isAdopted;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setAdopted(boolean adopted) {
+        isAdopted = adopted;
     }
 }

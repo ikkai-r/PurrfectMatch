@@ -30,10 +30,11 @@ import com.google.firebase.firestore.FieldValue;
 public class PendingAppView extends AppCompatActivity {
 
     TextView appTitle, nameAge, householdMembers, otherPets, gender, address, social,
-    applicationDate, percentage, energy,incomeBracket;
+    applicationDate, percentage, energy,incomeBracket, reasonAdopt;
     Dialog dialog;
     String appId, catId;
     FirebaseFirestore db;
+    Button buttonSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,25 @@ public class PendingAppView extends AppCompatActivity {
          social = findViewById(R.id.social);
          energy = findViewById(R.id.energy);
          applicationDate = findViewById(R.id.applicationDate);
+        reasonAdopt = findViewById(R.id.reasonAdopt);
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
+        buttonSchedule = findViewById(R.id.buttonSchedule);
 
         // Set text values based on ApplicationData fields
         if (app != null) {
             applicationDate.setText(app.get("appDate")); // Convert Timestamp to Date
             appId = app.get("appId");
+            reasonAdopt.setText(app.get("appReason"));
+
+            if(app.get("appStatus").equals("reviewed")) {
+                buttonSchedule.setText("Accept");
+                buttonSchedule.setOnClickListener(v -> goAcceptApp(v));
+
+            } else if(app.get("appStatus").equals("pending")) {
+                buttonSchedule.setText("Schedule");
+                buttonSchedule.setOnClickListener(v -> goScheduledApp(v));
+            }
         }
 
         // Set text values based on userFields
@@ -133,15 +146,14 @@ public class PendingAppView extends AppCompatActivity {
     }
     private void rejectApplication(String appId, String catId) {
         EditText reasonEditText = dialog.findViewById(R.id.reasonEditText);
-        String reason = reasonEditText.getText().toString();
+        String feedback = reasonEditText.getText().toString();
 
-        // Update application status to "rejected" with reason
+        // Update application status to "rejected" with feedback
         db.collection("Applications") // Replace with your collection name
                 .document(appId)
                 .update(
                         "status", "rejected",
-                        "reason", reason,
-                        "acknowledged", "No"
+                        "feedback", feedback
                 )
                 .addOnSuccessListener(aVoid -> {
                     Log.d("RejectApp", "Application status updated to rejected.");
@@ -152,9 +164,14 @@ public class PendingAppView extends AppCompatActivity {
                             .addOnSuccessListener(catUpdate -> {
                                 Log.d("RejectApp", "Application ID removed from cat's pendingApps list.");
 
-                                // Navigate back to ShelterPage
-                                Intent i = new Intent(PendingAppView.this, ShelterPage.class);
-                                PendingAppView.this.startActivity(i);
+                                // After saving, start the ShelterPage activity
+                                Intent i = new Intent(PendingAppView.this, SuccessForm.class);
+                                i.putExtra("title", "Adopter Application");
+                                i.putExtra("title_big", "Rejected");
+                                i.putExtra("subtitle_1", "Successfully rejected adoption request");
+                                i.putExtra("button_text", "Okay");
+                                i.putExtra("user_type", "shelter");
+                                startActivity(i);
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("RejectApp", "Failed to update cat's pendingApps list: " + e.getMessage());
@@ -170,8 +187,50 @@ public class PendingAppView extends AppCompatActivity {
         dialog.show();
     }
 
-    public void acceptApp(View v) {
+    public void goScheduledApp(View v) {
         Intent i = new Intent(this, ScheduleShelter.class);
+        i.putExtra("appId", appId);
         this.startActivity(i);
+    }
+
+
+    public void goAcceptApp(View v) {
+        //accept adopter
+        // application
+
+        // Update application status to "rejected" with feedback
+        db.collection("Applications") // Replace with your collection name
+                .document(appId)
+                .update(
+                        "status", "accepted"
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AcceptApp", "Application status updated to accepted.");
+                    // Remove the appId from the cat's pendingApps list
+                    db.collection("Cats") // Replace "Cats" with your cat collection name
+                            .document(catId)
+                            .update("pendingApplications", FieldValue.arrayRemove(appId),
+                                    "isAdopted", true)
+                            .addOnSuccessListener(catUpdate -> {
+                                Log.d("AcceptApp", "Application ID removed from cat's pendingApps list and isAdopted true.");
+
+                                // After saving, start the ShelterPage activity
+                                Intent i = new Intent(PendingAppView.this, SuccessForm.class);
+                                i.putExtra("title", "Adopter Application");
+                                i.putExtra("title_big", "Accepted");
+                                i.putExtra("subtitle_1", "Successfully accepted adoption request");
+                                i.putExtra("button_text", "Okay");
+                                i.putExtra("user_type", "shelter");
+                                startActivity(i);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("AcceptApp", "Failed to update cat's pendingApps list: " + e.getMessage());
+                                Toast.makeText(PendingAppView.this, "Failed to update cat's information. Try again later.", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AcceptApp", "Error updating application status: " + e.getMessage());
+                    Toast.makeText(PendingAppView.this, "Failed to accept application. Try again later.", Toast.LENGTH_SHORT).show();
+                });
     }
 }

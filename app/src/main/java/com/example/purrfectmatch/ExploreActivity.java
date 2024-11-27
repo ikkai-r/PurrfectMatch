@@ -173,6 +173,7 @@ public class ExploreActivity extends AppCompatActivity {
 
     private void fetchCats() {
         db.collection("Cats")
+                .whereEqualTo("isAdopted", false)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value,
