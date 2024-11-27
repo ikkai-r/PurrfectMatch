@@ -54,4 +54,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     api (libs.material.v110alpha06)
+    implementation(libs.cloudinary.android)
+    implementation(libs.glide)
 }

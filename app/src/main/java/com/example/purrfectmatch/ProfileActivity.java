@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,7 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView applications, editProfileBtn, bioText, locationProfile, nameProfile,
              phoneNumberProfile, lifestyleText, logoutBtn, noBookmarkedCatsTxt, faqBtn;
-    private ImageView explore, swipe, profilePicture;
+    private ImageView explore, swipe, profileImageView;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -74,9 +76,9 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileBtn = findViewById(R.id.editProfileBtn);
         explore = findViewById(R.id.explore);
         swipe = findViewById(R.id.swipe);
-        profilePicture = findViewById(R.id.profilePicture);
         noBookmarkedCatsTxt = findViewById(R.id.noBookmarkedCatsTxt);
         faqBtn  = findViewById(R.id.faq);
+        profileImageView = findViewById(R.id.profilePicture);
 
         adapter.setOnItemClickListener(cat -> {
             Intent i = new Intent(ProfileActivity.this, ClickedExploreActivity.class);
@@ -143,13 +145,14 @@ public class ProfileActivity extends AppCompatActivity {
                             String phoneNumberTxt = documentSnapshot.getString("phoneNumber");
                             String bioTxt = documentSnapshot.getString("bio");
                             String locationTxt = documentSnapshot.getString("city") + ", " + documentSnapshot.get("region");
-
+                            String imageUrl = documentSnapshot.getString("profileimg");
                             // Display the data in the UI
                             nameProfile.setText(nameText);
                             lifestyleText.setText(lifestylePref);
                             phoneNumberProfile.setText(phoneNumberTxt);
                             bioText.setText(bioTxt);
                             locationProfile.setText(locationTxt);
+                            Glide.with(this).load(imageUrl).into(profileImageView); //for image view
                         } else {
                            Log.d("fe", "user doesnt exist");
                         }

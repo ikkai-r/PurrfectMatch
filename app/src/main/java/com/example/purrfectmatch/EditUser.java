@@ -175,35 +175,6 @@ public class EditUser extends AppCompatActivity {
         }
     }
 
-
-//    // Upload the image to Firebase Storage
-//    private void uploadImageToFirebase(Uri photoUri, String UUID) {
-//        if (photoUri != null) {
-//            // Create a reference to Firebase Storage in the "profile_images" folder
-//            StorageReference storageReference = FirebaseStorage.getInstance().getReference("profile_images/" + UUID);
-//
-//            // Upload the image file
-//            storageReference.putFile(photoUri)
-//                    .addOnSuccessListener(taskSnapshot -> {
-//                        // Get the download URL after the image has been uploaded
-//                        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-//                                    // Get the URL of the uploaded image
-//                                    profileImageUrl = uri.toString();
-//                                    Log.d("Firebase", "Image uploaded successfully. URL: " + profileImageUrl);
-//                                    // Now you can save the image URL to your Firestore or perform further actions
-//                                })
-//                                .addOnFailureListener(e -> {
-//                                    // Handle errors
-//                                    Log.e("Firebase", "Failed to get download URL", e);
-//                                });
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        // Handle upload errors
-//                        Log.e("Firebase", "Failed to upload image", e);
-//                    });
-//        }
-//    }
-
     private void checkIfUsernameExists(String username, UsernameCheckCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

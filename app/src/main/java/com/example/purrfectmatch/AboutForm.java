@@ -20,6 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -33,6 +41,9 @@ public class AboutForm extends Fragment {
     private Button buttonNext, buttonUpload;
     private ImageView profileImageView;
     private Uri photoUri;
+    private String cloudName = "djdeqyhes";
+    private String imageUrl;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +61,8 @@ public class AboutForm extends Fragment {
             // Pop the fragment back stack
             getActivity().getSupportFragmentManager().popBackStack();
         });
+
+        initCloudinary();
 
         buttonUpload.setOnClickListener(v -> choosePicture());
 
@@ -71,8 +84,8 @@ public class AboutForm extends Fragment {
 
             // Add bio text and photo URI to the bundle
             previousBundle.putString("bio", bioText);
-            if (photoUri != null) {
-                previousBundle.putString("profileimg", photoUri.toString());
+            if (imageUrl != null) {
+                previousBundle.putString("profileimg", imageUrl);
             }
 
             // Log the values for debugging (you can remove this in production)
@@ -89,6 +102,15 @@ public class AboutForm extends Fragment {
         return view;
     }
 
+
+    private void initCloudinary() {
+        Map config = new HashMap();
+        config.put("cloud_name", cloudName);
+        config.put("api_key", "267458959441425");
+        config.put("api_secret", "yx3jJ7kIqnno467x2_5DnNWsmAA"); //TODO: hide this
+        MediaManager.init(requireContext(), config);
+    }
+
     // Launch intent to select an image
     private void choosePicture() {
         // Create an Intent to pick a file (image)
@@ -98,7 +120,6 @@ public class AboutForm extends Fragment {
         launcher.launch(intent);
     }
 
-
     // Handle the result of the image picker
     private final ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -106,9 +127,44 @@ public class AboutForm extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     photoUri = result.getData().getData();
                     // Show the selected image in ImageView
-                    profileImageView.setImageURI(photoUri);
-
+                    //profileImageView.setImageURI(photoUri);
+                    //upload it
+                    uploadImage();
                 }
             }
     );
+
+
+    private void uploadImage() {
+        MediaManager.get().upload(photoUri).callback(new UploadCallback() {
+            @Override
+            public void onStart(String requestId) {
+                Log.d("Cloudinary Quickstart", "Upload start");
+            }
+
+            @Override
+            public void onProgress(String requestId, long bytes, long totalBytes) {
+                Log.d("Cloudinary Quickstart", "Upload progress");
+            }
+
+            @Override
+            public void onSuccess(String requestId, Map resultData) {
+                Log.d("Cloudinary Quickstart", "Upload success");
+                imageUrl = (String) resultData.get("secure_url");
+                Glide.with(requireContext()).load(imageUrl).into(profileImageView);
+            }
+
+            @Override
+            public void onError(String requestId, ErrorInfo error) {
+                Log.d("Cloudinary Quickstart", "Upload failed");
+            }
+
+            @Override
+            public void onReschedule(String requestId, ErrorInfo error) {
+
+            }
+        }).dispatch();
+
+
+    }
 }

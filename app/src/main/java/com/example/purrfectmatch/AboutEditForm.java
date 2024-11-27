@@ -19,10 +19,17 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +44,8 @@ public class AboutEditForm extends Fragment {
     private Button buttonNext, buttonUpload;
     private ImageView profileImageView;
     private Uri photoUri;
+    private String cloudName = "djdeqyhes";
+    private String imageUrl;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +59,7 @@ public class AboutEditForm extends Fragment {
         profileImageView = view.findViewById(R.id.profileImageView);  // ImageView to show selected image
 
         setUserInfo();
+        initCloudinary();
 
         TextView backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
@@ -77,8 +87,8 @@ public class AboutEditForm extends Fragment {
 
             // Add bio text and photo URI to the bundle
             previousBundle.putString("bio", bioText);
-            if (photoUri != null) {
-                previousBundle.putString("profileimg", photoUri.toString());
+            if (imageUrl != null) {
+                previousBundle.putString("profileimg", imageUrl);
             }
 
             // Log the values for debugging (you can remove this in production)
@@ -102,9 +112,11 @@ public class AboutEditForm extends Fragment {
         if (bundle != null) {
             // Retrieve values from the bundle and set them to TextViews
             String bioText = bundle.getString("bio");
-            String profileImgUri = bundle.getString("profileimg");
+            String profileImageUrl = bundle.getString("profileimg");
 
             bio.setText(bioText);
+            Glide.with(requireContext()).load(profileImageUrl).into(profileImageView);
+
         }
 
     }
@@ -127,9 +139,51 @@ public class AboutEditForm extends Fragment {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     photoUri = result.getData().getData();
                     // Show the selected image in ImageView
-                    profileImageView.setImageURI(photoUri);
+                    uploadImage();
 
                 }
             }
     );
+
+    private void initCloudinary() {
+        Map config = new HashMap();
+        config.put("cloud_name", cloudName);
+        config.put("api_key", "267458959441425");
+        config.put("api_secret", "yx3jJ7kIqnno467x2_5DnNWsmAA"); //TODO: hide this
+        MediaManager.init(requireContext(), config);
+    }
+
+
+    private void uploadImage() {
+        MediaManager.get().upload(photoUri).callback(new UploadCallback() {
+            @Override
+            public void onStart(String requestId) {
+                Log.d("Cloudinary Quickstart", "Upload start");
+            }
+
+            @Override
+            public void onProgress(String requestId, long bytes, long totalBytes) {
+                Log.d("Cloudinary Quickstart", "Upload progress");
+            }
+
+            @Override
+            public void onSuccess(String requestId, Map resultData) {
+                Log.d("Cloudinary Quickstart", "Upload success");
+                imageUrl = (String) resultData.get("secure_url");
+                Glide.with(requireContext()).load(imageUrl).into(profileImageView);
+            }
+
+            @Override
+            public void onError(String requestId, ErrorInfo error) {
+                Log.d("Cloudinary Quickstart", "Upload failed");
+            }
+
+            @Override
+            public void onReschedule(String requestId, ErrorInfo error) {
+
+            }
+        }).dispatch();
+
+
+    }
 }
