@@ -68,6 +68,7 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                 appFields.put("appDate", formatFirebaseTimestamp(app.getApplicationDate()));
                 appFields.put("appId", app.getApplicationId());
                 appFields.put("appStatus", app.getStatus());
+                appFields.put("appReason", app.getReason());
                 // Create an Intent to navigate to the specific application's page for the current cat
                 Intent intent = new Intent(context, PendingAppView.class);
                 intent.putExtra("app", appFields);  // Pass the application object via Intent

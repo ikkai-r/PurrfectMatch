@@ -30,7 +30,7 @@ import com.google.firebase.firestore.FieldValue;
 public class PendingAppView extends AppCompatActivity {
 
     TextView appTitle, nameAge, householdMembers, otherPets, gender, address, social,
-    applicationDate, percentage, energy,incomeBracket;
+    applicationDate, percentage, energy,incomeBracket, reasonAdopt;
     Dialog dialog;
     String appId, catId;
     FirebaseFirestore db;
@@ -65,6 +65,7 @@ public class PendingAppView extends AppCompatActivity {
          social = findViewById(R.id.social);
          energy = findViewById(R.id.energy);
          applicationDate = findViewById(R.id.applicationDate);
+        reasonAdopt = findViewById(R.id.reasonAdopt);
         percentage = findViewById(R.id.percentage);
         incomeBracket = findViewById(R.id.incomeBracket);
         buttonSchedule = findViewById(R.id.buttonSchedule);
@@ -73,6 +74,7 @@ public class PendingAppView extends AppCompatActivity {
         if (app != null) {
             applicationDate.setText(app.get("appDate")); // Convert Timestamp to Date
             appId = app.get("appId");
+            reasonAdopt.setText(app.get("appReason"));
 
             if(app.get("appStatus").equals("reviewed")) {
                 buttonSchedule.setText("Accept");
