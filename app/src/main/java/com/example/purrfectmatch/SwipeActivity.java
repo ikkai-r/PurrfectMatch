@@ -313,7 +313,7 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         // Fetch user's application IDs first
         userRef.get().addOnSuccessListener(userSnapshot -> {
             if (userSnapshot.exists()) {
-                List<String> applicationIds = (List<String>) userSnapshot.get("catApplications");
+                List<String> applicationIds = (List<String>) userSnapshot.get("pendingApplications");
                 List<String> bookmarkedCats = (List<String>) userSnapshot.get("bookmarkedCats");
 
                 if (applicationIds == null) {
