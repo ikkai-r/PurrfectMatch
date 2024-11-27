@@ -40,7 +40,7 @@ public class ScheduledApplications extends AppCompatActivity {
     private String catCompatibility, catTemp2, catTemp1, appId, catId;
     private FirebaseFirestore db;
     private int userAge;
-    private Button acceptButton;
+    private Button acceptButton, rejectButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,7 @@ public class ScheduledApplications extends AppCompatActivity {
         incomeBracket = findViewById(R.id.incomeBracket);
         schedule = findViewById(R.id.schedule);
         acceptButton = findViewById(R.id.acceptButton);
+        rejectButton = findViewById(R.id.rejectButton);
 
         Log.d("app inside", app.toString());
         reasonAdopt = findViewById(R.id.reasonAdopt);
@@ -144,12 +145,8 @@ public class ScheduledApplications extends AppCompatActivity {
             percentage.setText(String.format("%.2f", matchingPercentage) + "% match");
         }
 
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_reject_app);
-
-        Button rejectButton = dialog.findViewById(R.id.dialog_reject_button);
-        Button cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
         String userId = app.get("userId");
+
 
         rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +154,7 @@ public class ScheduledApplications extends AppCompatActivity {
                 // change status of application to rejected
 
                 if(appId != null) {
-                    rejectApplication(appId, catId, userId);
+                    rejectApp(v);
                 }
             }
         });
@@ -169,14 +166,6 @@ public class ScheduledApplications extends AppCompatActivity {
                 if(appId != null) {
                     acceptApp(v);
                 }
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Just dismiss the dialog
-                dialog.dismiss();
             }
         });
 
@@ -201,16 +190,19 @@ public class ScheduledApplications extends AppCompatActivity {
             return "Invalid date format";
         }
     }
-    private void rejectApplication(String appId, String catId, String userId) {
-        EditText reasonEditText = dialog.findViewById(R.id.reasonEditText);
-        String reason = reasonEditText.getText().toString();
+    private void rejectApplication(String feedback) {
+        HashMap<String, String> app = (HashMap<String, String>) getIntent().getSerializableExtra("app");
+        String appId = app.get("appId");
+        String catId = app.get("catId");
+        String userId = app.get("userId");
+
 
         // Update application status to "rejected" with reason
         db.collection("Applications") // Replace with your collection name
                 .document(appId)
                 .update(
                         "status", "rejected",
-                        "feedback", reason,
+                        "feedback", feedback,
                         "acknowledged", "No"
                 )
                 .addOnSuccessListener(aVoid -> {
@@ -223,6 +215,7 @@ public class ScheduledApplications extends AppCompatActivity {
                             .addOnSuccessListener(catUpdate -> {
                                 Log.d("RejectApp", "Application ID removed from cat's pendingApplications list.");
 
+                                // Remove the appId from the user's pendingApplications
                                 db.collection("Users") 
                                         .document(userId)
                                         .update("pendingApplications", FieldValue.arrayRemove(appId))
@@ -313,7 +306,31 @@ public class ScheduledApplications extends AppCompatActivity {
     }
 
     public void rejectApp(View v) {
-        dialog.show();
+        View popupView = LayoutInflater.from(ScheduledApplications.this).inflate(R.layout.dialog_reject_app, null);
+        PopupWindow popupWindow = createPopup(popupView, v);
+
+        Button rejectButton = popupView.findViewById(R.id.dialog_reject_button);
+        Button cancelButton = popupView.findViewById(R.id.dialog_cancel_button);
+        EditText reasonEditText = popupView.findViewById(R.id.reasonEditText);
+
+
+
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String feedback = reasonEditText.getText().toString();
+                rejectApplication(feedback);
+                popupWindow.dismiss();
+            }
+        });
+
+        // Set OnClickListener for the cancel button
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
     }
 
     public void acceptAppBackend(View v, String feedback) {
