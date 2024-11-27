@@ -74,6 +74,7 @@ public class ShelterPage extends AppCompatActivity {
         initializeNumbers();
         Log.d("fetching", "fetching pending apps");
         fetchPendingApps();
+        Log.d("scheduled", "fetching scheduled apps");
         fetchScheduledApps();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -152,19 +153,23 @@ public class ShelterPage extends AppCompatActivity {
                 .whereEqualTo("status", "scheduled") // Filter for scheduled applications
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         // Get application data
                         String appId = document.getId();
                         String userId = document.getString("userId");
                         String catId = document.getString("catId");
-                        String dateSchedule = document.getString("dateSchedule");
+                        String dateSchedule = document.getString("finalDate");
+                        String finalTime = document.getString("finalTime");
 
                         // Create an object or HashMap to store application data
                         HashMap<String, String> appData = new HashMap<>();
                         appData.put("appId", appId);
                         appData.put("catId", catId);
-                        appData.put("dateSchedule", dateSchedule);
-                        appData.put("appDate",formatFirebaseTimestamp(document.getTimestamp("applicationDate")));
+                        appData.put("finalDate", dateSchedule);
+                        appData.put("finalTime", finalTime);
+
+                        appData.put("appDate", formatFirebaseTimestamp(document.getTimestamp("applicationDate")));
                         // Inner query to fetch user details
                         db.collection("Users")
                                 .document(userId) // Access the specific user's document
@@ -173,38 +178,35 @@ public class ShelterPage extends AppCompatActivity {
                                     if (userDoc.exists()) {
                                         // Add user details to app data
                                         appData.put("userSched", userDoc.getString("firstName") + " " + userDoc.get("lastName"));
-                                        appData.put("profileImg", userDoc.getString("profileImg"));
+                                        appData.put("profileImg", userDoc.getString("profileimg"));
                                         appData.put("userId", userDoc.getId());
                                     }
 
                                     // Add the complete app data to the list
                                     scheduledAppsList.add(appData);
 
-
-                                    adapterScheduled.notifyDataSetChanged();
-
                                     // Notify your adapter or UI about the new data
-                                    // Example: recyclerAdapter.notifyDataSetChanged();
-                                    Log.d("fetching", "App data added: " + appData.toString());
+                                    adapterScheduled.notifyDataSetChanged();
+                                    Log.d("scheduled", "App data added: " + appData.toString());
+
+
+                                        if (scheduledAppsList.isEmpty()) {
+                                            noScheduledApplications.setVisibility(View.VISIBLE);
+                                        } else {
+                                            noScheduledApplications.setVisibility(View.GONE);
+                                        }
+
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e("fetching", "Failed to fetch user details: " + e.getMessage());
+                                    Log.e("scheduled", "Failed to fetch user details: " + e.getMessage());
                                 });
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("fetching", "Failed to fetch scheduled applications: " + e.getMessage());
+                    Log.e("scheduled", "Failed to fetch scheduled applications: " + e.getMessage());
                 });
-
-        if (scheduledAppsList.isEmpty()) {
-            noScheduledApplications.setVisibility(View.VISIBLE);
-        } else {
-            noScheduledApplications.setVisibility(View.GONE);
-        }
-
-        Log.d("fetching", "App data: " + scheduledAppsList.toString());
-
     }
+
 
     private String formatFirebaseTimestamp(Timestamp timestamp) {
         if (timestamp == null) {
