@@ -46,9 +46,9 @@ public class CatGenForm extends Fragment {
 
         radioGroup.setOnCheckedChangeListener(((radioGroup1, i) -> {
             if(i == R.id.radioMale){
-                sex = "male";
+                sex = "M";
             }else if(i == R.id.radioFemale){
-                sex = "female";
+                sex = "F";
             }
         }));
 
