@@ -12,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,9 +47,10 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
         Log.d("scheduled", currentApp.toString());
 
         // Populate the views with data from ScheduledAppData
-        holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
         holder.userSched.setText(currentApp.get("userSched"));
-        holder.dateSched.setText(formatDate(currentApp.get("finalDate")));
+        Glide.with(context).load(currentApp.get("profileImg")).into(holder.userImage);
+
+                            holder.dateSched.setText(formatDate(currentApp.get("finalDate")));
         holder.itemView.setOnClickListener(view -> {
             if (listener != null) {
                 listener.onItemClick(currentApp);

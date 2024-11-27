@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -210,12 +212,11 @@ public class ExploreActivity extends AppCompatActivity {
 
             String catImageStr = document.getString("catImage");
             //int catImage = R.drawable.app_icon; // Default picture
-            String catImage = "content://com.android.providers.media.documents/document/image%3A1000035034"; // Default picture
             /*
             if (catImageStr != null && !catImageStr.isEmpty()) {
                 catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
             }*/
-
+            
             String sex = document.getString("sex");
             String breed = document.getString("breed");
             String name = document.getString("name");
@@ -224,7 +225,7 @@ public class ExploreActivity extends AppCompatActivity {
                     ? document.getLong("adoptionFee").intValue()
                     : 0;
 
-            return new ExploreData(catId, catImage, name, age, sex, breed, isNeutered, adoptionFee);
+            return new ExploreData(catId, catImageStr, name, age, sex, breed, isNeutered, adoptionFee);
         } catch (Exception e) {
             Log.e("CreateExploreData", "Error creating ExploreData from document", e);
             return null;

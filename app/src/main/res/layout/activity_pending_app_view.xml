@@ -67,6 +67,7 @@
             android:layout_height="260dp"
             android:layout_gravity="center"
             android:layout_marginTop="12dp"
+            android:id="@+id/userImage"
             android:src="@drawable/niki_mylove"
             android:background="@drawable/rounded_image_border"
             android:scaleType="centerCrop"

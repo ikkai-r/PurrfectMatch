@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,7 +52,7 @@ public class ScheduledAppAdapter extends RecyclerView.Adapter<ScheduledAppAdapte
         if (app != null) {
 
             // Get name from db using user id in app
-            holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
+
             holder.date.setText("Date: " + app.get("appDate"));
 
             // Fetch both applicant and cat data and display matching traits
@@ -102,6 +103,8 @@ public class ScheduledAppAdapter extends RecyclerView.Adapter<ScheduledAppAdapte
                             int userAge = document.getLong("age").intValue();
                             // Set applicant's name
                             holder.applicant.setText("Applicant: " + userName);
+                            Glide.with(context).load(document.getString("profileimg")).into(holder.userImage);
+
 
                             // Fetch cat data
                             db.collection("Cats").document(catId).get()

@@ -12,7 +12,7 @@ public class Cat implements Serializable {
     private int age;
     private int weight;
     private int adoptionFee;
-    private int[] catPics;  // List of cat picture resources, replace with URLs if using Firebase Storage
+    private String catImage;  // List of cat picture resources, replace with URLs if using Firebase Storage
     private String sex;
     private String foodPreference;
     private String description;
@@ -30,14 +30,14 @@ public class Cat implements Serializable {
     // Default constructor required for calls to DataSnapshot.getValue(Cat.class)
     public Cat() {}
 
-    public Cat(String name, int age, int weight, int adoptionFee, int[] catPics, String sex, String foodPreference, String description,
+    public Cat(String name, int age, int weight, int adoptionFee, String catImage, String sex, String foodPreference, String description,
                String temperament1, String temperament2, String breed, String compatibleWith, String ownerName, String birthday,
                String contactNumber, boolean isAdopted, List<String> pendingApplicationsId) {
         this.name = name;
         this.age = age;
         this.weight = weight;
         this.adoptionFee = adoptionFee;
-        this.catPics = catPics;
+        this.catImage = catImage;
         this.sex = sex;
         this.foodPreference = foodPreference;
         this.description = description;
@@ -107,12 +107,12 @@ public class Cat implements Serializable {
         this.adoptionFee = adoptionFee;
     }
 
-    public int[] getCatPics() {
-        return catPics;
+    public String getCatImage() {
+        return catImage;
     }
 
-    public void setCatPics(int[] catPics) {
-        this.catPics = catPics;
+    public void setCatImage(String catImage) {
+        this.catImage = catImage;
     }
 
     public String getSex() {
