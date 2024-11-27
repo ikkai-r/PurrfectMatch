@@ -112,7 +112,7 @@ public class AddCat extends AppCompatActivity {
             catData.put("bookmarkedBy", bookmarked);
             catData.put("sex", sex);
             catData.put("isNeutered", isNeutered);
-            catData.put("active", false);
+            //catData.put("active", false);
 
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -130,6 +130,7 @@ public class AddCat extends AppCompatActivity {
                         i.putExtra("subtitle_1", "You've added a new cat to our database!");
                         i.putExtra("subtitle_2", "Let's help find a home for them.");
                         i.putExtra("button_text", "Done");
+                        i.putExtra("user_type", "shelter");
                         startActivity(i);
                         finish();
                     })

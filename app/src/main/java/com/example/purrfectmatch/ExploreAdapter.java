@@ -2,6 +2,7 @@ package com.example.purrfectmatch;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -35,7 +38,12 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExploreData currentCat = exploreList.get(position);
 
-        holder.catImage.setImageResource(currentCat.getCatImage());
+        Glide.with(context)
+                .load(currentCat.getCatImage()) // Load the URI/URL
+                .into(holder.catImage);
+
+        //holder.catImage.setImageResource(currentCat.getCatImage());
+        //Log.d("Test", "HERE2" + currentCat.getCatImage());
         holder.catName.setText(currentCat.getName());
         holder.catAge.setText(currentCat.getAge() + " months old");
         holder.catBreed.setText(currentCat.getBreed());

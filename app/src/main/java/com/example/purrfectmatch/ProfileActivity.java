@@ -221,10 +221,12 @@ public class ProfileActivity extends AppCompatActivity {
                     : 0;
 
             String catImageStr = document.getString("catImage");
-            int catImage = R.drawable.app_icon; // Default picture
+            //int catImage = R.drawable.app_icon; // Default picture
+            String catImage = "content://com.android.providers.media.documents/document/image%3A1000035034"; // Default picture
+            /*
             if (catImageStr != null && !catImageStr.isEmpty()) {
                 catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
-            }
+            }*/
 
             String sex = document.getString("sex");
             String breed = document.getString("breed");

@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import android.graphics.PorterDuff;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
@@ -48,7 +49,10 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
         SwipeData swipeDataItem = catDataItemArrayList[position];
 
-        holder.catImage.setImageResource(swipeDataItem.catImage);
+        //holder.catImage.setImageResource(swipeDataItem.catImage);
+        Glide.with(context)
+                .load(swipeDataItem.catImage)
+                .into(holder.catImage);
         holder.ageText.setText(String.valueOf(swipeDataItem.age) + " months");
         holder.weightText.setText(String.valueOf(swipeDataItem.weight) + "lbs");
         holder.sexText.setText(String.valueOf(swipeDataItem.sex));

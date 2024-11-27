@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -121,7 +122,10 @@ public class CatProfile extends AppCompatActivity {
                         SwipeData swipeDataItem = createCatDataFromDocument(document, catId);
 
                         //TODO: Change to actual cat images
-                        catImage.setImageResource(R.drawable.cat1);
+                        //catImage.setImageResource(R.drawable.cat1);
+                        Glide.with(this)
+                                .load(swipeDataItem.catImage)
+                                .into(catImage);
 
                         ageText.setText(String.valueOf(swipeDataItem.age) + "months");
                         weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
@@ -155,8 +159,9 @@ public class CatProfile extends AppCompatActivity {
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
         // Retrieve the list of image names and convert them to resource IDs
-        String catImageStr = document.getString("catImage");
-        int catImage =  getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+        String catImage = document.getString("catImage");
+        //String catImageStr = document.getString("catImage");
+        //int catImage =  getResources().getIdentifier(catImageStr, "drawable", getPackageName());
 
         // Retrieve other information
         char sex = document.getString("sex").charAt(0);
@@ -177,6 +182,7 @@ public class CatProfile extends AppCompatActivity {
 
     public void editCat(View v) {
         Intent i = new Intent(this, EditCat.class);
+        i.putExtra("name", catName);
         this.startActivity(i);
     }
 

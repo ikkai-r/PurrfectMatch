@@ -2,13 +2,13 @@ package com.example.purrfectmatch;
 
 public class SwipeData {
 
-    int age, weight, adoptionFee, catImage;
+    int age, weight, adoptionFee;
     char sex;
-    String foodPreference, bio, temperament, breed, name, contactInformation, compatibleWith, catId;
+    String foodPreference, bio, temperament, breed, name, contactInformation, compatibleWith, catId, catImage;
     boolean isBookmarked, isNeutered;
 
     public SwipeData(int age, int weight, int adoptionFee,  int neuteredImage, int vaccinationImage, int litterTrainedImage,
-                     int catImage, char sex, String foodPreference, String bio, String temperament, String breed,
+                     String catImage, char sex, String foodPreference, String bio, String temperament, String breed,
                      String name, String contactInformation, String catId, String compatibleWith, boolean isNeutered) {
         this.age = age;
         this.weight = weight;
