@@ -168,6 +168,7 @@ public class ShelterPage extends AppCompatActivity {
                         appData.put("catId", catId);
                         appData.put("finalDate", dateSchedule);
                         appData.put("finalTime", finalTime);
+                        appData.put("reason", document.getString("reason"));
 
                         appData.put("appDate", formatFirebaseTimestamp(document.getTimestamp("applicationDate")));
                         // Inner query to fetch user details
