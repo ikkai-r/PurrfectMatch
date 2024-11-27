@@ -40,7 +40,7 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HashMap<String, String> currentApp = scheduledAppList.get(position);
-        Log.d("scheduled", currentApp.get("appId"));
+        Log.d("scheduled", currentApp.toString());
 
         // Populate the views with data from ScheduledAppData
         holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
@@ -57,6 +57,7 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
             //Create an Intent to navigate to the specific application's page for the current cat
             Intent intent = new Intent(context, ScheduledApplications.class);
             intent.putExtra("app", currentApp);  // Pass the app object via Intent
+            context.startActivity(intent);
         });
     }
 

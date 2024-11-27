@@ -19,6 +19,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class ScheduledApplications extends AppCompatActivity {
             return insets;
         });
 
+        db = FirebaseFirestore.getInstance();
+
         HashMap<String, String> app = (HashMap<String, String>) getIntent().getSerializableExtra("app");
 
         appTitle = findViewById(R.id.appTitle);
@@ -58,12 +62,16 @@ public class ScheduledApplications extends AppCompatActivity {
         schedule = findViewById(R.id.schedule);
 
         if (app != null) {
+
+            Log.d("scheduled", "in view" + app.toString());
             appId = app.get("appId");
             applicationDate.setText(app.get("appDate"));
-            schedule.setText("Schedule is on ");
-            //format like this             android:text="Schedule is on December 20, 10:30 AM"
+            schedule.setText(formatSchedule(app.get("finalDate"), app.get("finalTime")));
 
             String userId = app.get("userId");
+
+            Log.d("scheduled", "userId: " + userId);
+
 
             // Inner query to fetch user details
             db.collection("Users")
@@ -71,7 +79,8 @@ public class ScheduledApplications extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(userDoc -> {
                         if (userDoc.exists()) {
-                            userAge = (int) userDoc.get("age");
+                            Long age = (Long) userDoc.get("age");
+                            userAge = age.intValue();
                             nameAge.setText(userDoc.get("firstName") + " " + userDoc.get("lastName") + ", " + userAge); // name + age
                             householdMembers.setText("Household Members: " + userDoc.get("householdMembers"));
                             otherPets.setText("Other Pets: " + userDoc.get("otherPets"));
@@ -80,11 +89,12 @@ public class ScheduledApplications extends AppCompatActivity {
                             energy.setText("Energy level: " + userDoc.get("preferences2"));
                             social.setText("Temperament: " + userDoc.get("preferences1"));
 
-                            if(Integer.parseInt((String) userDoc.get("age")) < 18) {
+                            int ageInt = ((Long) userDoc.get("age")).intValue();
+                            if(ageInt < 18) {
                                 incomeBracket.setText("Likely a student and dependent.");
-                            } else if(Integer.parseInt((String) userDoc.get("age")) > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
+                            } else if(ageInt > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
                                 incomeBracket.setText("Likely a student and may be working.");
-                            } else if(Integer.parseInt((String) userDoc.get("age")) > 23)  {
+                            } else if(ageInt > 23)  {
                                 incomeBracket.setText("Likely working already.");
                             }
                         }
@@ -94,6 +104,9 @@ public class ScheduledApplications extends AppCompatActivity {
                     });
 
             catId = app.get("catId");
+
+
+            Log.d("scheduled", "catId: " + catId);
 
 
             db.collection("Cats")
@@ -143,6 +156,26 @@ public class ScheduledApplications extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String formatSchedule(String finalDate, String finalTime) {
+
+        try {
+            // Parse the input finalDate in the given format
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = dateFormat.parse(finalDate);
+
+            // Format the parsed date to the desired format
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("MMMM dd");
+            String formattedDate = outputDateFormat.format(date);
+
+            // Combine the formatted date and time
+            return "Schedule is on " + formattedDate + ", " + finalTime;
+        } catch (Exception e) {
+            // Handle parsing error
+            e.printStackTrace();
+            return "Invalid date format";
+        }
     }
 
     private void rejectApplication(String appId, String catId) {
