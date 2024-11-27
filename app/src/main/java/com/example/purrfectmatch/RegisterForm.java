@@ -81,6 +81,8 @@ public class RegisterForm extends Fragment implements LocationListener {
             @Override
             public void onClick(View view) {
 
+                getLocation();
+
                 // Check if all fields are not empty
                 String emailText = email.getText().toString().trim();
                 String passwordText = password.getText().toString().trim();
@@ -112,7 +114,7 @@ public class RegisterForm extends Fragment implements LocationListener {
                 bundle.putString("password", passwordText);
                 bundle.putString("username", usernameText);
 
-                Log.d("c", country + " " + city + " " + region);
+                Log.d("locationget", country + " " + city + " " + region);
                 bundle.putString("country", country);
                 bundle.putString("city", city);
                 bundle.putString("region", region);
@@ -160,47 +162,61 @@ public class RegisterForm extends Fragment implements LocationListener {
 //        }
 //    }
 
+
     void getLocation() {
         try {
-            Log.d("loc", "getting location");
+            Log.d("locationget", "Getting location...");
             locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 
-            // Check if the GPS is enabled
+            // Check permissions
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+                return;
+            }
+
+            // Try to get the last known location first
+            Location lastKnownLocation = null;
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+                lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             } else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
+                lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+
+            if (lastKnownLocation != null) {
+                Log.d("locationget", "Last known location found.");
+                handleLocationUpdate(lastKnownLocation);
             } else {
-                // Prompt to enable location services
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Enable Location Services")
-                        .setMessage("Location services are turned off. Please enable to proceed.")
-                        .setPositiveButton("Enable", (dialog, which) -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
-                        .setNegativeButton("Cancel", null)
-                        .show();
-            }
+                Log.d("locationget", "No last known location. Requesting updates...");
 
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void getLocationA() {
-        try {
-            Log.d("loc", "getting location");
-            locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 5, this);
-            if(locationManager!=null) {
-                Log.d("did location", "location manager not null");
+                // Request real-time updates
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+                } else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
+                } else {
+                    // Prompt to enable location services
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Enable Location Services")
+                            .setMessage("Location services are turned off. Please enable to proceed.")
+                            .setPositiveButton("Enable", (dialog, which) -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
             }
         } catch (SecurityException e) {
-            e.printStackTrace();
+            Log.e("locationget", "Security exception while accessing location.", e);
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("ca", "Location changed triggered");
+        Log.d("locationget", "Location changed triggered");
+        handleLocationUpdate(location);
+    }
+
+    // Extracted method to handle location updates
+    private void handleLocationUpdate(Location location) {
         if (location != null) {
             try {
                 Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
@@ -209,13 +225,14 @@ public class RegisterForm extends Fragment implements LocationListener {
                     country = addresses.get(0).getCountryName();
                     city = addresses.get(0).getLocality();
                     region = addresses.get(0).getAdminArea();
-                    Log.d("c", "Location found: " + country + ", " + city + ", " + region);
+                    Log.d("locationget", "Location found: " + country + ", " + city + ", " + region);
                 }
             } catch (Exception e) {
-                Log.e("Location Error", "Error getting location", e);
+                Log.e("locationget", "Error getting location details.", e);
             }
         }
     }
+
 
 
 
