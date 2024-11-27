@@ -63,7 +63,7 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.ViewHolder>{
 
         if(swipeDataItem.isNeutered == true) { holder.neuterText.setText("Neutered");}
         else {  holder.neuterText.setText("Not neutered"); }
-        holder.temperamentText.setText((swipeDataItem.temperament1) + ", " + (swipeDataItem.temperament2));
+        holder.temperamentText.setText((swipeDataItem.temperament));
         holder.bioText.setText(swipeDataItem.bio);
         holder.compatibleWithText.setText(swipeDataItem.compatibleWith);
         holder.adoptionFeeText.setText(String.valueOf(swipeDataItem.adoptionFee) + " php");
