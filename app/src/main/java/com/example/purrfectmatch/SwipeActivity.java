@@ -680,9 +680,14 @@ public class SwipeActivity extends AppCompatActivity implements GestureDetector.
         // Find the Reload button and set its click listener
         AppCompatButton reloadButton = popupView.findViewById(R.id.reload_rejected_button);
         reloadButton.setOnClickListener(v -> {
-            viewPager2.setCurrentItem(0);
             popupWindow.dismiss();
+
+            // Restart the activity
+            Intent intent = getIntent(); // Get the intent that started this activity
+            finish(); // Finish the current activity
+            startActivity(intent); // Start the activity again
         });
+
     }
 
 
