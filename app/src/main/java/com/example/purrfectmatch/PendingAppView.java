@@ -76,13 +76,26 @@ public class PendingAppView extends AppCompatActivity {
             appId = app.get("appId");
             reasonAdopt.setText(app.get("appReason"));
 
-            if(app.get("appStatus").equals("reviewed")) {
+            String appStatus = app.get("appStatus");
+
+            Log.d("appstat", appStatus);
+            Log.d("appstat", String.valueOf(appStatus.equals("scheduled")));
+
+
+            if(appStatus.equals("reviewed")) {
                 buttonSchedule.setText("Accept");
+                buttonSchedule.setVisibility(View.VISIBLE);  // Ensure the button is visible
                 buttonSchedule.setOnClickListener(v -> goAcceptApp(v));
 
-            } else if(app.get("appStatus").equals("pending")) {
+            } else if(appStatus.equals("pending")) {
                 buttonSchedule.setText("Schedule");
+                buttonSchedule.setVisibility(View.VISIBLE);  // Ensure the button is visible
                 buttonSchedule.setOnClickListener(v -> goScheduledApp(v));
+
+            } else if(appStatus.equals("scheduled")) {
+                // Hide the button when status is "scheduled"
+                buttonSchedule.setVisibility(View.GONE);
+                buttonSchedule.setOnClickListener(null);  // Remove any existing listeners
             }
         }
 
