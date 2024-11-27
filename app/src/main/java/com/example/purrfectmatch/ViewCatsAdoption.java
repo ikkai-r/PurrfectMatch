@@ -115,6 +115,7 @@ public class ViewCatsAdoption extends AppCompatActivity {
                             } catch (Exception e) {
                                 Toast.makeText(ViewCatsAdoption.this, "Error parsing data: "
                                         + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d("error" ,"Here!" + e.getMessage());
                             }
                         }
                         filteredList = new ArrayList<>(exploreList);

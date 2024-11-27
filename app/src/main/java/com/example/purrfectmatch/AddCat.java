@@ -131,6 +131,7 @@ public class AddCat extends AppCompatActivity {
                         i.putExtra("subtitle_1", "You've added a new cat to our database!");
                         i.putExtra("subtitle_2", "Let's help find a home for them.");
                         i.putExtra("button_text", "Done");
+                        i.putExtra("user_type", "shelter");
                         startActivity(i);
                         finish();
                     })

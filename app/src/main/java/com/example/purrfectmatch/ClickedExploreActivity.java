@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -347,12 +348,18 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
                         // Create the SwipeData using the document data
                         SwipeData swipeDataItem = createSwipeDataFromDocument(document, documentId);
 
-                        catImage.setImageResource(swipeDataItem.catImage);
-                        ageText.setText("Age:  " + String.valueOf(swipeDataItem.age) + " months");
-                        weightText.setText("Weight:  " + String.valueOf(swipeDataItem.weight) + "lbs");
-                        breedText.setText("Breed:  " + swipeDataItem.breed);
+
+                        //catImage.setImageResource(swipeDataItem.catImage);
+                        Glide.with(this)
+                                .load(swipeDataItem.catImage) // Assuming catImage is a URL or URI
+                                .into(catImage);
+                        ageText.setText(String.valueOf(swipeDataItem.age) + " months");
+                        weightText.setText(String.valueOf(swipeDataItem.weight) + " lbs");
+                        sexText.setText(String.valueOf(swipeDataItem.sex));
+                        breedText.setText(swipeDataItem.breed);
                         if ("F".equals(String.valueOf(swipeDataItem.sex))) {sexText.setText("Sex:  Female");}
                         else {sexText.setText("Sex:  Male");  }
+
                         if(swipeDataItem.isNeutered == true) { neuterText.setText("Neutered");}
                         else {  neuterText.setText("Not neutered"); }
                         temperamentText.setText((swipeDataItem.temperament1) + ", " + (swipeDataItem.temperament2));
@@ -384,8 +391,9 @@ public class ClickedExploreActivity extends AppCompatActivity implements Gesture
         int weight = document.getLong("weight").intValue();
         int adoptionFee = document.getLong("adoptionFee").intValue();
 
-        String catImageStr = document.getString("catImage");
-        int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
+        String catImage = document.getString("catImage");
+        //String catImageStr = document.getString("catImage");
+        //int catImage = getResources().getIdentifier(catImageStr, "drawable", getPackageName());
 
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
