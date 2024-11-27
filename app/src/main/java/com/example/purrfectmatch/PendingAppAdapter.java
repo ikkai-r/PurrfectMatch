@@ -126,11 +126,11 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
                                                 String catCompatibility = catDocument.getString("compatibleWith");
 
                                                 // Calculate the matching traits and percentage
-                                                int matchingTraits = getMatchingTraits(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
+                                                String matchingTraits = getMatchingTraits(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2);
                                                 double matchingPercentage = calculateMatchPercentage(userHousehold, userOtherPets, catCompatibility, userTempSocial, catTemp1, userTempEnergy, catTemp2, userAge);
 
                                                 // Display matching traits and percentage
-                                                holder.matching.setText("Matching traits: " + matchingTraits);
+                                                holder.matching.setText(matchingTraits);
                                                 holder.percentage.setText("They are " + matchingPercentage + "% compatible based on traits and preferences");
 
                                                 userFields.put("name", userName);
@@ -161,40 +161,47 @@ public class PendingAppAdapter extends RecyclerView.Adapter<PendingAppAdapter.Vi
     }
 
 
-    // Method to calculate matching traits
-    public int getMatchingTraits(String userHousehold,
-                                 String userOtherPets, String catPetsCompatibility,
-                                 String userTempSocial, String catTemp1,
-                                 String userTempEnergy, String catTemp2) {
-        int matches = 0;
+    public String getMatchingTraits(String userHousehold,
+                                    String userOtherPets, String catPetsCompatibility,
+                                    String userTempSocial, String catTemp1,
+                                    String userTempEnergy, String catTemp2) {
+        StringBuilder matchingTraits = new StringBuilder();
 
+        // Compatible in: living situation
         // Compare household members to cat's social characteristic
-        if (userHousehold.equals("3-4 members") && catTemp2.equals("Active / Playful")) {
-            matches++;
-        } else if (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) {
-            matches++;
-        } else if (userHousehold.equals("5+ members") && catTemp2.equals("Active / Playful") ) {
-            matches++;
+        if ((userHousehold.equals("3-4 members") && catTemp2.equals("Active / Playful")) ||
+                (userHousehold.equals("1-2 members") && catTemp2.equals("Quiet / Shy")) ||
+                (userHousehold.equals("5+ members") && catTemp2.equals("Active / Playful"))) {
+            matchingTraits.append("Living situation, ");
         }
 
+        // Other pets
         // Compare other pets with compatibility
         if ((userOtherPets.equals("Yes") && catPetsCompatibility.contains("Yes")) ||
                 (userOtherPets.equals("No") && catPetsCompatibility.contains("No"))) {
-            matches++;
+            matchingTraits.append("Other pets, ");
         }
 
-        // Compare temperament (social)
+        // Social attitude
         if (userTempSocial.equals(catTemp1)) {
-            matches++;
+            matchingTraits.append("Social attitude, ");
         }
 
-        // Compare temperament (energy)
+        // Energy level
         if (userTempEnergy.equals(catTemp2)) {
-            matches++;
+            matchingTraits.append("Energy level, ");
         }
 
-        return matches;
+        // If no traits match, return a message indicating no matches
+        if (matchingTraits.length() == 0) {
+            return "No matching traits found.";
+        }
+
+        // Remove the trailing comma and space, and return the string with the prefix
+        matchingTraits.setLength(matchingTraits.length() - 2); // Remove last ", "
+        return "Compatible in: " + matchingTraits.toString();
     }
+
 
     public double calculateMatchPercentage(String userHousehold,
                                            String userOtherPets,
