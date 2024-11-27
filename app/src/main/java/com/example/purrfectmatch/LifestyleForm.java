@@ -47,7 +47,7 @@ public class LifestyleForm extends Fragment {
         spinnerOtherPets.setAdapter(otherPetsAdapter);
 
         ArrayAdapter<String> preferencesAdapter = new ArrayAdapter<>(getContext(),
-                R.layout.spinner_item, new String[]{"Independent", "Moderately Clingy", "Affectionate"});
+                R.layout.spinner_item, new String[]{"Independent", "Affectionate"});
         preferencesAdapter.setDropDownViewResource(R.layout.spinner_item);
         spinnerPreferences.setAdapter(preferencesAdapter);
 
