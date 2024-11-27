@@ -168,6 +168,7 @@ public class ShelterPage extends AppCompatActivity {
                         appData.put("catId", catId);
                         appData.put("finalDate", dateSchedule);
                         appData.put("finalTime", finalTime);
+                        appData.put("reason", document.getString("reason"));
 
                         appData.put("appDate", formatFirebaseTimestamp(document.getTimestamp("applicationDate")));
                         // Inner query to fetch user details
@@ -221,13 +222,13 @@ public class ShelterPage extends AppCompatActivity {
         return sdf.format(date);
     }
 
-
-
-
-
-
     public void goPendingApps(View v) {
         Intent i = new Intent(this, PendingApplications.class);
+        this.startActivity(i);
+    }
+
+    public void goScheduledApp(View v) {
+        Intent i = new Intent(this, ScheduledAppsList.class);
         this.startActivity(i);
     }
 

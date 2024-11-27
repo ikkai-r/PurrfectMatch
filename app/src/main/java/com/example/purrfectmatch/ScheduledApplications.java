@@ -27,7 +27,7 @@ import java.util.List;
 public class ScheduledApplications extends AppCompatActivity {
 
     private TextView appTitle, nameAge, householdMembers, otherPets, gender, address, social,
-            applicationDate, schedule, percentage, energy,incomeBracket;
+            applicationDate, schedule, percentage, energy,incomeBracket, reasonAdopt;
     private Dialog dialog;
     private String catCompatibility, catTemp2, catTemp1, appId, catId;
     private FirebaseFirestore db;
@@ -64,6 +64,7 @@ public class ScheduledApplications extends AppCompatActivity {
         acceptButton = findViewById(R.id.acceptButton);
 
         Log.d("app inside", app.toString());
+        reasonAdopt = findViewById(R.id.reasonAdopt);
 
         if (app != null) {
 
@@ -71,7 +72,7 @@ public class ScheduledApplications extends AppCompatActivity {
             appId = app.get("appId");
             applicationDate.setText(app.get("appDate"));
             schedule.setText(formatSchedule(app.get("finalDate"), app.get("finalTime")));
-
+            reasonAdopt.setText(app.get("reason"));
             String userId = app.get("userId");
 
             Log.d("scheduled", "userId: " + userId);
