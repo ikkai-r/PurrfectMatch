@@ -222,18 +222,13 @@ public class ShelterPage extends AppCompatActivity {
         return sdf.format(date);
     }
 
-
-
-
-
-
     public void goPendingApps(View v) {
         Intent i = new Intent(this, PendingApplications.class);
         this.startActivity(i);
     }
 
     public void goScheduledApp(View v) {
-        Intent i = new Intent(this, ScheduledApplications.class);
+        Intent i = new Intent(this, ScheduledAppsList.class);
         this.startActivity(i);
     }
 
