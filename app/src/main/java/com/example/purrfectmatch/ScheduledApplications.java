@@ -374,8 +374,7 @@ public class ScheduledApplications extends AppCompatActivity {
                                                         db.collection("Users")
                                                                 .document(userId)
                                                                 .update(
-                                                                        "adoptedCatIds", FieldValue.arrayUnion(catId),
-                                                                        "adoptedCatCount", FieldValue.increment(1)
+                                                                        "adoptedCatIds", FieldValue.arrayUnion(catId)
                                                                 )
                                                                 .addOnSuccessListener(userUpdate -> {
                                                                     Log.d("AcceptApp", "User's adoption record updated.");
