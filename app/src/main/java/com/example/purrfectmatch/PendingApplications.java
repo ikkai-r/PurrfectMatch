@@ -61,7 +61,7 @@ public class PendingApplications extends AppCompatActivity {
 
         // Query to
         db.collection("Applications")
-                .whereIn("status", Arrays.asList("pending", "reviewed"))
+                .whereNotIn("status", Arrays.asList("accepted", "rejected"))
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
