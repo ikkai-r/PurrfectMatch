@@ -12,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.io.Serializable;
@@ -38,28 +41,44 @@ public class ScheduledAppHomeAdapter extends RecyclerView.Adapter<ScheduledAppHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HashMap<String, String> currentApp = scheduledAppList.get(position);
-        Log.d("bindingApp", currentApp.get("appId"));
+        Log.d("scheduled", currentApp.toString());
 
         // Populate the views with data from ScheduledAppData
         holder.userImage.setImageResource(R.drawable.user_1); // Replace with actual image
         holder.userSched.setText(currentApp.get("userSched"));
-        holder.dateSched.setText(currentApp.get("dateSched"));
-
-
+        holder.dateSched.setText(formatDate(currentApp.get("finalDate")));
         holder.itemView.setOnClickListener(view -> {
             if (listener != null) {
                 listener.onItemClick(currentApp);
             }
 
 
-            Log.d("currentApp", currentApp.toString());
+            Log.d("currentApp scheduled", currentApp.toString());
 
             //Create an Intent to navigate to the specific application's page for the current cat
             Intent intent = new Intent(context, ScheduledApplications.class);
-            intent.putExtra("app", currentApp);  // Make sure the HashMap is serializable
+            intent.putExtra("app", currentApp);  // Pass the app object via Intent
             context.startActivity(intent);
-
         });
+    }
+
+    private String formatDate(String inputDate) {
+        // Create a SimpleDateFormat for the input format
+        Date date = null;
+        SimpleDateFormat outputFormat = null;
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+            // Parse the input string into a Date object
+            date = inputFormat.parse(inputDate);
+
+            // Create a SimpleDateFormat for the desired output format
+            outputFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return outputFormat.format(date);
     }
 
     @Override

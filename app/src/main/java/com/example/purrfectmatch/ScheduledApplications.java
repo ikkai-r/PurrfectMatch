@@ -19,6 +19,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,6 +44,8 @@ public class ScheduledApplications extends AppCompatActivity {
             return insets;
         });
 
+        db = FirebaseFirestore.getInstance();
+
         HashMap<String, String> app = (HashMap<String, String>) getIntent().getSerializableExtra("app");
 
         appTitle = findViewById(R.id.appTitle);
@@ -58,91 +62,120 @@ public class ScheduledApplications extends AppCompatActivity {
         schedule = findViewById(R.id.schedule);
         Log.d("app inside", app.toString());
         if (app != null) {
-             appId = app.get("appId");
-             applicationDate.setText(app.get("appDate"));
-             schedule.setText("Schedule is on ");
+
+            Log.d("scheduled", "in view" + app.toString());
+            appId = app.get("appId");
+            applicationDate.setText(app.get("appDate"));
+            schedule.setText(formatSchedule(app.get("finalDate"), app.get("finalTime")));
 
              String userId = app.get("userId");
 
-             // Inner query to fetch user details   
-//             db.collection("Users")
-//                     .document(userId) // Access the specific user's document
-//                     .get()
-//                     .addOnSuccessListener(userDoc -> {
-//                        Log.d("fetchin inside scheduled", "Can get up to here");
-//                         if (userDoc.exists()) {
-//                             userAge = (int) userDoc.get("age");
-//                             nameAge.setText(userDoc.get("firstName") + " " + userDoc.get("lastName") + ", " + userAge); // name + age
-//                             householdMembers.setText("Household Members: " + userDoc.get("householdMembers"));
-//                             otherPets.setText("Other Pets: " + userDoc.get("otherPets"));a
-//                             gender.setText("Gender: " + userDoc.get("gender")); // Static or dynamic based on your field
-//                             address.setText("Address: " + userDoc.get("city") + ", " + userDoc.get("region")); // Replace with user-provided address if available
-//                             energy.setText("Energy level: " + userDoc.get("preferences2"));
-//                             social.setText("Temperament: " + userDoc.get("preferences1"));
-//
-//                             if(Integer.parseInt((String) userDoc.get("age")) < 18) {
-//                                 incomeBracket.setText("Likely a student and dependent.");
-//                             } else if(Integer.parseInt((String) userDoc.get("age")) > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
-//                                 incomeBracket.setText("Likely a student and may be working.");
-//                             } else if(Integer.parseInt((String) userDoc.get("age")) > 23)  {
-//                                 incomeBracket.setText("Likely working already.");
-//                             }
-//                         }
-//                     })
-//                     .addOnFailureListener(e -> {
-//                         Log.e("fetching inside scheduled", "Failed to fetch user details: " + e.getMessage());
-//                     });
-
-            //  catId = app.get("catId");
+            Log.d("scheduled", "userId: " + userId);
 
 
-            //  db.collection("Cats")
-            //          .document(catId) // Access the specific user's document
-            //          .get()
-            //          .addOnSuccessListener(catDoc -> {
-            //              if (catDoc.exists()) {
-            //                  // Add user details to app data
-            //                  appTitle.setText("Application for " + catDoc.get("name"));
-            //                  catCompatibility = (String) catDoc.get("compatibleWith");
-            //                  catTemp1 = catDoc.getString("temperament1");
-            //                  catTemp2 = catDoc.getString("temperament2");
-            //              }
-            //          })
-            //          .addOnFailureListener(e -> {
-            //              Log.e("cats", "Failed to fetch cat details: " + e.getMessage());
-            //          });
+            // Inner query to fetch user details
+            db.collection("Users")
+                    .document(userId) // Access the specific user's document
+                    .get()
+                    .addOnSuccessListener(userDoc -> {
+                        if (userDoc.exists()) {
+                            Long age = (Long) userDoc.get("age");
+                            userAge = age.intValue();
+                            nameAge.setText(userDoc.get("firstName") + " " + userDoc.get("lastName") + ", " + userAge); // name + age
+                            householdMembers.setText("Household Members: " + userDoc.get("householdMembers"));
+                            otherPets.setText("Other Pets: " + userDoc.get("otherPets"));
+                            gender.setText("Gender: " + userDoc.get("gender")); // Static or dynamic based on your field
+                            address.setText("Address: " + userDoc.get("city") + ", " + userDoc.get("region")); // Replace with user-provided address if available
+                            energy.setText("Energy level: " + userDoc.get("preferences2"));
+                            social.setText("Temperament: " + userDoc.get("preferences1"));
 
-            //  //compute matching percentage
-            //  // Calculate the matching traits and percentage
-            //  double matchingPercentage = calculateMatchPercentage(householdMembers.getText().toString(), otherPets.getText().toString(), catCompatibility, social.getText().toString(), catTemp1, energy.getText().toString(), catTemp2, userAge);
-            //  percentage.setText(String.format("%.2f", matchingPercentage) + "% match");
+                            int ageInt = ((Long) userDoc.get("age")).intValue();
+                            if(ageInt < 18) {
+                                incomeBracket.setText("Likely a student and dependent.");
+                            } else if(ageInt > 18 && Integer.parseInt((String) userDoc.get("age")) < 23) {
+                                incomeBracket.setText("Likely a student and may be working.");
+                            } else if(ageInt > 23)  {
+                                incomeBracket.setText("Likely working already.");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("fetching", "Failed to fetch user details: " + e.getMessage());
+                    });
+
+            catId = app.get("catId");
+
+
+            Log.d("scheduled", "catId: " + catId);
+
+
+            db.collection("Cats")
+                    .document(catId) // Access the specific user's document
+                    .get()
+                    .addOnSuccessListener(catDoc -> {
+                        if (catDoc.exists()) {
+                            // Add user details to app data
+                            appTitle.setText("Application for " + catDoc.get("name"));
+                            catCompatibility = (String) catDoc.get("compatibleWith");
+                            catTemp1 = catDoc.getString("temperament1");
+                            catTemp2 = catDoc.getString("temperament2");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("cats", "Failed to fetch cat details: " + e.getMessage());
+                    });
+
+            //compute matching percentage
+            // Calculate the matching traits and percentage
+            double matchingPercentage = calculateMatchPercentage(householdMembers.getText().toString(), otherPets.getText().toString(), catCompatibility, social.getText().toString(), catTemp1, energy.getText().toString(), catTemp2, userAge);
+            percentage.setText(String.format("%.2f", matchingPercentage) + "% match");
         }
 
-        // dialog = new Dialog(this);
-        // dialog.setContentView(R.layout.dialog_reject_app);
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_reject_app);
 
-        // Button rejectButton = dialog.findViewById(R.id.dialog_reject_button);
-        // Button cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
+        Button rejectButton = dialog.findViewById(R.id.dialog_reject_button);
+        Button cancelButton = dialog.findViewById(R.id.dialog_cancel_button);
 
-        // rejectButton.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //         // change status of application to rejected
+        rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // change status of application to rejected
 
-        //         if(appId != null) {
-        //             rejectApplication(appId, catId);
-        //         }
-        //     }
-        // });
+                if(appId != null) {
+                    rejectApplication(appId, catId);
+                }
+            }
+        });
 
-        // cancelButton.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //         // Just dismiss the dialog
-        //         dialog.dismiss();
-        //     }
-        // });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Just dismiss the dialog
+                dialog.dismiss();
+            }
+        });
 
+    }
+
+    private String formatSchedule(String finalDate, String finalTime) {
+
+        try {
+            // Parse the input finalDate in the given format
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = dateFormat.parse(finalDate);
+
+            // Format the parsed date to the desired format
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("MMMM dd");
+            String formattedDate = outputDateFormat.format(date);
+
+            // Combine the formatted date and time
+            return "Schedule is on " + formattedDate + ", " + finalTime;
+        } catch (Exception e) {
+            // Handle parsing error
+            e.printStackTrace();
+            return "Invalid date format";
+        }
     }
 
     private void rejectApplication(String appId, String catId) {
