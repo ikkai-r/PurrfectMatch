@@ -132,7 +132,7 @@ public class CatProfile extends AppCompatActivity {
                         if(swipeDataItem.isNeutered == true) { neuterText.setText("Neutered");}
                         else {  neuterText.setText("Not neutered"); }
 
-                        temperamentText.setText((swipeDataItem.temperament1) + ", " + (swipeDataItem.temperament2));
+                        temperamentText.setText((swipeDataItem.temperament));
                         bioText.setText(swipeDataItem.bio);
                         compatibleWithText.setText(swipeDataItem.compatibleWith);
 
@@ -168,7 +168,7 @@ public class CatProfile extends AppCompatActivity {
         char sex = document.getString("sex").charAt(0);
         String foodPreference = document.getString("foodPreference");
         String bio = document.getString("bio");
-        String temperament1 = document.getString("temperament1");
+        String temperament = document.getString("temperament");
         String temperament2 = document.getString("temperament2");
         String breed = document.getString("breed");
         String name = document.getString("name");
@@ -178,7 +178,7 @@ public class CatProfile extends AppCompatActivity {
 
         // Now, pass the catId (document ID) directly into the SwipeData constructor
         return new SwipeData(age, weight, adoptionFee, R.drawable.check, R.drawable.check, R.drawable.check, catImage,
-                sex, foodPreference, bio, temperament1, temperament2, breed, name,
+                sex, foodPreference, bio, temperament, breed, name,
                 contact, catId, compatibleWith, isNeutered);
     }
 

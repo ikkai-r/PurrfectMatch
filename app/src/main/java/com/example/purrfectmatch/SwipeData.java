@@ -20,8 +20,8 @@ public class SwipeData {
         this.sex = sex;
         this.foodPreference = foodPreference;
         this.bio = bio;
-        this.temperament1 = temperament1;
-        this.temperament2 = temperament2;
+        this.temperament = temperament;
+        //this.temperament2 = temperament2;
         this.breed = breed;
         this.name = name;
         this.isBookmarked = false;
