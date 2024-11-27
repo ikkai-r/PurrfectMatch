@@ -49,4 +49,16 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <string-array name="spinner_items">
+        <item>Active / Playful</item>
+        <item>Quiet / Shy</item>
+        <item>Curious</item>
+    </string-array>
+
+    <string-array name="spinner_items2">
+        <item>Independent</item>
+        <item>Moderately Clingy</item>
+        <item>Affectionate</item>
+    </string-array>
 </resources>

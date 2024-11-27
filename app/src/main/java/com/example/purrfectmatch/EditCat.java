@@ -98,9 +98,9 @@ public class EditCat extends AppCompatActivity {
             catData.put("age", age);
             catData.put("weight", weight);
             catData.put("breed", breed);
-            catData.put("temperament", temperament);
+            catData.put("temperament1", temperament);
             catData.put("compatibleWith", compatible);
-            catData.put("foodPreference", food);
+            catData.put("temperament2", food);
             catData.put("adoptionFee", fee);
             catData.put("catImage", picture);
             catData.put("bio", about);
