@@ -26,6 +26,9 @@
             android:name=".ScheduleShelter"
             android:exported="false" />
         <activity
+            android:name=".ScheduleUser"
+            android:exported="false" />
+        <activity
             android:name=".ViewApplication"
             android:exported="false" />
         <activity

@@ -248,11 +248,17 @@ public class ShelterPage extends AppCompatActivity {
     private void initializeNumbers() {
         // Fetch number of cats
         db.collection("Cats")
+                .whereEqualTo("isAdopted", false)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     numCats = querySnapshot.size();
                     txtCats.setText(String.valueOf(numCats));
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Error fetching cat count", e);
+                    txtCats.setText("0");
                 });
+
 
         // Fetch number of scheduled appointments
         db.collection("Applications")

@@ -92,20 +92,24 @@ public class ApplicationsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerViews() {
-        // Set up Active Applications RecyclerView
         activeAdapter = new ApplicationAdapter(true, activeApplicationsList, this);
         recyclerActiveApplications = findViewById(R.id.recyclerActiveApplications);
         recyclerActiveApplications.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerActiveApplications.setAdapter(activeAdapter);
 
+        activeAdapter.setOnItemClickListener(applicationData -> {
+            Intent i = new Intent(this, ScheduleUser.class);
+            i.putExtra("applicationId", applicationData.getApplicationId());
+            startActivity(i);
+        });
+
+        // Set up Closed Applications RecyclerView
         closedAdapter = new ApplicationAdapter(false, closedApplicationsList, this);
         recyclerClosedApplications = findViewById(R.id.recyclerClosedApplications);
-        closedAdapter.setOnItemClickListener(applicationData -> {
-            // Implement your item click logic
-        });
         recyclerClosedApplications.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerClosedApplications.setAdapter(closedAdapter);
     }
+
 
 
     private void fetchApplications() {
