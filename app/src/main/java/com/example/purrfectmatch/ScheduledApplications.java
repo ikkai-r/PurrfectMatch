@@ -209,14 +209,13 @@ public class ScheduledApplications extends AppCompatActivity {
                     Log.d("RejectApp", "Application status updated to rejected.");
 
                     // Remove the appId from the cat's pendingApplications list
-                    db.collection("Cats") // Replace "Cats" with your cat collection name
+                    db.collection("Cats") 
                             .document(catId)
                             .update("pendingApplications", FieldValue.arrayRemove(appId))
                             .addOnSuccessListener(catUpdate -> {
                                 Log.d("RejectApp", "Application ID removed from cat's pendingApplications list.");
 
-                                // Remove the appId from the user's pendingApplications list
-                                db.collection("Users") // Replace "Users" with your users collection name
+                                db.collection("Users") 
                                         .document(userId)
                                         .update("pendingApplications", FieldValue.arrayRemove(appId))
                                         .addOnSuccessListener(userUpdate -> {
@@ -315,82 +314,82 @@ public class ScheduledApplications extends AppCompatActivity {
         String catId = app.get("catId");
         String userId = app.get("userId");
 
-    // Start by updating the application status to "accepted"
-    db.collection("Applications")
-            .document(appId)
-            .update("status", "accepted")
-            .addOnSuccessListener(aVoid -> {
-                Log.d("AcceptApp", "Application status updated to accepted.");
+        // Start by updating the application status to "accepted"
+        db.collection("Applications")
+                .document(appId)
+                .update("status", "accepted")
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AcceptApp", "Application status updated to accepted.");
 
-                // Now update the cat's status to adopted
-                db.collection("Cats")
-                        .document(catId)
-                        .update("isAdopted", true)
-                        .addOnSuccessListener(catUpdate -> {
-                            Log.d("AcceptApp", "Cat's adoption status updated to true.");
+                    // Now update the cat's status to adopted
+                    db.collection("Cats")
+                            .document(catId)
+                            .update("isAdopted", true)
+                            .addOnSuccessListener(catUpdate -> {
+                                Log.d("AcceptApp", "Cat's adoption status updated to true.");
 
-                            // Remove the applicationId from the cat's pendingApplications array
-                            db.collection("Cats")
-                                    .document(catId)
-                                    .update("pendingApplications", FieldValue.arrayRemove(appId))
-                                    .addOnSuccessListener(removePendingApp -> {
-                                        Log.d("AcceptApp", "ApplicationId removed from cat's pendingApplications.");
+                                // Remove the applicationId from the cat's pendingApplications array
+                                db.collection("Cats")
+                                        .document(catId)
+                                        .update("pendingApplications", FieldValue.arrayRemove(appId))
+                                        .addOnSuccessListener(removePendingApp -> {
+                                            Log.d("AcceptApp", "ApplicationId removed from cat's pendingApplications.");
 
-                                        // Remove the applicationId from the user's pendingApplications array
-                                        db.collection("Users")
-                                                .document(userId)
-                                                .update("pendingApplications", FieldValue.arrayRemove(appId))
-                                                .addOnSuccessListener(removeUserPendingApp -> {
-                                                    Log.d("AcceptApp", "ApplicationId removed from user's pendingApplications.");
+                                            // Remove the applicationId from the user's pendingApplications array
+                                            db.collection("Users")
+                                                    .document(userId)
+                                                    .update("pendingApplications", FieldValue.arrayRemove(appId))
+                                                    .addOnSuccessListener(removeUserPendingApp -> {
+                                                        Log.d("AcceptApp", "ApplicationId removed from user's pendingApplications.");
 
-                                                    // Update cat adoption details for the user
-                                                    db.collection("Users")
-                                                            .document(userId)
-                                                            .update(
-                                                                    "adoptedCatIds", FieldValue.arrayUnion(catId),
-                                                                    "adoptedCatCount", FieldValue.increment(1)
-                                                            )
-                                                            .addOnSuccessListener(userUpdate -> {
-                                                                Log.d("AcceptApp", "User's adoption record updated.");
+                                                        // Update cat adoption details for the user
+                                                        db.collection("Users")
+                                                                .document(userId)
+                                                                .update(
+                                                                        "adoptedCatIds", FieldValue.arrayUnion(catId),
+                                                                        "adoptedCatCount", FieldValue.increment(1)
+                                                                )
+                                                                .addOnSuccessListener(userUpdate -> {
+                                                                    Log.d("AcceptApp", "User's adoption record updated.");
 
-                                                                // Also update the adoptedBy field for the cat
-                                                                db.collection("Cats")
-                                                                        .document(catId)
-                                                                        .update("adoptedBy", userId) // Record who adopted the cat
-                                                                        .addOnSuccessListener(adoptedCatUpdate -> {
-                                                                            Log.d("AcceptApp", "Adopted cat details updated.");
+                                                                    // Also update the adoptedBy field for the cat
+                                                                    db.collection("Cats")
+                                                                            .document(catId)
+                                                                            .update("adoptedBy", userId) // Record who adopted the cat
+                                                                            .addOnSuccessListener(adoptedCatUpdate -> {
+                                                                                Log.d("AcceptApp", "Adopted cat details updated.");
 
-                                                                            // Navigate back to ShelterPage
-                                                                            Intent i = new Intent(ScheduledApplications.this, ShelterPage.class);
-                                                                            ScheduledApplications.this.startActivity(i);
-                                                                        })
-                                                                        .addOnFailureListener(e -> {
-                                                                            Log.e("AcceptApp", "Error updating adopted cat details: " + e.getMessage());
-                                                                        });
-                                                            })
-                                                            .addOnFailureListener(e -> {
-                                                                Log.e("AcceptApp", "Error updating user's adoption record: " + e.getMessage());
-                                                            });
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    Log.e("AcceptApp", "Error removing applicationId from user's pendingApplications: " + e.getMessage());
-                                                    Toast.makeText(ScheduledApplications.this, "Failed to update user. Try again later.", Toast.LENGTH_SHORT).show();
-                                                });
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("AcceptApp", "Error removing applicationId from cat's pendingApplications: " + e.getMessage());
-                                        Toast.makeText(ScheduledApplications.this, "Failed to update cat adoption. Try again later.", Toast.LENGTH_SHORT).show();
-                                    });
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.e("AcceptApp", "Failed to update cat's adoption status: " + e.getMessage());
-                            Toast.makeText(ScheduledApplications.this, "Failed to update cat adoption. Try again later.", Toast.LENGTH_SHORT).show();
-                        });
-            })
-            .addOnFailureListener(e -> {
-                Log.e("AcceptApp", "Error updating application status: " + e.getMessage());
-                Toast.makeText(ScheduledApplications.this, "Failed to accept the application. Try again later.", Toast.LENGTH_SHORT).show();
-            });
-    }
+                                                                                // Navigate back to ShelterPage
+                                                                                Intent i = new Intent(ScheduledApplications.this, ShelterPage.class);
+                                                                                ScheduledApplications.this.startActivity(i);
+                                                                            })
+                                                                            .addOnFailureListener(e -> {
+                                                                                Log.e("AcceptApp", "Error updating adopted cat details: " + e.getMessage());
+                                                                            });
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Log.e("AcceptApp", "Error updating user's adoption record: " + e.getMessage());
+                                                                });
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.e("AcceptApp", "Error removing applicationId from user's pendingApplications: " + e.getMessage());
+                                                        Toast.makeText(ScheduledApplications.this, "Failed to update user. Try again later.", Toast.LENGTH_SHORT).show();
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("AcceptApp", "Error removing applicationId from cat's pendingApplications: " + e.getMessage());
+                                            Toast.makeText(ScheduledApplications.this, "Failed to update cat adoption. Try again later.", Toast.LENGTH_SHORT).show();
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("AcceptApp", "Failed to update cat's adoption status: " + e.getMessage());
+                                Toast.makeText(ScheduledApplications.this, "Failed to update cat adoption. Try again later.", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AcceptApp", "Error updating application status: " + e.getMessage());
+                    Toast.makeText(ScheduledApplications.this, "Failed to accept the application. Try again later.", Toast.LENGTH_SHORT).show();
+                });
+        }
 
 }

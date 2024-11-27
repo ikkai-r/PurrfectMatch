@@ -22,7 +22,7 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/confirmFeedback"
+        android:id="@+id/feedback"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="@drawable/edittext_bg"
