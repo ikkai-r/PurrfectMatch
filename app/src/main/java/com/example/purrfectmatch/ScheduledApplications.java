@@ -2,11 +2,19 @@ package com.example.purrfectmatch;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -308,7 +316,7 @@ public class ScheduledApplications extends AppCompatActivity {
         dialog.show();
     }
 
-    public void acceptApp(View v) {
+    public void acceptAppBackend(View v, String feedback) {
         HashMap<String, String> app = (HashMap<String, String>) getIntent().getSerializableExtra("app");
         String appId = app.get("appId");
         String catId = app.get("catId");
@@ -317,7 +325,10 @@ public class ScheduledApplications extends AppCompatActivity {
         // Start by updating the application status to "accepted"
         db.collection("Applications")
                 .document(appId)
-                .update("status", "accepted")
+                .update(
+                    "status", "accepted",
+                    "feedback", feedback
+                )
                 .addOnSuccessListener(aVoid -> {
                     Log.d("AcceptApp", "Application status updated to accepted.");
 
@@ -390,6 +401,61 @@ public class ScheduledApplications extends AppCompatActivity {
                     Log.e("AcceptApp", "Error updating application status: " + e.getMessage());
                     Toast.makeText(ScheduledApplications.this, "Failed to accept the application. Try again later.", Toast.LENGTH_SHORT).show();
                 });
+        }
+
+        public void acceptApp(View v) {
+            // Inflate the dialog layout for accepting the cat adoption
+            View popupView = LayoutInflater.from(ScheduledApplications.this).inflate(R.layout.dialog_accept_app, null);
+            // Create the PopupWindow
+            PopupWindow popupWindow = createPopup(popupView, v);
+
+            // Initialize the buttons in the dialog
+            Button confirmButton = popupView.findViewById(R.id.confirm_adoption_button);
+            Button cancelButton = popupView.findViewById(R.id.close_button);
+            EditText feedbackEditText = popupView.findViewById(R.id.feedback);
+
+           confirmButton.setOnClickListener(view -> {
+               String feedbackMessage = feedbackEditText.getText().toString();
+                acceptAppBackend(view, feedbackMessage);
+                popupWindow.dismiss();
+           });
+
+            cancelButton.setOnClickListener(view -> {
+                popupWindow.dismiss();
+            });
+        }
+
+
+        private PopupWindow createPopup(View popupView, View anchorView) {
+            // Define the layout parameters
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int screenWidth = displayMetrics.widthPixels;
+            int width = (int) (screenWidth * 0.8);
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+            // Create a new PopupWindow
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+            // Set the background of the PopupWindow to transparent
+            popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            // Create an overlay with transparent background
+            View overlay = new View(this);
+            overlay.setBackgroundColor(Color.parseColor("#111111"));
+            overlay.setAlpha(0.6f);  // Adjust transparency as needed
+
+            // Add the overlay to the root layout
+            ViewGroup rootLayout = findViewById(android.R.id.content);
+            rootLayout.addView(overlay);
+
+            // Show the PopupWindow at the center of the screen
+            popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+            // Remove the overlay when the PopupWindow is dismissed
+            popupWindow.setOnDismissListener(() -> rootLayout.removeView(overlay));
+
+            return popupWindow;
         }
 
 }
