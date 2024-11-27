@@ -23,6 +23,9 @@
             android:name=".PendingAppView"
             android:exported="false" />
         <activity
+            android:name=".FAQ"
+            android:exported="false" />
+        <activity
             android:name=".ScheduleShelter"
             android:exported="false" />
         <activity

@@ -35,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
     private List<ExploreData> bookmarkedCats;
 
     private TextView applications, editProfileBtn, bioText, locationProfile, nameProfile,
-             phoneNumberProfile, lifestyleText, logoutBtn, noBookmarkedCatsTxt;
+             phoneNumberProfile, lifestyleText, logoutBtn, noBookmarkedCatsTxt, faqBtn;
     private ImageView explore, swipe, profilePicture;
 
     private FirebaseAuth mAuth;
@@ -76,10 +76,16 @@ public class ProfileActivity extends AppCompatActivity {
         swipe = findViewById(R.id.swipe);
         profilePicture = findViewById(R.id.profilePicture);
         noBookmarkedCatsTxt = findViewById(R.id.noBookmarkedCatsTxt);
+        faqBtn  = findViewById(R.id.faq);
 
         adapter.setOnItemClickListener(cat -> {
             Intent i = new Intent(ProfileActivity.this, ClickedExploreActivity.class);
             i.putExtra("documentId", cat.getId());
+            startActivity(i);
+        });
+
+        faqBtn.setOnClickListener(view -> {
+            Intent i = new Intent(this, FAQ.class);
             startActivity(i);
         });
 
