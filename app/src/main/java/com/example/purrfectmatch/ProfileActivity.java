@@ -244,7 +244,7 @@ public class ProfileActivity extends AppCompatActivity {
                     ? document.getLong("adoptionFee").intValue()
                     : 0;
 
-            return new ExploreData(catId, catImage, name, age, sex, breed, isNeutered, adoptionFee);
+            return new ExploreData(catId, catImageStr, name, age, sex, breed, isNeutered, adoptionFee);
         } catch (Exception e) {
             Log.e("CreateExploreData", "Error creating ExploreData from document", e);
             return null;
